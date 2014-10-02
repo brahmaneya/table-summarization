@@ -19,6 +19,7 @@ public class Marketing {
 		List<Map<String, String>> names = new ArrayList<Map<String, String>>();
 		
 		Map<String, String> incomes = new HashMap<String, String>();
+		incomes.put("column", "Income");
 		incomes.put("1", "Less than $10,000");
 		incomes.put("2", "$10,000-$14,999");
 		incomes.put("3", "$15,000-$19,999");
@@ -32,12 +33,14 @@ public class Marketing {
 		names.add(incomes);
 		
 		Map<String, String> sex = new HashMap<String, String>();
+		sex.put("column", "Gender");
 		sex.put("1", "Male");
 		sex.put("2", "Female");
 		sex.put("NA", "NULL");
 		names.add(sex);
 		
 		Map<String, String> maritalStatus = new HashMap<String, String>();
+		maritalStatus.put("column", "Marital Status");
 		maritalStatus.put("1", "Married");
 		maritalStatus.put("2", "Living together");
 		maritalStatus.put("3", "Divorced/separated");
@@ -47,6 +50,7 @@ public class Marketing {
 		names.add(maritalStatus);
 		
 		Map<String, String> age = new HashMap<String, String>();
+		age.put("column", "Age");
 		age.put("1", "14-17");
 		age.put("2", "18-24");
 		age.put("3", "25-34");
@@ -58,6 +62,7 @@ public class Marketing {
 		names.add(age);
 		
 		Map<String, String> education = new HashMap<String, String>();
+		education.put("column", "Education");
 		education.put("1", "< Grade 8");
 		education.put("2", "Grades 9-11");
 		education.put("3", "High school");
@@ -68,6 +73,7 @@ public class Marketing {
 		names.add(education);
 		
 		Map<String, String> occupation = new HashMap<String, String>();
+		occupation.put("column", "Occupation");
 		occupation.put("1", "Professional/Managerial");
 		occupation.put("2", "Sales Worker");
 		occupation.put("3", "Factory Worker/Laborer/Driver");
@@ -81,6 +87,7 @@ public class Marketing {
 		names.add(occupation);
 		
 		Map<String, String> lived = new HashMap<String, String>();
+		lived.put("column", "Time in Bay Area");
 		lived.put("1", "< 1 year");
 		lived.put("2", "1-3 years");
 		lived.put("3", "4-6 years");
@@ -90,6 +97,7 @@ public class Marketing {
 		names.add(lived);
 		
 		Map<String, String> dualIncome = new HashMap<String, String>();
+		dualIncome.put("column", "Dual Income?");
 		dualIncome.put("1", "Unmarried");
 		dualIncome.put("2", "Yes");
 		dualIncome.put("3", "No");
@@ -97,6 +105,7 @@ public class Marketing {
 		names.add(dualIncome);
 		
 		Map<String, String> personsInHouseHold = new HashMap<String, String>();
+		personsInHouseHold.put("column", "#Persons in household");
 		for (Integer i = 1; i < 8; i++) {
 			personsInHouseHold.put(i.toString(), i.toString());
 		}
@@ -105,6 +114,7 @@ public class Marketing {
 		names.add(personsInHouseHold);
 		
 		Map<String, String> personsUnder18 = new HashMap<String, String>();
+		personsUnder18.put("column", "#Persons under 18");
 		for (Integer i = 0; i < 8; i++) {
 			personsUnder18.put(i.toString(), i.toString());
 		}
@@ -113,6 +123,7 @@ public class Marketing {
 		names.add(personsUnder18);
 		
 		Map<String, String> housing = new HashMap<String, String>();
+		housing.put("column", "Housing");
 		housing.put("1", "Own");
 		housing.put("2", "Rent");
 		housing.put("3", "with parents/family");
@@ -121,6 +132,7 @@ public class Marketing {
 		
 
 		Map<String, String> houseType = new HashMap<String, String>();
+		houseType.put("column", "House Type");
 		houseType.put("1", "House");
 		houseType.put("2", "Condominium");
 		houseType.put("3", "Apartment");
@@ -129,6 +141,7 @@ public class Marketing {
 		names.add(houseType);
 
 		Map<String, String> ethnic = new HashMap<String, String>();
+		ethnic.put("column", "Ethnicity");
 		ethnic.put("1", "American Indian");
 		ethnic.put("2", "Asian");
 		ethnic.put("3", "Black");
@@ -141,6 +154,7 @@ public class Marketing {
 		names.add(ethnic);
 
 		Map<String, String> language = new HashMap<String, String>();
+		language.put("column", "Language");
 		language.put("1", "English");
 		language.put("2", "Spanish");
 		language.put("3", "Other");

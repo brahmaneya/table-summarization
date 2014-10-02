@@ -51,6 +51,8 @@ public class RuleTree {
 		Map<Integer, Integer> valueMap = new HashMap<Integer, Integer>();
 		final Integer length = table.dictionary.size();
 		Rule emptyRule = new Rule(valueMap, length);
+		emptyRule.count = table.contents.size();
+		emptyRule.counted = true;
 		nodeMap = new HashMap<Rule, RuleNode>();
 		root = new RuleNode(emptyRule);
 		nodeMap.put(emptyRule, this.root);

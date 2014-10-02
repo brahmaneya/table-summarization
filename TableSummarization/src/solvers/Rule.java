@@ -289,9 +289,9 @@ public class Rule implements Comparable<Rule> {
 		String ruleString = "";
 		for (int col : valueMap.keySet()) {
 			final Integer val = get(col);
-			ruleString = ruleString + table.names.get(col).get(table.dictionary.get(col).get(val)) + " ";
+			ruleString = ruleString + table.names.get(col).get("column") + ":" + table.names.get(col).get(table.dictionary.get(col).get(val)) + ", ";
 		}
-		ruleString = ruleString + " : " + count;
+		ruleString = ruleString + "Count:" + count;
 		return ruleString;
 	}
 	

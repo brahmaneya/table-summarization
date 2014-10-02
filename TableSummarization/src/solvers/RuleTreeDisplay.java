@@ -96,8 +96,32 @@ public class RuleTreeDisplay {
 		}
 	}
 
-	public String printRuleListTex () {
+	private String tableHeaderTex () {
 		String answer = "";
+		answer = answer + "\\begin{table} \n \\centering \n \\begin{tabular}{|";
+		for (int i = 0; i < columnOrder.size(); i++) {
+			answer = answer + " 1 |";
+		}
+		answer = answer + "} \\hline ";
+		boolean first = true;
+		for (int i = 0; i < columnOrder.size(); i++) {
+			if (!first) {
+				answer = answer + " & ";
+			}
+			answer = answer + ruleTree.table.names.get(columnOrder.get(i)).get("column");
+			first = false;
+		}
+		answer = answer + " \\\\ \\hline \n";
+		return answer;
+	}
+	
+	private String tableFooterTex () {
+		String answer = " \\hline \n \\end{tabular} \n \\caption{ADD CAPTION} \n \\end{table} \n";
+		return answer;
+	}
+	
+	public String printRuleListTex () {
+		String answer = tableHeaderTex();
 		Stack<RuleNode> nodeStack = new Stack<RuleNode>();
 		nodeStack.push(ruleTree.root);
 		
@@ -129,7 +153,7 @@ public class RuleTreeDisplay {
 				nodeStack.push(childNode);
 			}
 		}
-		return answer;
+		return answer + tableFooterTex();
 	}
 	
 	public String treeStringSparse (TableInfo table) {
@@ -158,10 +182,16 @@ public class RuleTreeDisplay {
 	}
 	
 	public static void main (String[] args) throws IOException {
-		TableInfo table = Marketing.parseData();
+		List<Integer> columns = new ArrayList<Integer>();
+		final Integer firstNumColumns = 10;
+		for (int i = 0; i < firstNumColumns; i++) {
+			columns.add(i);
+		}
+		TableInfo fullTable = Marketing.parseData();
+		TableInfo table = fullTable.getSubTable(columns);
 		RuleTree ruleTree = new RuleTree(table);
 		RuleTreeDisplay ruleTreeDisplay = new RuleTreeDisplay(ruleTree);
-		Integer ruleNums = 3;
+		Integer ruleNums = 4;
 		Integer maxRuleScore = 5;
 		Scanner scanner = new Scanner(System.in);
 		Scorer scorer = new Rule.sizeScorer();
@@ -214,6 +244,7 @@ public class RuleTreeDisplay {
 				nodeNo++;
 			}	
 			out.println(ruleTreeDisplay.treeStringSparse(table));
+			//out.println(ruleTreeDisplay.printRuleListTex());
 			input = scanner.nextLine();
 		} while (!input.equals("end")); 
 		scanner.close();
