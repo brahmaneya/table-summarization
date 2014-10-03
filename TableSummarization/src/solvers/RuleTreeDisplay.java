@@ -98,11 +98,11 @@ public class RuleTreeDisplay {
 
 	private String tableHeaderTex () {
 		String answer = "";
-		answer = answer + "\\begin{table} \n \\centering \n \\begin{tabular}{|";
+		answer = answer + "\\begin{table} \n\\centering \n\\begin{tabular}{|";
 		for (int i = 0; i < columnOrder.size(); i++) {
-			answer = answer + " 1 |";
+			answer = answer + " p{1.5cm} |";
 		}
-		answer = answer + "} \\hline ";
+		answer = answer + " l | l |} \n\\hline ";
 		boolean first = true;
 		for (int i = 0; i < columnOrder.size(); i++) {
 			if (!first) {
@@ -111,12 +111,12 @@ public class RuleTreeDisplay {
 			answer = answer + ruleTree.table.names.get(columnOrder.get(i)).get("column");
 			first = false;
 		}
-		answer = answer + " \\\\ \\hline \n";
+		answer = answer + " & Count & Size \\\\ \\hline \n";
 		return answer;
 	}
 	
 	private String tableFooterTex () {
-		String answer = " \\hline \n \\end{tabular} \n \\caption{ADD CAPTION} \n \\end{table} \n";
+		String answer = "\\hline \n\\end{tabular} \n\\caption{ADD CAPTION} \n\\end{table} \n";
 		return answer;
 	}
 	
@@ -183,8 +183,8 @@ public class RuleTreeDisplay {
 	
 	public static void main (String[] args) throws IOException {
 		List<Integer> columns = new ArrayList<Integer>();
-		final Integer firstNumColumns = 10;
-		for (int i = 0; i < firstNumColumns; i++) {
+		final Integer firstNumColumns = 7;
+		for (int i = 1; i < firstNumColumns; i++) {
 			columns.add(i);
 		}
 		TableInfo fullTable = Marketing.parseData();
@@ -194,7 +194,7 @@ public class RuleTreeDisplay {
 		Integer ruleNums = 4;
 		Integer maxRuleScore = 5;
 		Scanner scanner = new Scanner(System.in);
-		Scorer scorer = new Rule.sizeScorer();
+		Scorer scorer = new Rule.sizeBitsScorer();
 		String input = "0";
 		do {
 			int ruleNo;
@@ -243,8 +243,8 @@ public class RuleTreeDisplay {
 				}
 				nodeNo++;
 			}	
-			out.println(ruleTreeDisplay.treeStringSparse(table));
-			//out.println(ruleTreeDisplay.printRuleListTex());
+			//out.println(ruleTreeDisplay.treeStringSparse(table));
+			out.println(ruleTreeDisplay.printRuleListTex());
 			input = scanner.nextLine();
 		} while (!input.equals("end")); 
 		scanner.close();

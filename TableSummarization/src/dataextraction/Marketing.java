@@ -105,7 +105,7 @@ public class Marketing {
 		names.add(dualIncome);
 		
 		Map<String, String> personsInHouseHold = new HashMap<String, String>();
-		personsInHouseHold.put("column", "#Persons in household");
+		personsInHouseHold.put("column", "Persons in household");
 		for (Integer i = 1; i < 8; i++) {
 			personsInHouseHold.put(i.toString(), i.toString());
 		}
@@ -114,7 +114,7 @@ public class Marketing {
 		names.add(personsInHouseHold);
 		
 		Map<String, String> personsUnder18 = new HashMap<String, String>();
-		personsUnder18.put("column", "#Persons under 18");
+		personsUnder18.put("column", "Persons under 18");
 		for (Integer i = 0; i < 8; i++) {
 			personsUnder18.put(i.toString(), i.toString());
 		}

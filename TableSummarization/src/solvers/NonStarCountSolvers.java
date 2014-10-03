@@ -805,8 +805,6 @@ public class NonStarCountSolvers {
 		Map<List<Integer>, Rule> ruleListMap = new HashMap<List<Integer>, Rule>();
 		Rule bestRule = null;
 		Integer bestMarginalRuleValue = -1;
-		Rule emptyRule = new Rule(table, new HashMap<Integer, Integer>(), length, table.contents.size(), true, scorer);
-		superRules.put(emptyRule, new HashSet<Rule>());
 		
 		if (requiredColumn == -1) {
 			for (int col = 0; col < singleRules.size(); col++) {
@@ -816,7 +814,6 @@ public class NonStarCountSolvers {
 					ruleMap.put(rule, rule);
 					ruleListMap.put(rule.values, rule);
 					superRules.put(rule, new HashSet<Rule>());
-					superRules.get(emptyRule).add(rule);
 					if (rule.minMarginalValue > bestMarginalRuleValue) {
 						bestMarginalRuleValue = rule.minMarginalValue;
 						bestRule = rule;
@@ -830,7 +827,6 @@ public class NonStarCountSolvers {
 				ruleMap.put(rule, rule);
 				ruleListMap.put(rule.values, rule);
 				superRules.put(rule, new HashSet<Rule>());
-				superRules.get(emptyRule).add(rule);
 				if (rule.minMarginalValue > bestMarginalRuleValue) {
 					bestMarginalRuleValue = rule.minMarginalValue;
 					bestRule = rule;
@@ -839,8 +835,6 @@ public class NonStarCountSolvers {
 		}
 		
 		Set<Rule> latestSuperRules = ruleMap.keySet();
-		ruleMap.put(emptyRule, emptyRule);
-		ruleListMap.put(emptyRule.values, emptyRule);
 		
 		for (int currentSize = 2; currentSize < 7; currentSize++) {
 			//out.println(bestMarginalRuleValue);
