@@ -192,6 +192,22 @@ public class TableSample extends TableInfo {
 	}
 	
 	/**
+	 * Expand rule values/valueMap only
+	 */
+	public Rule expandRule (Rule rule) {
+		List<Integer> values = new ArrayList<Integer>();
+		for (int i = 0; i < table.dictionary.size(); i++) {
+			if (reverseColumnMapping.get(i) == -1) {
+				values.add(filterRule.get(i));
+			} else {
+				values.add(rule.get(reverseColumnMapping.get(i)));				
+			}
+		}
+		Rule result = new Rule (values);
+		return result;
+	}
+	
+	/**
 	 * Updates counts (estimates) of rules (that must be subRules of filterRules), according to sample.
 	 */
 	public static void updateCounts (Map<Rule, Rule> ruleMap) {

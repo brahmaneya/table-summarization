@@ -1147,12 +1147,21 @@ public class NonStarCountSolvers {
 	 * First creates a sample of tuples that satisfy baseRule, and runs to normal function for the reduced sample, then 
 	 * modifies results to add in the components of baseRule.
 	 */
-	public static Set<Rule> getSolution (TableInfo table, Rule baseRule, Integer ruleNums, Integer maxRuleScore, Scorer scorer,
+	public static Set<Rule> getSolution (TableInfo table, Rule baseRule, Integer ruleNums, Integer maxRuleScore, final Scorer scorer,
 			Integer requiredColumn) throws IOException {
 		Integer sampleSize = Integer.MAX_VALUE;
-		TableSample sample = TableSample.createSample(table, baseRule, sampleSize);
+		final TableSample sample = TableSample.createSample(table, baseRule, sampleSize);
+		final TableInfo origTable = table;
+		Scorer sampleScorer = new Scorer () {
+			@Override
+			public void setScore(TableInfo table, Rule rule) {
+				final Rule expandedRule = sample.expandRule(rule);
+				scorer.setScore(origTable, expandedRule);
+				rule.score = expandedRule.score;
+			}
+		};
 		Integer requiredSampleColumn = requiredColumn == -1 ? -1 : sample.reverseColumnMapping.get(requiredColumn);
-		Set<Rule> truncatedSolutionSet = getSolution(sample, ruleNums, maxRuleScore, scorer, requiredSampleColumn);
+		Set<Rule> truncatedSolutionSet = getSolution(sample, ruleNums, maxRuleScore, sampleScorer, requiredSampleColumn);
 		Set<Rule> solutionSet = new HashSet<Rule>();
 		for (Rule truncatedSolutionRule : truncatedSolutionSet) {
 			Rule expandedRule = sample.expandRule(truncatedSolutionRule, scorer);

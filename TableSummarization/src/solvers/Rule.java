@@ -60,6 +60,24 @@ public class Rule implements Comparable<Rule> {
 		}
 	};
 	
+	public static class sizeMinusKScorer implements Scorer {
+		int k;
+		public sizeMinusKScorer (int k) {
+			this.k = k;
+		}
+		
+		@Override
+		public void setScore(TableInfo table, Rule rule) {
+			rule.score = 0;
+			for (int i = 0; i < rule.length(); i++) {
+				if (rule.get(i) != -1 && table.dictionary.get(i).get(rule.get(i)) != "NA") {
+					rule.score ++;
+				}
+			}
+			rule.score = Math.max(0, rule.score - k);
+		}
+	};
+	
 	public static class columnsSizeScorer implements Scorer {
 		final Set<Integer> columnsToScore;
 		public columnsSizeScorer (Set<Integer> columnsToScore) {

@@ -194,7 +194,7 @@ public class RuleTreeDisplay {
 		Integer ruleNums = 4;
 		Integer maxRuleScore = 5;
 		Scanner scanner = new Scanner(System.in);
-		Scorer scorer = new Rule.sizeBitsScorer();
+		Scorer scorer = new Rule.sizeSquareScorer();
 		String input = "0";
 		do {
 			int ruleNo;
