@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class Marketing {
-	final static String DATAFILELOCATION = "C:/Users/manas/Box Sync/Hector Papers/TableSummarization/TestDatasets/Marketing/marketing.data.txt";
+	final static String DATAFILELOCATION = "TestDatasets/Marketing/marketing.data.txt";
 	
 	public static void addNames (TableInfo table) {
 		List<Map<String, String>> names = new ArrayList<Map<String, String>>();
