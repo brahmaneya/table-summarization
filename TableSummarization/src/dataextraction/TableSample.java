@@ -12,6 +12,7 @@ import solvers.Scorer;
 /**
  * This class represents a sample of a table. It consists of a uniform random sample of size given by size(), from all the table
  * rules that are covered by the filterRule. Used for estimating counts, etc of subRules of the filterRule.
+ * @TODO Adjust bucket columns, as well as ranges. in constructors.
  */
 public class TableSample extends TableInfo {
 	public TableInfo table;
@@ -39,7 +40,7 @@ public class TableSample extends TableInfo {
 		}
 	}
 	
-	public TableSample (TableInfo table, Rule filterRule, Integer totalCount, Set<List<Integer>> contents, List<Integer> columnMapping) {
+	public TableSample (TableInfo table, Rule filterRule, Integer totalCount, List<List<Integer>> contents, List<Integer> columnMapping) {
 		this.table = table;
 		this.filterRule = filterRule;
 		this.totalCount = totalCount;
@@ -97,7 +98,7 @@ public class TableSample extends TableInfo {
 				}
 			}
 		}
-		Set<List<Integer>> contents = new HashSet<List<Integer>>(contentsList);
+		List<List<Integer>> contents = new ArrayList<List<Integer>>(contentsList);
 		TableSample result = new TableSample(table, filter, totalCount, contents, columnMapping);
 		return result;
 	}
@@ -118,7 +119,7 @@ public class TableSample extends TableInfo {
 			}
 		}
 		int totalCount = 0;
-		Set<List<Integer>> contents = new HashSet<List<Integer>>();
+		List<List<Integer>> contents = new ArrayList<List<Integer>>();
 		for (List<Integer> tuple : tableSample.contents) {
 			if (tableSample.isSubRule(filter, tuple)) {
 				totalCount++;

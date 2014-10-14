@@ -168,7 +168,7 @@ public class Marketing {
 		BufferedReader br = new BufferedReader(new FileReader(DATAFILELOCATION));
 		List<List<String>> dictionary = new ArrayList<List<String>>();
 		List<Map<String, Integer>> reverseDictionary = new ArrayList<Map<String, Integer>>();
-		Set<List<Integer>> contents = new HashSet<List<Integer>>();
+		List<List<Integer>> contents = new ArrayList<List<Integer>>();
 		
 		String line = br.readLine();
 		{
