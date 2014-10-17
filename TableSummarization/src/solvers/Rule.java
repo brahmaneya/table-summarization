@@ -35,6 +35,13 @@ public class Rule implements Comparable<Rule> {
 		return values.size();
 	}
 	
+	public static class nullScorer implements Scorer {
+		@Override
+		public void setScore(TableInfo table, Rule rule) {
+			rule.score = 0;
+		}
+	}
+	
 	public static class sizeScorer implements Scorer {
 		@Override
 		public void setScore(TableInfo table, Rule rule) {
