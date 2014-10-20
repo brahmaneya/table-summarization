@@ -27,6 +27,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 \newtheorem{definition}{Definition}
+\newtheorem{example}[definition]{Example}
 
 \newcommand{\agp}[1]{ \textcolor{red}{\bf ||Ins: #1||}}
 \newcommand{\agpdel}[1]{\textcolor{blue}{\bf ||Del: #1||}}
@@ -39,6 +40,7 @@
       \setlength{\partopsep}{0pt}
     }
 }
+\newcommand{\stitle}[1]{\vspace{0.5em}\noindent\textbf{#1}}
 \newcommand{\squishend}{\end{list}}
 \newcommand{\eat}[1]{}
 \newcommand{\papertext}[1]{#1}
@@ -59,34 +61,17 @@ Aditya Parameswaran\\Stanford University\\adityagp@cs.stanford.edu
 \maketitle
 
 \begin{abstract}
-In this paper, we study the following problem: Given a relational table, find the best summary of the table, subject to user-specified constraints. The summary is in form of a list of `rules', where a rule is a pattern specifying a subset of tuples, along with the size of the subset. We allow user to specify what kind of rules to prefer in the summary, and to further selectively explore parts of the table.
-% TODO: Do and mention that we do Experiments to show performance/usefulness.
+In this paper, we study the following problem: Given a relational table, find the best summary of the table, subject to user-specified constraints. The summary is in form of a list of `rules', where a rule is a pattern specifying a subset of tuples, along with the size of the subset. We allow user to specify what kind of rules to prefer in the summary, and to further selectively explore parts of the table. Finally, we demonstrate the usefulness of our summary by performing experiments on a real dataset.
+% TODO: Improve abstract.
 \end{abstract}
 
-% Aditya comments: 
-
-\begin{comment}
-Meeting points:
-
-\end{comment}
-
 \section{Introduction}
-% Something about data being ubiquitous. Data is only as valuable as the insights we can get from it. Data analysts need to sift through large amounts of data to learn about trends and obtain insights from it. Big amounts of data hard for human to analyze, making it necessary to summarize the data. The summary needs to be fast and interactive to facilitate exploration. Help users make sense of data. 
-% Mention our problem. Then features. 
 
-% TODO : Write introduction containing points below. 
-% say that paper is on summarization. 
-% Salient features 
-% Interactive : = Dynamic + Real-Time (see below) 
-% Flexible/Customizable : Because user can choose size/ weighting function (which columns/rule sizes to emphasize).
-% Dynamic : Because it modifies according to user clicks.
-% Real time : Because time taken is very small compared to explananion tables (and cubes?). 
-% Coverage : We emphasize coverage over surprise. (Need motivation for this). Also motivate coverage based scoing over only giving top scoring rules i.e. MCount over Count.
-% Interpretable : Meaning of rules is easy to understand. (But their significance? Not sure about this).
-% Compare to existing work. OLAP/Explanation tables take more time, don't focus on coverage. OLAP requires more user clicks to get same info. Explanation tables is not interactive (verify this). Weighting functions also make our system highly flexible, allowing users to prefer rules of certain sizes, or with certain columns. 
+Data analysts need to sift through large amounts of data to learn about trends and obtain insights from it. Large amounts of data hard for human to make sense of. This necessitates summarizing the data in an informative, interpretable way. The summary also needs to be fast and interactive to facilitate deeper exploration.
 
-In this paper, we study the problem of table summarization.
+In this paper, we consider the following problem: Given a relational table, find the best list of `rules' to summarize the table, subject to user specified constraints. A `rule' is a pattern that describes a set of tuples in a relational table (defined more precisely in Section~\ref{sec:preliminaries}. Our summarization algorithm is highly {\em flexible}, allowing the user to specify what kind of rules are preferred, by taking a rule-scoring black box as user input. In addition, the summary is {\em fast}, with a response time measured in seconds on our experimental datasets, and {\em interactive}, with a user interface that allows the user to explore parts of the table in greater detail. 
 
+\begin{example}\label{ex:introexample}
 Consider a table with columns `Department Store', `Product', `State' and `Number of Sales'. Suppose an investor wants to query for tuples where Sales were higher than some threshold, in order to decide where to invest his money. The resulting query can have a very large number of tuples, making it hard for a user to get valuable information out of it. We propose to summarize the result of the query with a set of `rules'. For example, a possible rule summarization for the query is shown in table~\ref{table:introexample}. The summary consists of a list of \textit{rules}, with the \textit{count} denoting the number of tuples that satisfy the rule, and the \textit{size} denoting the number of non-$\star$ values of the rule) for each rule.
 
 \begin{table}
@@ -124,14 +109,34 @@ $\triangleright$ walmart & $\star$ & Washington & $130$ & $2$ \\ \hline
 \end{table}
 
 This table tells the user that walmart sells a lot of cookies and that it has the most sales in California and Washington, in addition to the information given by the rules in the previous table.
+\end{example}
 
-This raises some questions regarding how to score the rules, and what operations to allow the user to perform to dig deeper into the rules.
+The above example raises some questions regarding how to score the rules, and what operations to allow the user to perform to dig deeper into the rules.
 We describe our user interface in Section \ref{sec:interface}. Regarding scoring, we generally want our rules to be descriptive by having fewer $\star$ values, but at the same time, we want our limited set of rules to cover as many tuples as possible. Thus scoring rules involves a tradeoff between specific rules like (walmart, cookies, California, $30$, $3$) and highly general rules like (walmart, $\star$, $\star$, $1000$, $1$). We further discuss our scoring scheme in Section~\ref{sec:weighting}. 
 
-% TODO: Overview of paper and list of contributions
+There has been some work on finding anomalies in a dataset~\cite{Sarawagi:2001:UMA:767141.767148, Sarawagi00user-adaptiveexploration, Sarawagi98discovery-drivenexploration, DBLP:journals/pvldb/GebalyAGKS14}. This work mostly focuses on giving he most 'surprising' information to the user i.e. information that would minimize the Kullback-Liebler(KL) divergence of the resulting max entropy distribution. Our algorithm, on the other hand, focuses on coverage, describing as much of the table as possible. 
+
+%??Something about how users can't imagine max-entropy distribution??. 
+ 
+OLAP (Online-Analytic-Processing) systems attempt to summarize a dataset by computing counts for all `rules'. We focus on only obtaining counts for rules which cover a significant number of tuples, to get a fast response time. We compute more detailed rules on the fly, when the user explores the table further. In addition, we often display rules containing multiple non-$\star$ values in our summary (such as the (target, bicycles) rule in our example) is their score is high enough, whereas a user would need to multiple clicks in an OLAP system to get the same information. Finally, our algorithm has the flexibility of allowing the user to specify a rule-weighting function, in order to preferentially choose rules of a particular size, or containing information about a particular column that the user is interested in.
+ 
+% TODO : Need motivation for coverage over surprise. Also motivate coverage based scoring over only giving top scoring rules i.e. MCount over Count. 
+\stitle{Overview of paper:} 
+\squishlist 
+
+\item In Section 2, we introduce the relevant notation and formally define our problem.
+
+\item In Section 3, we consider different schemes for weighting rules, along with their practical significance.
+
+\item In Section 4, we describe our user interface. 
+  
+\item In Section 5, we present our algorithms for finding optimal rule-based summaries, as well as our sampling schemes for dealing with large tables.
+
+\item In Section 6, we experimentally evaluate the performance of our algorithms a real dataset.
+\squishend 
 
 \section{Preliminaries} 
-\label{sec:notation}
+\label{sec:preliminaries}
 Suppose we have a relational table, and we let $T$ denote the set of tuples in the table, and $C$ denote the set of columns of the table. Our objective (formally defined later) is to summarise the table with a list of {\em rules}. A {\em rule} is a tuple with one field per column of the queried table. In addition, a rule has other attributes, such as count and weight (which we define later) associated with it. The value in each field of the rule can either be one of the values in the corresponding column of the table, or $\star$, which is a wildcard character representing all values in the column. For a table column with numerical values, we can allow the corresponding rule-value to be a range instead of a single value. A {\em trivial rule} is one that has a $\star$ value in all fields. A rule-list is an ordered list of rules returned by our system as a summary of the table, or a part of the table specified by the user. A rule $r$ is said to {\em cover} a tuple  $t$ from the table if all non-$\star$ values in the columns of the rule match the corresponding values in the tuple. We abuse notation to write this as $t \in r$.
 
 We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. We also write $r_1 \geq r_2$ to denote that $r_1$ subsumes $r_2$, and $r_1 > r_2$ if $r_1$ subsumes but is not equal to $r_2$. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
@@ -346,20 +351,17 @@ For the second pass onwards, we are more selective about which rules to consider
 \end{framed}
 
 \subsection{Supporting user operations}
-Our greedy algorithm finds the best set of rules to cover a table, as per some monotonic weight function $W$. We now describe how we use our algorithm to support the operations allowed in our user interface:
+Our greedy algorithm finds the best set of rules to cover a table, as per some monotonic weight function $W$. We now describe how we can use our algorithm to support the operations allowed in our user interface:
 \begin{enumerate}
 \item \textbf{Expand Rule} : When the user tries to expand rule $r$, we want to display the highest scoring set of sub-rules of $r$. In order to do this, we make a pass through table $T$ to select tuples covered by $r$, and load them into a new table $T^{\prime}$. Then we run the greedy algorithm on $T^{\prime}$ to get the set of rules to display to the user.
 \item \textbf{Expand Star} : When the user tries to expand the $\star$ value in a column $c$ of rule $r$, we again create table $T^{\prime}$ consisting of tuples of $T$ that are covered by $r$. In addition, we use weight function $W^{\prime}$ such that $W^{\prime}(x) = 0$ if rule $x$ has a $\star$ in column $c$, and $W^{\prime}(x) = W(x)$ otherwise. Then we run the greedy algorithm on table $T^{\prime}$ with weight function $W^{\prime}$.
 \end{enumerate}
 
 \subsection{Sampling for big tables}
-%TODO: Read and improve flow of this section.
-Our greedy algorithm describes how to get a near optimal set of rules for a given table. But in addition to getting the best rules for the table, we want to find the best sub-rules of a given rule $r$ (when the user clicks on $r$). Iterating over the entire table to find counts when we only need the small part of the table that is covered by $r$ is wasteful. We can instead compute and materialize the set of tuples covered by $r$, and run our algorithm on that set. 
+Our greedy algorithm needs to make multiple passes over the entire table in order to find counts of rules. These passes can be very expensive if the table is large, especially if it does not fit in main memory. If we want exact counts for rules, we have not choice but to read the entire table. But if we are willing to accept approximate counts rather than exact counts for rules, we can speed up our algorithm by loading a sample of the table into main memory, finding rule counts on the sample, and scaling up the count. If we had obtained the sample by sampling each tuple with probability $p$, then we must scale up the sample count of each rule by $\frac{1}{p}$ to get an estimate of it's count over the full table.
 
-Our algorithm also needs to make multiple passes through the table to find counts and marginal values of rules. This can be slow if the table size is high. In that case, if we are willing to accept approximate counts rather than exact counts for rules, we can speed up our algorithm by loading a sample of the table into main memory, finding rule counts on the sample, and scaling up the count. If we had obtained the sample by sampling each tuple with probability $p$, then we must scale up the sample count of each rule by $\frac{1}{p}$ to get an estimate of it's count over the full table.
-
-We handle both the above problems, of materializing sets of tuples covered by a rule, and of tables that don't fit in main memory, by using sampling. Our system includes a {\em SampleHandler}, which is given a certain memory capacity $M$, and a minimum sample size $minSS$ (specified by the user).
-The $minSS$ parameter is the minimum umber of sample tuples we are required to find counts on while running our greedy algorithm, and it determines how accurate our count estimates will be. We provide a way to find values of $minSS$ later.
+Thus, we use sampling to trade-off a small amount of accuracy for a faster response time. Our system includes a {\em SampleHandler}, which is given a certain memory capacity $M$, and a minimum sample size $minSS$ (specified by the user).
+The $minSS$ parameter is the minimum umber of sample tuples we are required to find counts on while running our greedy algorithm, and it determines how accurate our count estimates will be. We provide a way to find reasonable values of $minSS$ later.
 
 At all points, the SampleHandler maintains a set of Table Samples in memory. Each table sample $s$ has the following attributes: A `filter' rule $f_s$, a scaling factor $N_s$ and a set $T_s$ of tuples from the table. The set $T_s$ consists of a $\frac{1}{N_s}$ uniformly sampled fraction of tuples covered by $f_s$. The scaling factor $N_s$ is used to translate counts of a rule on the sample, into estimated counts on the entire table. The sum of $|T_s|$ is not allowed to exceed capacity $M$ at any point. 
 
@@ -367,24 +369,27 @@ Whenever the user expands a rule $r$, our system calls the SampleHandler with ar
 
 When the SamplerHandler gets called with argument $r$, it needs to find or create a sample with $r$ as the filter rule. There are multiple ways it could do this:
 \begin{enumerate}
-\item \textbf{Find:} If it finds an existing sample with $r$ as the filter rule, and at least $minSS$ tuples, it simply returns that sample.
-\item \textbf{Combine:} If \textbf{Find} doesn't work i.e. if the SampleHandler cannot find an existing sample with filter $r$ and $\geq minSS$ tuples, then it looks at all existing samples $s^{\prime}$ such that $f_{s^{\prime}}$ is a sub-rule of $r$. We can show that tuples from $T_{s^{\prime}}$ that are covered by $r$ can be taken to be uniformly sample tuples covered by $r$. If the union of such tuples over all existing samples exceeds $minSS$ in size, then the SampleHandler can create a sample using existing samples, instead of reading the entire table to create a new sample
-\item \textbf{Create:} If \textbf{Combine} doesn't work either, then the the SampleHandler needs to create a new sample by making a pass through the table. Making a pass can be expensive for big tables, so we only use \textbf{Create} when \textbf{Find} and \textbf{Combine} cannot be used. We can use reservoir sampling to get a uniformly random sample of given size in a single pass through the table. In addition, the SampleHandler can choose to create a sample of $minSS$ size, or larger (if enough memory is available). Making a larger sample is advantageous not only because due to higher accuracy, but because when the user later expands a sub-rule $r^{\prime}$ of $r$, having a large $r$ sample increases the chance that the \textbf{Combine} strategy will work for $r^{\prime}$, which can let us avoid making another expensive pass through the table.
+\item \textbf{Find:} If the SampleHandler finds an existing sample with $r$ as the filter rule, and at least $minSS$ tuples, it simply returns that sample. 
+\item \textbf{Combine:} If \textbf{Find} doesn't work i.e. if the SampleHandler cannot find an existing sample with filter $r$ and $\geq minSS$ tuples, then it looks at all existing samples $s^{\prime}$ such that $f_{s^{\prime}}$ is a sub-rule of $r$. We can show that tuples from $T_{s^{\prime}}$ that are covered by $r$ can be taken to be uniformly sample tuples covered by $r$. That is, each tuple covered by $r$ is equally likely to appear in a uniform sample of $f_{s^{\prime}}$. If the union of such tuples over all such available $s^{\prime}$s exceeds $minSS$ in size, then the SampleHandler can create a sample using existing the samples, instead of reading the entire table to create a new sample.
+\item \textbf{Create:} If \textbf{Combine} doesn't work either, then the SampleHandler needs to create a new sample by making a pass through the table. Making a pass can be expensive for big tables, so we only use \textbf{Create} when \textbf{Find} and \textbf{Combine} cannot be used. We can use reservoir sampling to get a uniformly random sample of given size in a single pass through the table. In addition, the SampleHandler can choose to create a sample of $minSS$ size, or larger (if enough memory is available). Making a larger sample is advantageous not only to get higher accuracy, but also because, when the user later expands a sub-rule $r^{\prime}$ of $r$, having a large $r$ sample increases the chance that the \textbf{Combine} strategy will work for $r^{\prime}$, which can let us avoid making another expensive pass through the table. For example, if $minSS = 500$, but we get a size $2000$ sample $s$ for the empty rule, then when the user clicks on one of it's sub-rules, say $r$, there is a good chance the $2000$ tuples from $T_s$ contain at least $500$ tuples covered by $r$ and that allows us to display the rule-list expanding $r$ quickly instead of making another pass through the table. 
 \item \textbf{Delete/Shrink:} Finally, it may happen that there is not enough memory left to create a new sample. In that case, the SampleHandler needs to delete or shrink an existing sample. It can use a heuristic, like a LRU (Least-Recently-Used) policy to decide which sample to delete or shrink. Note that shrinking a sample by randomly deleting some tuples (even if the sample size goes below $minSS$) may be better than deleting, because in future, we may be able to recreate a sample using \textbf{Combine} on the existing shrinked sample along with other samples.
 %For shrink, prefer shrinking samples of the largest size (> minSS) first?
 \end{enumerate}
 
-When the user clicks on rule $r$ (the rule itself or a $\star$ in the rule), we need to get a sample, run the greedy algorithm, and display a rule-list to the user. If we use \textbf{Find} or \textbf{Combine}, then we can display the rule-list much faster because we don't have to read the entire table. But after expanding $r$, there is a high chance that the user goes further and expands one of the sub-rules $r^{\prime}$ of $r$. We may not be able to use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ with the existing samples. So while the user is reading the current rule-list from expanding $r$, we can start making a pass through the table to create a bigger sample of $r$ in the background. That way, when the user expands $r^{\prime}$, the new loaded tuples for $r$ will increase that chance that we can use \textbf{Combine} on $r^{\prime}$, and reduce our response time. 
+When the user clicks on rule $r$ (the rule itself or a $\star$ in the rule), we need to get a sample, run the greedy algorithm, and display a rule-list to the user. If we use \textbf{Find} or \textbf{Combine}, then we can display the rule-list much faster because we don't have to read the entire table. But after expanding $r$, there is a high chance that the user goes further and expands one of the sub-rules $r^{\prime}$ of $r$. We may not be able to use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ with the existing samples. So while the user is reading the current rule-list from expanding $r$, we can start making a pass through the table to create a bigger sample of $r$ in the background. That way, when the user expands $r^{\prime}$, some of the newly loaded tuples for $r$ will also be covered by $r^{\prime}$, increasing the chance that we can use \textbf{Combine} on $r^{\prime}$, and reduce our response time. 
 In addition, while we are making the pass in the background, we can find the exact counts for currently displayed rules (which only have estimated counts shown), and update them when our pass is complete.
 
-% Need to find and write about the exact algorithm to decide how much to load, what to shrink, and how much to shrink.
+% TODO: Need to find and write about the exact algorithm to decide how much to load, what to shrink, and how much to shrink. Different heuristic algos are a good experimental subject as well. 
+
+\subsubsection{Additional optimizations}
+There are some additional minor optimizations we can make to reduce the memory cost per sample, allowing us to store more and bigger samples. 
+Suppose we have a sample $s$, and say it's filter rule $f_s$ has value $v$ in column $c$. Then we know that each tuple $t$ in $T_s$ must also have value $v$ in column $c$, since it is covered by $f_s$. So we do not need to explicitly store the column $c$ value of any tuple in $T_s$. We only need to store the tuple values of columns that have a $\star$ value in $f_s$.
+In addition, we may have a tuple occur in multiple samples, especially when we use \textbf{Combine} to create a sample. Instead of storing the entire tuple repeatedly, we could create a dictionary of common tuples, and only store a pointer to the tuple's dictionary entry in $T_s$. 
 
 \subsubsection{Setting $minSS$}
-% TODO: Write bound on reasonable value of minSS
+Suppose a rule $r$ covers $x$ fraction of the tuples of $T$ i.e. $x|T|$ tuples. Say we have a uniform random sample $s$ of $T$. The samples has size $|T_s|$, and let $X_{r,s}$ be the random variable denoting the number of tuples of $T_s$ covered by $r$. Then $E\left[ X_{r,s} \right] = x|T_s|$, and $\text{Dev}(X_{r,s}) \approx \sqrt{|T_s|x(1-x)}$. In order to get a good estimate of $x$ (and hence of Count$(r) = x|T|$), we want $E\left[X_{r,s}\right] >> \text{Dev}(X_{r,s})$. That is, $x|T_s| >> \sqrt{|T_s|x(1-x)} \Leftrightarrow \frac{x|T_s|}{1-x} >> 1$. So the value of minSS must be at least $c\frac{1-x}{x}$ where $x$ is the minimum fraction of tuples covered by any of the rules displayed in our summary, and $c$ is a constant chosen by us based on how accurate we want the count estimate to be.
 
-% Additional optimizations. In sample tuples, store only those columns that are not in filter rule. If tuples are repeated across samples, then store pointer to the tuple instead. 
-
-%Independent. Can we bunch together rare values into a single value called 'rare value'?
+Thus a reasonable value of minSS can be found by obtaining a bound on $\frac{1-x}{x}$. This is hard to do for arbitrary weighting functions, but we can do it for the Size weighting function (where weight of a rule equals number of non-$\star$ values of the rule). Let $c$ be the column with the fewest distinct values. Say it has $|c|$ values. Then the rule that has the most frequent value of $c$, and $\star$ everywhere else, must have a score of at least $\frac{|T|}{|c|}$. The highest scoring rule can have score at most $|C|$ (the total number of columns), the the Count of the highest scoring rule must be at least $\frac{|T|}{|C||c|}$. Thus if minSS is significantly larger than $|C||c|$, then the Count of the first few highest scoring rules should be well-approximated in a sample of size more than minSS. 
 
 \section{Experiments}
 \subsection{Datasets}
@@ -508,6 +513,8 @@ Our algorithm assumes that all attributes are categorical in nature. Attributes 
 However, we can modify the algorithm to deal with numerical attributes. Suppose we have a numerical attribute $A$. A simple approach is to create buckets for values of $A$. We choose a number of buckets $k$, and divide the range of values of $A$ into $k$ intervals, each corresponding to a bucket. We can create buckets having an equal range size, or decide their range such that there is an approximately equal number of tuples in each bucket. Then we can use our algorithm, treating the bucket number as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
 
 The distribution of values for the $A$ may not be similar in different parts of the table. For instance, we may create buckets have approximately equal numbers of tuples in the table. But then suppose a user tries to expand a rule $r$. The part of the table covered by $r$ might have a very different distribution of age values. For instance, in our MD dataset, if the user looks at people who own a house, their age distribution would be different from that of people who are still renting an apartment. To prevent the buckets from getting a skewed distribution when expanding $r$, we could recompute the bucket ranges every time the user expands a rule, and use the new bucket ranges to determine which rules to display upon expansion. 
+
+% Aditya's idea of flexible ranges. Score depends on range length.
 
 \section{Related Work}
 %TODO: Repeat what we said in intro about interactive, etc.
