@@ -43,7 +43,7 @@ public class Marketing {
 		maritalStatus.put("column", "Marital Status");
 		maritalStatus.put("1", "Married");
 		maritalStatus.put("2", "Living together");
-		maritalStatus.put("3", "Divorced/separated");
+		maritalStatus.put("3", "Divorced / separated");
 		maritalStatus.put("4", "Widowed");
 		maritalStatus.put("5", "Never married");
 		maritalStatus.put("NA", "NULL");
@@ -74,10 +74,10 @@ public class Marketing {
 		
 		Map<String, String> occupation = new HashMap<String, String>();
 		occupation.put("column", "Occupation");
-		occupation.put("1", "Professional/Managerial");
+		occupation.put("1", "Professional / Managerial");
 		occupation.put("2", "Sales Worker");
-		occupation.put("3", "Factory Worker/Laborer/Driver");
-		occupation.put("4", "Clerical/Service Worker");
+		occupation.put("3", "Factory Worker / Laborer / Driver");
+		occupation.put("4", "Clerical / Service Worker");
 		occupation.put("5", "Homemaker");
 		occupation.put("6", "Student");
 		occupation.put("7", "Military");

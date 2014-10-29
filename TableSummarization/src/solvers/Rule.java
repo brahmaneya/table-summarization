@@ -357,7 +357,7 @@ public class Rule implements Comparable<Rule> {
 		if (marginalCounts.get(this) != null) {
 			marginal = marginalCounts.get(this).toString();
 		}
-		ruleString = ruleString + ",\"" + marginal + "\",\"" + count + "\",\"" + size + "\"";
+		ruleString = ruleString + ",\"" + marginal + "\",\"" + count + "\",\"" + score + "\"";
 		return ruleString;
 	}
 
@@ -377,7 +377,7 @@ public class Rule implements Comparable<Rule> {
 				ruleString = ruleString + "\"" + table.names.get(i).get(table.dictionary.get(i).get(val)) + "\"";
 			}
 		}
-		ruleString = ruleString + ",\"" + count + "\",\"" + size + "\"";
+		ruleString = ruleString + ",\"" + count + "\",\"" + score + "\"";
 		return ruleString;
 	}
 	
@@ -402,7 +402,7 @@ public class Rule implements Comparable<Rule> {
 		if (marginalCounts.get(this) != null) {
 			marginal = marginalCounts.get(this).toString();
 		}
-		ruleString = ruleString + " & $" + marginal + "$ & $" + count + "$ & $" + size + "$ \\\\";
+		ruleString = ruleString + " & $" + marginal + "$ & $" + count + "$ & $" + score + "$ \\\\";
 		return ruleString;
 	}
 
@@ -423,7 +423,7 @@ public class Rule implements Comparable<Rule> {
 				ruleString = ruleString + (table.names.get(index).get(table.dictionary.get(index).get(val))).replaceAll("\\$", "\\\\\\$");
 			}
 		}
-		ruleString = ruleString + " & $" + count + "$ & $" + size + "$ \\\\";
+		ruleString = ruleString + " & $" + count + "$ & $" + score + "$ \\\\";
 		return ruleString;
 	}
 
@@ -448,7 +448,7 @@ public class Rule implements Comparable<Rule> {
 		if (marginalCounts.get(this) != null) {
 			marginal = marginalCounts.get(this).toString();
 		}
-		ruleString = ruleString + " & $" + marginal + "$ & $" + count + "$ & $" + size + "$ \\\\";
+		ruleString = ruleString + " & $" + marginal + "$ & $" + count + "$ & $" + score + "$ \\\\";
 		return ruleString;
 	}
 
@@ -469,7 +469,7 @@ public class Rule implements Comparable<Rule> {
 				ruleString = ruleString + (table.names.get(index).get(table.dictionary.get(index).get(val))).replaceAll("\\$", "\\\\\\$");
 			}
 		}
-		ruleString = ruleString + " & $" + count + "$ & $" + size + "$ \\\\";
+		ruleString = ruleString + " & $" + count + "$ & $" + score + "$ \\\\";
 		return ruleString;
 	}
 
@@ -491,7 +491,7 @@ public class Rule implements Comparable<Rule> {
 				ruleString = ruleString + (table.names.get(index).get(table.dictionary.get(index).get(val))).replaceAll("\\$", "\\\\\\$");
 			}
 		}
-		ruleString = ruleString + " & $" + count + "$ & $" + size + "$ \\\\";
+		ruleString = ruleString + " & $" + count + "$ & $" + score + "$ \\\\";
 		return ruleString;
 	}
 
@@ -512,7 +512,7 @@ public class Rule implements Comparable<Rule> {
 				ruleString = ruleString + (table.names.get(index).get(table.dictionary.get(index).get(val))).replaceAll("\\$", "\\\\\\$");
 			}
 		}
-		ruleString = ruleString + " & $" + count + "$ & $" + size + "$ \\\\";
+		ruleString = ruleString + " & $" + count + "$ & $" + score + "$ \\\\";
 		return ruleString;
 	}
 	
@@ -533,7 +533,7 @@ public class Rule implements Comparable<Rule> {
 				ruleString = ruleString + (table.names.get(index).get(table.dictionary.get(index).get(val))).replaceAll("\\$", "\\\\\\$");
 			}
 		}
-		ruleString = ruleString + " & $" + count + "$ & $" + size + "$ \\\\";
+		ruleString = ruleString + " & $" + count + "$ & $" + score + "$ \\\\";
 		return ruleString;
 	}
 

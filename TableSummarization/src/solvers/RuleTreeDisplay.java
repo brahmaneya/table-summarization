@@ -13,8 +13,11 @@ import java.util.Stack;
 
 import dataextraction.Marketing;
 import dataextraction.TableInfo;
+import solvers.Rule.sizeBitsScorer;
+import solvers.Rule.sizeMinusKScorer;
 import solvers.Rule.sizeScorer;
 import solvers.RuleTree.RuleNode;
+import utils.Experiments;
 
 public class RuleTreeDisplay {
 	RuleTree ruleTree;
@@ -98,7 +101,7 @@ public class RuleTreeDisplay {
 
 	private String tableHeaderTex () {
 		String answer = "";
-		answer = answer + "\\begin{table} \n\\centering \n\\begin{tabular}{|";
+		answer = answer + "\\begin{table*} \n\\centering \n\\begin{tabular}{|";
 		for (int i = 0; i < columnOrder.size(); i++) {
 			answer = answer + " p{1.5cm} |";
 		}
@@ -111,12 +114,12 @@ public class RuleTreeDisplay {
 			answer = answer + ruleTree.table.names.get(columnOrder.get(i)).get("column");
 			first = false;
 		}
-		answer = answer + " & Count & Size \\\\ \\hline \n";
+		answer = answer + " & Count & Weight \\\\ \\hline \n";
 		return answer;
 	}
 	
 	private String tableFooterTex () {
-		String answer = "\\hline \n\\end{tabular} \n\\caption{ADD CAPTION} \n\\end{table} \n";
+		String answer = "\\hline \n\\end{tabular} \n\\caption{ADD CAPTION} \n\\end{table*} \n";
 		return answer;
 	}
 	
@@ -141,7 +144,10 @@ public class RuleTreeDisplay {
 				cline = cline + "\\cline{" + (columnOrder.size() + 1) + "-" + (columnOrder.size() + 2) + "} ";
 			}
 			answer = answer + cline;
-			answer = answer + currentNode.rule.fullRuleStringTex(ruleTree.table, columnOrder, parentRule) + "\n";
+			for (int i = 0; i < currentNode.depth; i++) {
+				answer = answer + "$\\triangleright$ ";
+			}
+			answer = answer + currentNode.rule.fullRuleStringTex(ruleTree.table, columnOrder) + "\n";
 			List<RuleNode> toAdd = new ArrayList<RuleNode>();
 			for (RuleNode childNode : currentNode.children) {
 				if (!hiddenRows.contains(childNode)) {
@@ -182,6 +188,7 @@ public class RuleTreeDisplay {
 	}
 	
 	public static void main (String[] args) throws IOException {
+		String outFile = "Data_Graphs/mw_speed_bits";
 		List<Integer> columns = new ArrayList<Integer>();
 		final Integer firstNumColumns = 7;
 		for (int i = 1; i < firstNumColumns; i++) {
@@ -194,9 +201,12 @@ public class RuleTreeDisplay {
 		Integer ruleNums = 4;
 		Integer maxRuleScore = 5;
 		Scanner scanner = new Scanner(System.in);
-		Scorer scorer = new Rule.sizeSquareScorer();
+		Scorer scorer = new Rule.sizeBitsScorer();
+		Experiments.mwSpeedTest(table, 1, 20, ruleNums, scorer, outFile);
+		if(1!=2)return;
 		String input = "0";
 		do {
+			long timer = System.currentTimeMillis();
 			int ruleNo;
 			int colNo;
 			boolean toExpand;
@@ -245,6 +255,7 @@ public class RuleTreeDisplay {
 			}	
 			//out.println(ruleTreeDisplay.treeStringSparse(table));
 			out.println(ruleTreeDisplay.printRuleListTex());
+			out.println("Time: " + (System.currentTimeMillis() - timer));
 			input = scanner.nextLine();
 		} while (!input.equals("end")); 
 		scanner.close();
