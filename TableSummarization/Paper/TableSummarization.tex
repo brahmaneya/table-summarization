@@ -61,7 +61,7 @@ Aditya Parameswaran\\Stanford University\\adityagp@cs.stanford.edu
 \maketitle
 
 \begin{abstract}
-In this paper, we study the following problem: Given a relational table, find the most `interesting' summary of the table, subject to user-specified constraints. The summary consists of a list of `rules', where a rule is a pattern specifying values occurring in some columns of the table, along with the number of tuples that are covered by the rule. For instance, the rule $(a, b, \star, 1000)$ tell us that there are a $1000$ tuples with value $a$ in the first column and $b$ in the second column. We allow the user to specify what kind of rules to prefer in the summary via a black box weighting function, and to further selectively explore parts of the table. We describe an algorithm for finding the approximately optimal list of rules according to the user-specified weighting function, and a sampling based scheme for dealing with large tables. Finally, we demonstrate the usefulness of our summary by performing experiments on a real dataset.
+In this paper, we study the following problem: Given a relational table, find the most `interesting' summary of the table, subject to user-specified constraints. The summary consists of a list of `rules', where a rule is a pattern specifying values occurring in some columns of the table, along with the number of tuples that satisfy that pattern. For instance, the rule $(a, b, \star, 1000)$ tell us that there are a $1000$ tuples with value $a$ in the first column and $b$ in the second column. We allow the user to specify what kind of rules to prefer in the summary via a black box weighting function, and to further selectively explore parts of the table. We describe an algorithm for finding the approximately optimal list of rules according to the user-specified weighting function, and a sampling based scheme for efficiently summarizing large tables. Finally, we demonstrate the usefulness of our summary by performing experiments on a real dataset.
 \end{abstract}
 
 \section{Introduction}
@@ -74,7 +74,6 @@ In this paper, we consider the following problem: Given a relational table, find
 % Need justification for how investor got data. Or change example.
 Consider a table with columns `Department Store', `Product', `State' and `Number of Sales'. Suppose an investor wants to query for tuples where Sales were higher than some threshold, in order to decide where to invest his money. The resulting query can have a very large number of tuples, making it hard for a user to get valuable information out of it. We propose to summarize the result of the query with a set of `rules'. For example, a possible rule summarization for the query is shown in table~\ref{table:introexample}. The summary consists of a list of `rules', with the `count' denoting the number of tuples that satisfy the rule, and the `weight' in this case denoting the number of non-$\star$ values of the rule for each rule. The weight function can in general be customized by the user.
 
-%TODO: Change indentation format. All indentation at start, number of indents equal to depth of rule
 \begin{table}
 \centering
 \begin{tabular}{| l | l | l | l | l |}
@@ -131,7 +130,8 @@ There has been some work on finding anomalies in a dataset~\cite{Sarawagi:2001:U
 
 OLAP (Online-Analytic-Processing) systems attempt to summarize a dataset by computing counts for all `rules'. They have an operation called drill-down, which allows a user to get counts for rules having values in a given column. For instance in our example, a user can first drill down along the `Department Store' column, which will show the total number of tuples for each Department Store. After that, the user may drill down along the product column for `Walmart', which will show the user the number of tuples for each product in Walmart. Thus the user is required to decide which columns to drill down along in order to get interesting or frequent rules, and requires $k$ drill downs to get to rules of size $k$. In contrast, our summary may immediately display a size $k$ rule to the user if it has sufficiently high weight and count. There is no notion of ranking or ordering of rules in OLAP, since all possible rules are displayed for any drill down. In contrast, we only display the top few rules in terms of their score, and display them in decreasing order by weight. This makes the summary shorter and more readable by focusing only on the frequently occurring values in columns.
 
-% TODO : Also motivate coverage based scoring over only giving top scoring rules i.e. MCount over Count. 
+We further discuss related work in Section~\ref{sec:related}.
+
 \stitle{Overview of paper:} 
 \squishlist 
 
@@ -143,7 +143,7 @@ OLAP (Online-Analytic-Processing) systems attempt to summarize a dataset by comp
   
 \item In Section 5, we present our algorithms for finding optimal rule-based summaries, as well as our sampling schemes for dealing with large tables.
 
-\item In Section 6, we experimentally evaluate the performance of our algorithms a real dataset.
+\item In Section 6, we experimentally evaluate the performance of our algorithms on a real dataset.
 \squishend 
 
 \section{Preliminaries} 
@@ -174,7 +174,6 @@ We now define some additional properties of rules. Let $r$ be a rule. Then:
 \squishend
 
 The total score for our list of rules is given by $$\text{Score}(R) = \sum_{r \in R} MCount(r)W(r)$$. Our problem is to choose the rule-list that maximises total score. We use $MCount$ rather than Count to increase coverage of the table. If we had defined total score as $$\sum_{r \in R} \text{Count}(r)W(r)$$, then our optimal rule-list would contain rules that repeatedly refer to the most `summarizable' part of the table. For instance, if $a$ and $b$ were the most common values in columns $A$ and $B$, then the summary could consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$.
-%TODO: Write an actual example? To also verify what actually happens.
 
 We now formally define our problem:
 
@@ -630,7 +629,7 @@ The value of $m_w$ required to ensure a correct answer is equal to the maximum w
 \vspace{-13pt}
 \end{figure}
 
-% TODO: Experiments on m_w. Experiments on Sampling schemes.
+% TODO: Experiments on Sampling schemes.
 
 \begin{comment}
 Notes based on Explanation Tables paper: Prove that our problem is NP-Hard to solve exactly. Something like the Set Cover Problem. 
@@ -649,17 +648,25 @@ However, we can modify the algorithm to deal with numerical attributes. Suppose 
 
 The distribution of values for the $A$ may not be similar in different parts of the table. For instance, we may create buckets have approximately equal numbers of tuples in the table. But then suppose a user tries to expand a rule $r$. The part of the table covered by $r$ might have a very different distribution of age values. For instance, in our MD dataset, if the user looks at people who own a house, their age distribution would be different from that of people who are still renting an apartment. To prevent the buckets from getting a skewed distribution when expanding $r$, we could recompute the bucket ranges every time the user expands a rule, and use the new bucket ranges to determine which rules to display upon expansion. 
 
-\section{Related Work}
+\section{Related Work}\label{sec:related}
 %TODO: Repeat what we said in intro about interactive, etc.
-There has been work on finding interesting rules in OLAP systems~\cite{Sarawagi:2001:UMA:767141.767148, Sarawagi00user-adaptiveexploration, Sarawagi98discovery-drivenexploration}. The work mainly focuses on finding values that occur more often or less often that expected from a max entropy distribution. The work does not guarantee good coverage of the table, since it rates infrequently occurring sets of values as highly as frequently occurring ones. 
+There has been work on finding interesting rules in OLAP systems~\cite{Sarawagi:2001:UMA:767141.767148, Sarawagi00user-adaptiveexploration, Sarawagi98discovery-drivenexploration}. This work, along with other existing work~\cite{Mampaey:2011:TMI:2020408.2020499} focuses on finding values that occur more often or less often that expected from a max entropy distribution. The work does not guarantee good coverage of the table, since it rates infrequently occurring sets of values as highly as frequently occurring ones. 
 
 There is work on constructing `explanation tables', which are sets of rules that co-occur with a given binary attribute of the table~\cite{DBLP:journals/pvldb/GebalyAGKS14}. This work again focuses on displaying rules that will cause the max entropy distribution to best approximate the actual distribution of values. 
 
+Some related work~\cite{Golab_efficientand, Golab:2008:GNT:1453856.1453900} focuses on finding minimum sized Tableaux that provide improved support and confidence for conditional functional dependencies. There has also been work~\cite{Bu:2005:MSH:1083592.1083644, Lakshmanan:2002:GMA:1287369.1287435, Xiang_succinctsummarization, Geerts04tilingdatabases} on finding hyper-rectangle based covers for tables. All the existing works solve a fixed optimization problem, whereas  we focus on finding an optimal summary for a flexible user-specified weighting function.
+
 Our algorithm uses ideas from the a priori algorithm~\cite{apriori}. Several extensions for the algorithm have been proposed, including those for dealing with numerical attributes~\cite{Srikant:1996:MQA:233269.233311}. We can potentially use these ideas to improve handing of numerical attributes in our work. 
 
-% Related Work summary :
+% Related Work summary : Is ours the only only that is flexible (due to weight function black box)?
 % Explanation tables takes lots of papers and talks about them in one go in related work. saying they optimize for different opbjective functions. We can say that as well. We have a unique idea of flexible weighting functions for managing the tradeoff between coverage and specificity. 
-% Efficient and Effective... Tableaux
+% Succintly summarizing with itemsets-- Mampaey:2011:TMI:2020408.2020499 -- Also seemed to optimize according to max entropy criterion
+% Efficient and Effective... Tableaux -- Golab_efficientand -- Similar to conditional functional dep. paper.
+% Near Optimal Tableaux Conditional functional dep. -- Golab:2008:GNT:1453856.1453900 -- Finding a smallest sized tableau that provides some confidence and support for a conditional functional dependency.
+% MDL Summarization with holes -- Bu:2005:MSH:1083592.1083644 -- Min sized summary with a rectangle and exceptions (holes). 
+% Generalized MDL Approach -- Lakshmanan:2002:GMA:1287369.1287435 -- Similar to MDL Approach.
+% Overlapped Hyperrectangle -- Xiang_succinctsummarization -- Efficiently find the set of hyperrectangles that covers the data (sets of itemsets)
+% Tiling Databases Geerts04tilingdatabases Simlar to hyper-rectangles. Probabilistic interpretation of frequent itemsets. 
 
 {\small 
 \bibliographystyle{plain}
