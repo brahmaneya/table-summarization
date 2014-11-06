@@ -17,6 +17,7 @@ import java.util.Set;
 
 import solvers.Rule.sizeScorer;
 import dataextraction.Marketing;
+import dataextraction.SampleHandler;
 import dataextraction.TableInfo;
 import dataextraction.TableSample;
 
@@ -1148,8 +1149,8 @@ public class NonStarCountSolvers {
 	 * modifies results to add in the components of baseRule.
 	 */
 	public static Set<Rule> getSolution (TableInfo table, Rule baseRule, Integer ruleNums, Integer maxRuleScore, final Scorer scorer,
-			Integer requiredColumn) throws IOException {
-		Integer sampleSize = Integer.MAX_VALUE;
+			Integer requiredColumn, SampleHandler sampleHandler) throws IOException {
+		Integer sampleSize = sampleHandler.minSampleSize;
 		final TableSample sample = TableSample.createSample(table, baseRule, sampleSize);
 		final TableInfo origTable = table;
 		Scorer sampleScorer = new Scorer () {
@@ -1234,7 +1235,10 @@ public class NonStarCountSolvers {
 		Integer ruleNums = 5;
 		//getSolution (table, ruleNums, maxRuleScore);
 		Integer requiredColumn = -1;
-		Set<Rule> solutionSet = getSolution (table, bigRule, ruleNums, maxRuleScore, scorer, requiredColumn);
+		int minSampleSize = Integer.MAX_VALUE;
+		int capacity = Integer.MAX_VALUE;
+		SampleHandler sampleHandler = new SampleHandler(table, capacity, minSampleSize);
+		Set<Rule> solutionSet = getSolution (table, bigRule, ruleNums, maxRuleScore, scorer, requiredColumn, sampleHandler);
 		out.println(solutionSet.toString());
 		if(1!=2)return;
 		List<Rule> rules = new ArrayList<Rule>();

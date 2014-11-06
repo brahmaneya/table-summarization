@@ -10,3 +10,15 @@ set output "../Paper/graphs/mw_speed.pdf"
 set xlabel "m_w Parameter value"
 set ylabel "Time in milliseconds to expand empty rule"
 plot "mw_speed_size" using 1:2 w linespoints title "Size scoring" ls 1, "mw_speed_bits" using 1:2 w linespoints title "Bits scoring" ls 2
+set output "../Paper/graphs/minSS_speed.pdf"
+set xlabel "minSS Parameter value"
+set ylabel "Time in milliseconds to expand empty rule"
+plot "minSS_speed_size" using 1:2 w linespoints title "Size scoring" ls 1, "minSS_speed_bits" using 1:2 w linespoints title "Bits scoring" ls 2
+set output "../Paper/graphs/minSS_error_count.pdf"
+set xlabel "minSS Parameter value"
+set ylabel "Error in rule counts"
+plot "minSS_error_size" using 1:2 w linespoints title "Size scoring" ls 1, "minSS_error_bits" using 1:2 w linespoints title "Bits scoring" ls 2
+set output "../Paper/graphs/minSS_error_rule.pdf"
+set xlabel "minSS Parameter value"
+set ylabel "Number of incorrect rules"
+plot "minSS_error_size" using 1:3 w linespoints title "Size scoring" ls 1, "minSS_error_bits" using 1:3 w linespoints title "Bits scoring" ls 2

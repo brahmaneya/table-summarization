@@ -61,7 +61,7 @@ Aditya Parameswaran\\Stanford University\\adityagp@cs.stanford.edu
 \maketitle
 
 \begin{abstract}
-In this paper, we study the following problem: Given a relational table, find the most `interesting' summary of the table, subject to user-specified constraints. The summary consists of a list of `rules', where a rule is a pattern specifying values occurring in some columns of the table, along with the number of tuples that satisfy that pattern. For instance, the rule $(a, b, \star, 1000)$ tell us that there are a $1000$ tuples with value $a$ in the first column and $b$ in the second column. We allow the user to specify what kind of rules to prefer in the summary via a black box weighting function, and to further selectively explore parts of the table. We describe an algorithm for finding the approximately optimal list of rules according to the user-specified weighting function, and a sampling based scheme for efficiently summarizing large tables. Finally, we demonstrate the usefulness of our summary by performing experiments on a real dataset.
+In this paper, we study the following problem: Given a relational table, find the most `interesting' summary of the table, subject to user-specified constraints. The summary consists of a list of `rules', where a rule is a pattern specifying values occurring in some columns of the table, along with the number of tuples that satisfy that pattern. For instance, the rule $(a, b, \star, 1000)$ tell us that there are a $1000$ tuples with value $a$ in the first column and $b$ in the second column. We allow the user to specify what kind of rules to prefer in the summary via a black box weighting function, and to further selectively explore parts of the table. We describe an algorithm for finding the approximately optimal list of rules according to the user-specified weighting function, and an optimized sampling scheme for efficiently summarizing large tables. Finally, we demonstrate the usefulness of our summary by performing experiments on a real dataset.
 \end{abstract}
 
 \section{Introduction}
@@ -71,7 +71,6 @@ Data analysts need to sift through large amounts of data to learn about trends a
 In this paper, we consider the following problem: Given a relational table, find the best list of `rules' to summarize the table, subject to user specified constraints. A `rule' is a pattern that describes a set of tuples in a relational table (defined more precisely in Section~\ref{sec:preliminaries}. Our summarization algorithm is highly {\em flexible}, allowing the user to specify what kind of rules are preferred, by taking a black box `weight function' as user input. In addition, the summary is {\em fast}, with a response time measured in seconds on our experimental datasets, and {\em interactive}, with a user interface that allows the user to explore parts of the table in greater detail. 
 
 \begin{example}\label{ex:introexample}
-% Need justification for how investor got data. Or change example.
 Consider a table with columns `Department Store', `Product', `State' and `Number of Sales'. Suppose an investor wants to query for tuples where Sales were higher than some threshold, in order to decide where to invest his money. The resulting query can have a very large number of tuples, making it hard for a user to get valuable information out of it. We propose to summarize the result of the query with a set of `rules'. For example, a possible rule summarization for the query is shown in table~\ref{table:introexample}. The summary consists of a list of `rules', with the `count' denoting the number of tuples that satisfy the rule, and the `weight' in this case denoting the number of non-$\star$ values of the rule for each rule. The weight function can in general be customized by the user.
 
 \begin{table}
@@ -89,9 +88,9 @@ $\triangleright$ walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
 
 % Things to work into example : Number of rules. Ordering.
 
-The first rule tells the user that there are $6000$ tuples in all. We call it an `empty' rule, because it has only $\star$ values. The three additional rules give more information about the table. The number of additional rules ($3$ in this case) is a parameter that can be set by the user. The rules are shown in decreasing order by size. 
+The first rule tells the user that there are $6000$ tuples in all. We call it an `empty' rule, because it has only $\star$ values. The three additional rules give more information about the table. The number of additional rules ($3$ in this case) is a parameter that can be set by the user. The rules are shown in decreasing order by weight. 
 
-The second rule in the table says that there are $200$ tuples with target as the first column value and bicycle as the second, which tells the user that target is selling a lot of bicycles. The rule after that tells the user that comforters are selling a lot in Massachusetts, across multiple department stores. The last rule tells the user that walmart is doing well in general over multiple products and states. 
+The second rule in the table says that there are $200$ tuples with target as the first column value and bicycle as the second, which tells the user that Target is selling a lot of bicycles. The rule after that tells the user that comforters are selling a lot in Massachusetts, across multiple department stores. The last rule tells the user that walmart is doing well in general over multiple products and states. 
 
 This gives the user an overall summary of the results. But after seeing this summary, the user may want to dig deeper to get more details on certain rules. For instance, the user may want to know which states walmart has more sales in, or which products they sell the most. In this case, the user can click on the rule with walmart, and will see an expanded summary as given in table~\ref{table:introexample2}. 
 
@@ -135,15 +134,17 @@ We further discuss related work in Section~\ref{sec:related}.
 \stitle{Overview of paper:} 
 \squishlist 
 
-\item In Section 2, we introduce the relevant notation and formally define our problem.
+\item In Section~\ref{sec:preliminaries}, we introduce the relevant notation and formally define our problem.
 
-\item In Section 3, we consider different schemes for weighting rules, along with their practical significance.
+\item In Section~\ref{sec:weighting}, we consider different schemes for weighting rules, along with their practical significance.
 
-\item In Section 4, we describe our user interface. 
+\item In Section~\ref{sec:interface}, we describe our user interface. 
   
-\item In Section 5, we present our algorithms for finding optimal rule-based summaries, as well as our sampling schemes for dealing with large tables.
+\item In Section~\ref{sec:algorithms}, we present our algorithms for finding optimal rule-based summaries, as well as our sampling schemes for dealing with large tables.
 
-\item In Section 6, we experimentally evaluate the performance of our algorithms on a real dataset.
+\item In Section~\ref{sec:experiments}, we experimentally evaluate the performance of our algorithms on a real dataset.
+
+\item In Section~\ref{sec:related}, we describe related work.
 \squishend 
 
 \section{Preliminaries} 
@@ -173,7 +174,7 @@ We now define some additional properties of rules. Let $r$ be a rule. Then:
 \item We let $W$ denote a function that assigns a {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. A weighting function is {\em monotonic} if for all rules $r_1$, $r_2$ such that $r_1$ is a sub-rule of $r_2$, we have $W(r_1) \leq W(r_2)$. We further describe our weighting functions in Section~\ref{sec:weighting}. 
 \squishend
 
-The total score for our list of rules is given by $$\text{Score}(R) = \sum_{r \in R} MCount(r)W(r)$$. Our problem is to choose the rule-list that maximises total score. We use $MCount$ rather than Count to increase coverage of the table. If we had defined total score as $$\sum_{r \in R} \text{Count}(r)W(r)$$, then our optimal rule-list would contain rules that repeatedly refer to the most `summarizable' part of the table. For instance, if $a$ and $b$ were the most common values in columns $A$ and $B$, then the summary could consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$.
+The total score for our list of rules is given by $$\text{Score}(R) = \sum_{r \in R} MCount(r)W(r)$$ Our problem is to choose the rule-list that maximises total score. We use $MCount$ rather than Count to increase coverage of the table. If we had defined total score as $\sum_{r \in R} \text{Count}(r)W(r)$, then our optimal rule-list would contain rules that repeatedly refer to the most `summarizable' part of the table. For instance, if $a$ and $b$ were the most common values in columns $A$ and $B$, then the summary could consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$.
 
 We now formally define our problem:
 
@@ -191,7 +192,7 @@ for one of the following interactions:
 
 \section{Weighting Rules}
 \label{sec:weighting}
-We now describe how we score rules. At a high level, we want our rules to be as descriptive of the table as possible, i.e. given the rules, it should be as easy as possible to reproduce the table. We consider a general family of weighting functions, that assigns for each rule $r$, a weight $W(r)$ that depends on how expressive the rule is. Given this weight per rule, our total score for our rule-list is given by : $$\sum_{r\in R} MCount(r)W(r)$$. Let us consider some forms for the function $W(r)$ and their interpretation:
+We now describe how we score rules. At a high level, we want our rules to be as descriptive of the table as possible, i.e. given the rules, it should be as easy as possible to reproduce the table. We consider a general family of weighting functions, that assigns for each rule $r$, a weight $W(r)$ that depends on how expressive the rule is. Given this weight per rule, our total score for our rule-list is given by : $\sum_{r\in R} MCount(r)W(r)$. Let us consider some forms for the function $W(r)$ and their interpretation:
 \begin{enumerate}
 \item $W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
 
@@ -261,7 +262,7 @@ $\triangleright$ $\triangleright$ walmart & bicycles & $\star$ & $150$ & $2$ \\ 
 
 \section{Algorithms}
 \label{sec:algorithms}
-When the user expands a rule $r^{\prime}$, we want to find the highest scoring list of rules to expand rule $r^{\prime}$ into. If the user had clicked on a $\star$ in a column $c$, then we have the additional restriction that all resulting rules must have a non-$\star$ value in column $c$. We can reduce Problem~\ref{prob:optimal-rule-list} to a simpler problem given below: 
+When the user expands a rule $r^{\prime}$, we want to find the highest scoring list of rules to expand rule $r^{\prime}$ into. If the user had clicked on a $\star$ in a column $c$, then we have the additional restriction that all resulting rules must have a non-$\star$ value in column $c$. We can reduce Problem~\ref{prob:optimal-subrule-list} to the following simpler problem by removing the user-interaction based constraints: 
 
 \begin{problem}\label{prob:optimal-rule-list}
 Given a table $T$, a weight function $W$, and a number $k$, to find the list $R$ of $k$ rules that maximizes the total score given by :
@@ -317,7 +318,8 @@ $$\text{Score}(S) = \sum_{t\in T}W_{S}(t)$$
 Tuple $t$ `contributes' $W_{S}(t)$ to the Score. Now when we add a rule $r$ to $S$, the Score changes to :
 $\text{Score}(S \cup \left\lbrace r \right\rbrace) = \sum_{t\in T}W_{S \cup \left\lbrace r \right\rbrace}(t)$
 For any tuple $t$ not covered by $r$, the contribution of $t$ to the score does not change. If $t$ is covered by $r$, then 
-$$W_{S\cup \left\lbrace r \right\rbrace}(t) = \textrm{max}(W_{S}(t), W(r))$$. Thus the contribution of $t$ increases by $\textrm{max}(0, W(r) - W_{S}(t))$. So we can write
+$$W_{S\cup \left\lbrace r \right\rbrace}(t) = \textrm{max}(W_{S}(t), W(r))$$ 
+Thus the contribution of $t$ increases by $\textrm{max}(0, W(r) - W_{S}(t))$. So we can write
 $$\text{Score}(S \cup \left\lbrace r \right\rbrace) - \text{Score}(S) = \sum_{t \in T(r)} \textrm{max}(0, W(r) - W_{S}(t))$$ where $T(r)$ is the set of tuples covered by $r$.
 
 Now if a rule set $S^{\prime}$ is a super-set of $S$, then for all tuples $t$, we have $W_{S^{\prime}}(t) \geq W_{S}(t)$. Thus,
@@ -343,7 +345,7 @@ Because Score is a submodular function of the set $S$, this greedy algorithm is 
 
 Our algorithm pseudo-code is given in the box labelled Algorithm~\ref{algo:best-rule-set}. The algorithm takes four parameters as input: the table $T$, the number $k$ of rules required in the final solution list, a parameter $m_w$ (which we describe in the next paragraph), and the weight function $W$. 
 
-The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, our algorithm is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by our algorithm does not contain $r$. Our algorithm runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w \geq \textrm{max}_{r \in S_o}W(r)$. In practise, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, it's Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments also show that the weights of rules in the optimal set are small.
+The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, our algorithm is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by our algorithm does not contain $r$. Our algorithm runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practise, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, it's Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set are small.
 
 % TODO: scheme/heuristic for finding good m_w values, since it seems arbitrary. Later, experiments testing effect of m_w on running time, and experiments to test finding heuristic, and show that values are in fact small.
 
@@ -351,11 +353,11 @@ The \textbf{Greedy Algorithm} initializes the solution set $S$ to be empty, and 
 
 In order to find the best marginal rule, we need to find the marginal values of several rules and then choose the best one. A brute-force way to do this would be to enumerate all possible rules, and to find the marginal value for each of those rules in a single pass over the data. But the number of possible rules may be almost as large as the size of the table itself, making this step very expensive in terms of computation and memory. 
 
-In order to avoid counting too many rules, we use an idea from the {\em a priori} algorithm for frequent itemset mining~\cite{apriori}. We compute the best marginal rule over several passes, with the maximum number of passes equal to the maximum size of a rule. In the $j^{th}$ pass, we compute counts for rules of size $j$. To give an example, suppose we had three columns $c_1$, $c_2$, and $c_3$. In the first pass, we would compute the marginal values of all rules of size $1$. In the second pass, instead of finding marginal values for all size $2$ rules, we can use our knowledge of counts from the first pass to upper bound the potential counts of size $2$ rules, and be more selective about which rules to count in the second pass. For instance, suppose we know that the rule $(a, \star, \star)$ has a count of $1000$, while $(\star, b, \star)$ has a count of $100$. Then for any value $c$ in column $c_3$ we would know that the count of $(\star, b, c)$ is at most $100$ because it cannot exceed that of $(\star, b, \star)$. This implies that the maximum marginal value of any super-rule of $(\star, \star, c)$ having weight $\leq m_w$ is at most $100m_w$. If the rule $(a, \star, \star)$ has a marginal value of $800$, then the marginal value of any super-rule of $(\star, b, \star)$ cannot possibly exceed that of $(a, \star, \star)$. Since our aim is to only find the highest marginal value rule, we can skip counting for all super-rules of $(\star, b, \star)$ for future passes.
+In order to avoid counting too many rules, we use an idea from the {\em a priori} algorithm for frequent itemset mining~\cite{apriori}. We compute the best marginal rule over several passes, with the maximum number of passes equal to the maximum size of a rule. In the $j^{th}$ pass, we compute counts for rules of size $j$. To give an example, suppose we had three columns $c_1$, $c_2$, and $c_3$. In the first pass, we would compute the marginal values of all rules of size $1$. In the second pass, instead of finding marginal values for all size $2$ rules, we can use our knowledge of counts from the first pass to upper bound the potential counts of size $2$ rules, and be more selective about which rules to count in the second pass. For instance, suppose we know that the rule $(a, \star, \star)$ has a count of $1000$, while $(\star, b, \star)$ has a count of $100$. Then for any value $c$ in column $c_3$ we would know that the count of $(\star, b, c)$ is at most $100$ because it cannot exceed that of $(\star, b, \star)$. This implies that the maximum marginal value of any super-rule of $(\star, b, c)$ having weight $\leq m_w$ is at most $100m_w$. If the rule $(a, \star, \star)$ has a marginal value of $800$, then the marginal value of any super-rule of $(\star, b, \star)$ cannot possibly exceed that of $(a, \star, \star)$. Since our aim is to only find the highest marginal value rule, we can skip counting for all super-rules of $(\star, b, \star)$ for future passes.
 
-We now describe the function to find the best marginal rule. The pseudo-code for the function is in the box titled Algorithm~\ref{algo:best-marginal-rule}. The function maintains a threshold $H$, which is the highest marginal value that has been found for any rule so far. The function makes several iterations (Step $3$), counting marginal values for size $j$ rules in the $j^{th}$ iteration. We maintain three sets of rules. $C$ is the set of all rules whose marginal values have been counted so far. $C_n$ is the set of rules whose marginal values are going to be counted in the current pass. And $C_o$ is the set of rules whose marginal values were counted in the previous pass. For the first pass, we set $C_n$ to be all rules of size $1$. Then we compute marginal values for those rules, and set $C = C_o = C_n$.
+We now describe the function to find the best marginal rule. The pseudo-code for the function is in the box titled Algorithm~\ref{algo:best-marginal-rule}. The function maintains a threshold $H$, which is the highest marginal value that has been found for any rule so far. The function makes several iterations (Step $3$), counting marginal values for size $j$ rules in the $j^{th}$ iteration. We maintain three sets of rules. $C$ is the set of all rules whose marginal values have been counted in all previous iterations. $C_n$ is the set of rules whose marginal values are going to be counted in the current pass. And $C_o$ is the set of rules whose marginal values were counted in the previous iteration. For the first pass, we set $C_n$ to be all rules of size $1$. Then we compute marginal values for those rules, and set $C = C_o = C_n$.
 
-For the second pass onwards, we are more selective about which rules to consider for marginal value evaluation. We first set $C_n$ to be the set of rules of size $j$ which are super-rules of rules from $C_o$. Then for each rule $r$ from $C_n$, we consider the known marginal values of it's sub-rules from $C$, and use them to upper-bound the marginal value of all super-rules of $r$, as shown in Step 3.3.2. Then we delete from $C_n$ the rules whose marginal value upper bound is less than the currently known best marginal value, since they have no chance of being returned as the best marginal rule. Then we make as actual pass through the table to compute the marginal value of the rules in $C_n$, as shown in Step 3.5. If in any round, the $C_n$ obtained after deleting rules is empty, then we terminate the algorithm and return the highest value rule. 
+For the second pass onwards, we are more selective about which rules to consider for marginal value evaluation. We first set $C_n$ to be the set of rules of size $j$ which are super-rules of rules from $C_o$. Then for each rule $r$ from $C_n$, we consider the known marginal values of its sub-rules from $C$, and use them to upper-bound the marginal value of all super-rules of $r$, as shown in Step 3.3.2. Then we delete from $C_n$ the rules whose marginal value upper bound is less than the currently known best marginal value, since they have no chance of being returned as the best marginal rule. Then we make as actual pass through the table to compute the marginal value of the rules in $C_n$, as shown in Step 3.5. If in any round, the $C_n$ obtained after deleting rules is empty, then we terminate the algorithm and return the highest value rule. 
 
 \begin{algorithm}\label{algo:best-rule-set}
 \KwIn{$k$ (Number of rules required), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
@@ -459,16 +461,18 @@ We now discuss algorithms for the SampleHandler to decide what sizes of Samples 
 
 We assume that we have a probability distribution over leaves, which assigns a probability that each leaf will be the next one to be expanded. In the absence of additional information, we can assume a uniform distribution. That is, every leaf is equally likely to be expanded next. However, we can also use Machine Learning on past user behaviour, along with rule features such as `rule depth in tree' and `rule distance from last expanded rule' to get a better probability estimate of each rule being expanded. 
 
-When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to make a pass through the entire table, as well as potentially shrink some existing samples to free up memory. Since reading the table from Hard Disk is usually a bottleneck, it also do things like creating other samples for rules other than $r$, and augmenting existing samples. Hence, we assume that in a \textbf{Create} phase, the SampleHandler does a complete re-organization of existing samples. Based on the current leaves and their expansion probabilities, it tries to find an optimal set of samples to create for the next step. More specifically, for every displayed rule $r$, it determines an integer $n_r$, and then creates a sample $s_r$ with $f_{s_r} = r$ and $|T_{s_r}| = n_r$ while making it's pass through the table. 
+When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to make a pass through the entire table, as well as potentially shrink some existing samples to free up memory. Since making a pass over the the table from the Hard Disk is usually a bottleneck, it can also do things like creating samples for rules other than $r$, and augmenting existing samples, in the same pass. Hence, we assume that in a \textbf{Create} phase, the SampleHandler not only creates one new sample for $r$, but also potentially creates other new samples, or resizes existing samples. For each displayed rule $r^{\prime}$, it may create a new sample for $r^{\prime}$ in the same pass through the table. Based on the current leaves and their expansion probabilities, it finds an optimal set of sizes of samples to create for each displayed rule. More specifically, for every displayed rule $r^{\prime}$, it determines an integer $n_{r^{\prime}}$, and then creates a fresh sample $s_{r^{\prime}}$ with $f_{s_{r^{\prime}}} = r^{\prime}$ and $|T_{s_{r^{\prime}}}| = n_{r^{\prime}}$ while making it's pass through the table. 
 
-Finally, for each rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. Define $S(r_1, r_2)$ to be zero if $r_1$ is not a sub-rule of $r_2$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$. For any $r^{prime}$, define the function {\em ess} (for `effective sample size') as $\text{ess}(r^{\prime}) = \sum_{r \in U} S(r, r^{\prime})n_r$. If $\text{ess}(r^{\prime}) \geq \text{minSS}$ then if the user expands $r^{\prime}$, we display the next rule list using \textbf{Find} or \textbf{Combine}, instead of having to make another pass through the table. We wish to maximise the probability that we can respond to the next user expansion without making another pass. 
+We choose the $n_{r^{\prime}}$ values so as to maximise the probability that the next user click can be satisfied using samples available in memory. We define some terms required to formalise this problem next. 
+
+For each pair of rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. We define $S(r_1, r_2)$ to be $0$ if $r_1$ is not a sub-rule of $r_2$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$ For any $r^{prime}$, define the function {\em ess} (for `effective sample size') as $\text{ess}(r^{\prime}) = \sum_{r \in U} S(r, r^{\prime})n_r$. If $\text{ess}(r^{\prime}) \geq \text{minSS}$ then if the user expands $r^{\prime}$, we display the next rule list using \textbf{Find} or \textbf{Combine}, instead of having to make another pass through the table. We wish to maximise the probability that we can respond to the next user expansion without making another pass. 
 
 Thus formally our problem is :
-Choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximise}$ :
+Choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximize}$ :
 $$\sum_{r^{\prime} \in L} p_{r^{\prime}}I_{\text{ess}(r^{\prime}) \geq \text{minSS}}$$
 where the $I$'s are indicator variables, subject to :
 $$\sum_{r \in U} n_r < \text{capacity}$$
-This problem is non-linear and non-convex because of the indicator variables. If the tree $U$ is not too big, then it might be okay to use an exponential algorithm to solve the problem. 
+This problem is non-linear and non-convex because of the indicator variables. If the tree $U$ is not too big, then it might be feasible to use an exponential algorithm to solve the problem. 
 
 Otherwise, with an additional simplification, we can reduce it to the knapsack-like problem, and use a PTAS (Polynomial Time Approximation Scheme) to find the approximately optimal solution. The simplification is: For each $r \in L$, we assume that it will get tuples only from samples obtained for itself (filter $= r$) and it's immediate parent. That is, we set $S(r_1, r_2)$ to be zero if $r_1 \neq r_2$ and $r_2$ is not a child of $r_1$. $\text{ess}(r)$ is redefined according to the new value of $S$ as well. So $$\text{ess}(r^{\prime}) = n_{r^{\prime}} + n_rS(r, r^{\prime})$$ where $r$ is the parent of $r^{\prime}$. 
 
@@ -508,9 +512,9 @@ Thus a reasonable value of minSS can be found by obtaining a bound on $\frac{1-x
 
 The highest scoring rule can have weight at most $|C|$ (the total number of columns). Since the score of the highest scoring rule is at least $\frac{|T|}{|c|}$, the Count of the highest scoring rule must be at least $\frac{|T|}{|C||c|}$. Thus if minSS is significantly larger than $|C||c|$, then the Count of the first few highest scoring rules should be well-approximated in a sample of size more than minSS. For example, if $|T| = 10000$, $|c| = 5$, $|C| = 10$, then we want $\text{minSS} >> 5 \times 10$.
 
-\section{Experiments}
-\subsection{Datasets}
-The first dataset we use is a marketing dataset (MD), which contains demographic information about potential customers. The source of the dataset is Impact Resources, Inc., Columbus, OH (1987). A total of $N=9409$ questionnaires containing $502$ questions were 
+\section{Experiments}\label{sec:experiments}
+\subsection{Dataset}
+The dataset we use is a marketing dataset (MD), which contains demographic information about potential customers. The source of the dataset is Impact Resources, Inc., Columbus, OH (1987). A total of $N=9409$ questionnaires containing $502$ questions were 
 filled out by shopping mall customers in the San Francisco Bay area. This dataset is an extract from this survey. Each tuple in the data table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, Gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and thus each column has upto $10$ distinct values. 
 
 
@@ -520,9 +524,9 @@ The columns (in order) are as follows:
 \subsection{User interface testing}
 We restrict the table to the first $7$ columns in order to make the result tables fit into the page. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$. We now present the rule-based summaries displayed as a result of a few different user actions.
 
-To begin with, the user sees an empty rule with the total number of tuples as the count. After this, suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Are for $> 10$ years. Note that the latter two rules give very specific information which would require upto $3$ user clicks to find in an OLAP system, whereas our system displays that information to the user with a single click. 
+To begin with, the user sees an empty rule with the total number of tuples as the count. After this, suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Are for $> 10$ years. Note that the latter two rules give very specific information which would require upto $3$ user clicks to find using Data Cube Drill-Downs, whereas our system displays that information to the user with a single click. 
 
-Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. So the user clicks on the $\star$ in the 'Education' column of the second rule. This opens up table~\ref{table:uiexamplestar}. It shows the number of females with different levels of education.
+Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. So the user clicks on the $\star$ in the 'Education' column of the second rule. This opens up table~\ref{table:uiexamplestar}. It shows the number of females with different levels of education, for the $4$ most frequent levels of education among females.
 
 Instead of expanding the 'Education' column, if the user had simply expanded the third rule, it would have displayed table~\ref{table:uiexamplerule}. 
 
@@ -580,11 +584,15 @@ Instead of expanding the 'Education' column, if the user had simply expanded the
 Our system can display optimal rule summaries using any monotone weighting function. By default, we assign a rule weight equal to it's size. In this section, we try a couple of other weighting functions. 
 
 We first try the weighting function given by:
-$$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ where $|c|$ refers to the number of distinct possible values in column $c$. This function gives higher weight to rules that have non-$\star$ values in columns that have many possible values. The rule summary for this weighting is in table~\ref{table:weigtingbitwise}. The weighting scheme gives low weight for non-$\star$ values in binary columns, like the gender column. Thus this summary instead gives us information about the Marital Status/Time in Bay Area/Occupation columns instead.  
+$$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ where $|c|$ refers to the number of distinct possible values in column $c$. This function gives higher weight to rules that have non-$\star$ values in columns that have many possible values. The rule summary for this weighting is in table~\ref{table:weigtingbitwise} (contrast with Table~\ref{table:uiexample1}). The weighting scheme gives low weight for non-$\star$ values in binary columns, like the gender column. Thus this summary instead gives us information about the Marital Status/Time in Bay Area/Occupation columns instead of the Gender column like in Table~\ref{table:uiexample1}.  
 
 The other weighting function we try is given by:
 $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
-This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system displays rules having $2$ or $3$ non-$\star$ values. 
+This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Table~\ref{table:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
+
+%TODO: Give application examples for different weighting functions
+%TODO: Say somewhere, that we haev drop-down list of common weighting functions in the user interface, with column selects and unselects.
+
 
 \begin{table*} 
 \centering 
@@ -615,11 +623,11 @@ This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0
 \end{table*}  
 
 \subsection{Effects of $m_w$}
-Our algorithm for finding the best marginal rule (Algorithm~\ref{algo:best-marginal-rule}) takes an input parameter called $m_w$. The algorithm is guaranteed to find the best marginal rule as long as it's weight is $leq m_w$, but runs faster for smaller values of $m_w$. In this section, we study the effect of varying $m_w$ on the speed of our algorithm.
+Our algorithm for finding the best marginal rule (Algorithm~\ref{algo:best-marginal-rule}) takes an input parameter called $m_w$. The algorithm is guaranteed to find the best marginal rule as long as it's weight is $\leq m_w$, but runs faster for smaller values of $m_w$. In this section, we study the effect of varying $m_w$ on the speed of our algorithm. Our system is run on a Dell XPS L702X laptop with 6GB RAM and an Intel i5 2.30GHz processor.
 
-We fix the weighting function $W$, and a value of $m_w$. Then we find the time taken for expanding the empty rule with the weighting function $W$ and $m_w$ parameter, and average this time across $10$ iterations. This time is plotted against $m_w$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:mw_speed}. The figure shows that running time seems to be approximately linear in $m_w$. 
+We consider a weighting function $W$, and a value of $m_w$. For that value of the $W$ and $m_w$ parameters, we find the time taken for expanding the empty rule. We repeat this procedure $10$ times and take the average value of the running times across the $10$ iterations. This time is plotted against $m_w$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:mw_speed}. The figure shows that running time seems to be approximately linear in $m_w$. 
 
-The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus for size scoring, according to Table~\ref{table:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Table~\ref{table:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. 
+The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus for size scoring, according to Table~\ref{table:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Table~\ref{table:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
 
 \begin{figure}
 \hspace{-20pt}
@@ -640,7 +648,7 @@ We don't have the binary thing. Is it useful? Maybe we can summarize better with
 
 \end{comment}
 
-\section{Extensions}
+\section{Extensions}\label{sec:extensions}
 \subsection{Dealing with Numerical Attributes}
 Our algorithm assumes that all attributes are categorical in nature. Attributes that have a large domain d to have a smaller tuple count per value, and hence don't appear in rule summaries. Thus our algorithm does not summarise information about numerical attributes. 
 

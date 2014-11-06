@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import dataextraction.Marketing;
+import dataextraction.SampleHandler;
 import dataextraction.TableInfo;
 import solvers.Rule.sizeBitsScorer;
 import solvers.Rule.sizeMinusKScorer;
@@ -188,7 +189,12 @@ public class RuleTreeDisplay {
 	}
 	
 	public static void main (String[] args) throws IOException {
-		String outFile = "Data_Graphs/mw_speed_bits";
+		final String mw_bits_outFile = "Data_Graphs/mw_speed_bits";
+		final String mw_size_outFile = "Data_Graphs/mw_speed_size";
+		final String minSS_size_outFile = "Data_Graphs/minSS_speed_size";
+		final String minSS_bits_outFile = "Data_Graphs/minSS_speed_bits";
+		final String minSS_size_error_outFile = "Data_Graphs/minSS_error_size";
+		final String minSS_bits_error_outFile = "Data_Graphs/minSS_error_bits";
 		List<Integer> columns = new ArrayList<Integer>();
 		final Integer firstNumColumns = 7;
 		for (int i = 1; i < firstNumColumns; i++) {
@@ -196,14 +202,25 @@ public class RuleTreeDisplay {
 		}
 		TableInfo fullTable = Marketing.parseData();
 		TableInfo table = fullTable.getSubTable(columns);
+		Integer ruleNums = 4;
+		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeBitsScorer(), mw_bits_outFile);
+		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeScorer(), mw_size_outFile);
+		
+		Experiments.minSSSpeedTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_outFile);
+		Experiments.minSSSpeedTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_outFile);
+		
+		//Experiments.minSSErrorTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_error_outFile);
+		//Experiments.minSSErrorTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_error_outFile);
+				
+		if(1!=2)return;
+		int minSampleSize = Integer.MAX_VALUE;
+		int capacity = Integer.MAX_VALUE;
+		SampleHandler sampleHandler = new SampleHandler(table, capacity, minSampleSize);
 		RuleTree ruleTree = new RuleTree(table);
 		RuleTreeDisplay ruleTreeDisplay = new RuleTreeDisplay(ruleTree);
-		Integer ruleNums = 4;
 		Integer maxRuleScore = 5;
 		Scanner scanner = new Scanner(System.in);
 		Scorer scorer = new Rule.sizeBitsScorer();
-		Experiments.mwSpeedTest(table, 1, 20, ruleNums, scorer, outFile);
-		if(1!=2)return;
 		String input = "0";
 		do {
 			long timer = System.currentTimeMillis();
@@ -232,9 +249,9 @@ public class RuleTreeDisplay {
 				if(nodeNo == ruleNo) {
 					if (toExpand) {
 						if (colNo != -1) {
-							ruleTree.expandStar(currentNode.rule, ruleNums, maxRuleScore, scorer, colNo);							
+							ruleTree.expandStar(currentNode.rule, ruleNums, maxRuleScore, scorer, colNo, sampleHandler);							
 						} else {
-							ruleTree.expandRow(currentNode.rule, ruleNums, maxRuleScore, scorer);
+							ruleTree.expandRow(currentNode.rule, ruleNums, maxRuleScore, scorer, sampleHandler);
 						}
 					} else {
 						ruleTree.contractRow(currentNode.rule);

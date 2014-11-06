@@ -12,9 +12,9 @@ import solvers.Scorer;
  * when to discard a sample to free memory, and which sample(s) to use for evaluating a query. 
  */
 public class SampleHandler {
-	TableInfo table;
-	int minSampleSize; // Minimum sample size we need (depends on how accurate we want our numbers to be, and how low selectivity rules we want to detect.
-	int capacity; // Maximum number of rows we can store across all samples. Maybe change this to memory instead of rows.
+	final public TableInfo table;
+	final public int minSampleSize; // Minimum sample size we need (depends on how accurate we want our numbers to be, and how low selectivity rules we want to detect.
+	final public int capacity; // Maximum number of rows we can store across all samples. Maybe change this to memory instead of rows.
 	Set<TableSample> samples; // Set of current samples.
 	
 	

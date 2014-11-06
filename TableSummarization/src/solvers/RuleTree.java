@@ -17,14 +17,15 @@ import java.util.Set;
 import java.util.Stack;
 
 import solvers.RuleTree.RuleNode;
+import dataextraction.SampleHandler;
 import dataextraction.TableInfo;
 
 public class RuleTree {
 	public static class RuleNode {
-		final Rule rule;
-		List<RuleNode> children;
-		RuleNode parent;
-		Integer depth;
+		final public Rule rule;
+		public List<RuleNode> children;
+		public RuleNode parent;
+		public Integer depth;
 		
 		public RuleNode (Rule rule) {
 			this.rule = rule;
@@ -41,7 +42,7 @@ public class RuleTree {
 	
 	TableInfo table;
 	Map<Rule, RuleNode> nodeMap;
-	RuleNode root;
+	final public RuleNode root;
 	
 	/**
 	 * Creates a new ruletree with only a single node, which is the empty rule. 
@@ -153,20 +154,16 @@ public class RuleTree {
 		deleteChildren(rule);
 	}
 	
-	public void expandStar (Rule rule, Integer ruleNums, Integer maxRuleScore, final Scorer scorer, final Integer col) throws IOException {
-		Set<Rule> solutionSet = NonStarCountSolvers.getSolution (table, rule, ruleNums, maxRuleScore, scorer, col);
+	public void expandStar (Rule rule, Integer ruleNums, Integer maxRuleScore, final Scorer scorer, final Integer col, SampleHandler sampleHandler) throws IOException {
+		Set<Rule> solutionSet = NonStarCountSolvers.getSolution (table, rule, ruleNums, maxRuleScore, scorer, col, sampleHandler);
 		for (Rule solutionRule : solutionSet) {
 			addChild (rule, solutionRule);
 		}
 	}
 
-	public void expandColumn (Integer col) {
-		// To implement.  Should simply make call to QueryEngine and add results.
-	}
-	
-	public void expandRow (Rule rule, Integer ruleNums, Integer maxRuleScore, Scorer scorer) throws IOException {
+	public void expandRow (Rule rule, Integer ruleNums, Integer maxRuleScore, Scorer scorer, SampleHandler sampleHandler) throws IOException {
 		// Modify this later to intelligently use exiting samples, etc.
-		Set<Rule> solutionSet = NonStarCountSolvers.getSolution (table, rule, ruleNums, maxRuleScore, scorer, -1);
+		Set<Rule> solutionSet = NonStarCountSolvers.getSolution (table, rule, ruleNums, maxRuleScore, scorer, -1, sampleHandler);
 		for (Rule solutionRule : solutionSet) {
 			addChild (rule, solutionRule);
 		}
