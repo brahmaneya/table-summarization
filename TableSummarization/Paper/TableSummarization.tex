@@ -637,6 +637,28 @@ The value of $m_w$ required to ensure a correct answer is equal to the maximum w
 \vspace{-13pt}
 \end{figure}
 
+\subsection{Effects of $minSS$}
+We now study the effects of the sampling parameter $minSS$. This parameter tells the SampleHandler the minimum sample size on which we run Algorithm~\ref{algo:best-rule-set}.   Higher values of $minSS$ give us more accurate counts for rules, but also increase computation time. 
+
+We consider a value of $minSS$, and a weight function $W$. For those parameters, we expand the empty rule and find the time taken to expand it, as well the the error in counts of the displayed rules. The error is the absolute value of the difference between the actual count of the rule on the entire table, and it's estimated count from the sample. We repeat this $50$ times for each $minSS$ and $W$, and find the average time and error per $minSS$ and $W$. The average time over these $50$ iterations is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}. The average error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error}.
+
+\begin{figure}
+\hspace{-20pt}
+  \includegraphics[height=2in]{graphs/minSS_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
+\vspace{-10pt}
+  \caption{Running time for different values of parameter $minSS$ \label{fig:minSS_speed}}
+\vspace{-13pt}
+\end{figure}
+
+
+\begin{figure}
+\hspace{-20pt}
+  \includegraphics[height=2in]{graphs/minSS_error_count.pdf}%change height to 2 inch for actual paper, 5 inch for single column
+\vspace{-10pt}
+  \caption{Error in Count for different values of parameter $minSS$ \label{fig:minSS_error}}
+\vspace{-13pt}
+\end{figure}
+
 % TODO: Experiments on Sampling schemes.
 
 \begin{comment}
