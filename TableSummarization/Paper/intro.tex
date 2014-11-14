@@ -1,0 +1,209 @@
+%!TEX root = TableSummarization.tex
+
+
+\section{Introduction}
+
+Drill down (and roll up) [citation] are very useful tools for exploring
+relational tables.
+In this paper we study an extension of drill down
+that lets users zoom into the more ``interesting'' parts of a table,
+with fewer operations and without having to examine as much data
+as traditional drill down.
+We call our approach {\em smart drill down};
+it does not replace traditional drill down but we will argue is a very
+useful complement.
+The best way to explain smart drill down is through a simple example.
+
+\begin{example}\label{ex:introexample}
+Consider a table with columns `Department Store', `Product', `Region'
+and `Sales'. Suppose an analyst queries for tuples
+where Sales were higher than some threshold, in order
+to find the best selling products.
+If the resulting table has many tuples,
+the analyst can use traditional drill down to explore it.
+For instance, the system may initially tell the analyst there are
+6000 tuples in the answer, represented by the tuple ($\star$, $\star$, $\star$, $6000$, $0$),
+as shown in Table~\ref{table:introexample0}.
+The $\star$ character is a wildcard that matches any value in the database.
+The Count attribute can be replaced by another aggregate,
+e.g., the total sales.
+The right-most Weight attribute is the number of non-$\star$ attributes; 
+its significance will be discussed shortly.
+If the analyst drills down on the Store attribute (first $\star$),
+then the system displays all tuples of the form ($X$, $\star$, $\star$, $C$, $1$),
+where $X$ is a Store in the answer table, and $C$
+is the number of tuples for $X$ (or the aggregate sales for $X$).
+
+Instead, when the analyst uses smart drill down on Table~\ref{table:introexample0},
+he obtains Table~\ref{table:introexample}.
+The ($\star$, $\star$, $\star$, $6000$) tuple is expanded into $3$ tuples
+that display noteworthy or interesting drill downs.
+The number $3$ is a user specified parameter, which we call $k$.
+
+For example, the tuple (Target, bicycles, $\star$, $200$, $2$)
+says that there are $200$ tuples (out of the 6000) with
+Target as the first column value and bicycle as the second.
+This fact tells the analyst that Target is selling a lot of bicycles.
+The next tuple tells the analyst that comforters are selling well in
+the MA-3 region, across multiple stores. The last tuple
+states that Walmart is doing well in general over multiple products and regions.
+We call each tuple in Table~\ref{table:introexample} a {\em rule}
+to distinguish it from the tuples in the original table that is being explored.
+Each rule summarizes the set of tuples that are described by it.
+Again, instead of Count, the system can display some other aggregate, such as
+the total Sales.
+
+\begin{table}
+\centering
+\begin{tabular}{| l | l | l | l | l |}
+\hline Store & Product & Region & Count & Weight \\
+\hline
+$\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
+\end{tabular}
+\caption{Initial summary}\label{table:introexample0}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{| l | l | l | l | l |}
+\hline Store & Product & Region & Count & Weight \\
+\hline
+$\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
+$\triangleright$ Target & bicycles & $\star$ & $200$ & $2$ \\ \hline
+$\triangleright$ $\star$ & comforters & MA-3 & $600$ & $2$ \\ \hline
+$\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
+\end{tabular}
+\caption{Result after first smart drill down}\label{table:introexample}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{| l | l | l | l | l |}
+\hline Store & Product & Region & Count & Weight \\
+\hline
+$\star$ & $\star$ & $\star$ & $6000$ & $0$ \\  \cline{1-5}
+$\triangleright$ Target & bicycles & $\star$ & $200$ & $2$ \\ \cline{1-5}
+$\triangleright$ $\star$ & comforters & MA-3 & $600$ & $2$ \\ \cline{1-5}
+$\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \cline{2-5}
+$\triangleright$ $\triangleright$ Walmart & cookies & $\star$ & $200$ & $2$ \\ \cline{2-5}
+$\triangleright$ $\triangleright$ Walmart & $\star$ & CA-1 & $150$ & $2$ \\ \cline{2-5}
+$\triangleright$ $\triangleright$ Walmart & $\star$ & WA-5 & $130$ & $2$ \\ \hline
+\end{tabular}
+\caption{Result after second smart drill down} \label{table:introexample2}
+\end{table}
+
+Say that after seeing the results of Table~\ref{table:introexample},
+the analyst wishes to dig deeper into the Walmart tuples
+represented by the last rule.
+For instance, the analyst may want to know
+which states Walmart has more sales in, or which products they sell
+the most. In this case, the analyst clicks on the Walmart rule,
+obtaining the expanded summary in Table~\ref{table:introexample2}.
+The three new rules in this table provide additional information
+about the $1000$ Walmart tuples.
+In particular, one of the new rules shows that
+Walmart sells a lot of cookies and the others show it sells a lot of products in
+the regions CA-1 and WA-5.
+
+When the analyst clicks on a rule $r$, smart drill down
+expands $r$ into $k$ sub-rules that as a set are deemed to be ``interesting.''
+(We discuss other smart drill down operations in Section~\ref{sec:interface}.)
+There are three factors that make a rule set interesting.
+One is if contains rules with high Count (or total sales) fields,
+since the larger the count, the more tuples are summarized.
+A second factor is if the rules have high weight (number of non-$\star$ attributes).
+For instance, the rule (Walmart, cookies, AK-1, $200$, $3$)
+seems more interesting than (Walmart, cookies, $*$, $200$, $2$)
+since the former rule tells us the high sales are concentrated in a single region.
+A third desirability factor is diversity:
+For example, if we already have the rule (Walmart, $\star$, $\star$, $1000$, $1$)
+in our set, we would rather have the rule (Target, bicycles, $\star$, $200$, $2$)
+than (Walmart, bicycles, $\star$, $200$, $2$) since the former rule
+describes tuples that are not described by the first rule.
+
+In this paper we describe how to combine or blend these three factors
+in order to obtain a single desirability score for a set of rules.
+Our score function can actually be tuned by the analyst
+(by specifying how weights are computed),
+providing significant flexibility in what is considered a good set of rules.
+We also present an efficient optimization procedure to maximize score, invoked
+by smart drill down to select the set of $k$ rules to display.
+
+\end{example}
+
+Compared to traditional drill down, our smart drill down has two important advantages:
+\begin{itemize}
+\item
+Smart drill down limits the information displayed
+to the most interesting $k$ facts (rules).
+With traditional drill down, a column is expanded and {\em all}
+attribute values are displayed in arbitrary order.
+In our example, if we drill down on say the store attribute,
+we would see all stores listed, which may be a very large number.
+\item
+Smart drill down explores several attributes to open up together,
+and automatically selects combinations that are interesting.
+For example, in Table~\ref{table:introexample},
+the rule (Target, bicycles, $\star$, $200$, $2$)
+is obtained after a single drill down;
+with a traditional approach, the analyst would first have to drill down on
+Store, examine the results, drill down on Product,
+look through all the displayed rules and then find the interesting rule
+(Target, bicycles, $\star$, $200$, $2$).
+\end{itemize}
+
+Incidentally, note that in the example we only described one type of smart drill down,
+where the analyst selects a {\em rule} to drill down on
+(e.g., the Walmart rule going from Table~\ref{table:introexample}
+Table~\ref{table:introexample2}.
+In Section~\ref{sec:interface} we describe another option
+where the analyst clicks an a {\em *} to obtain
+rules that have values in that location.
+
+Our work on smart drill down is related
+to table summarization and anomaly
+detection~\cite{Sarawagi:2001:UMA:767141.767148,
+Sarawagi00user-adaptiveexploration,
+Sarawagi98discovery-drivenexploration,
+DBLP:journals/pvldb/GebalyAGKS14}.
+These papers mostly focus on
+giving the most ``surprising'' information to the user, i.e., information
+that would minimize the Kullback-Liebler(KL) divergence of the
+resulting maximum entropy distribution. For instance, if a certain set of
+values occur together in an unexpectedly small number of tuples, that
+set of values may be displayed to the user. In contrast, our algorithm
+focuses on rules with high counts, covering as
+much of the table as possible.
+Furthermore, our summarization is couched in
+an interactive environment, where the analyst
+directs the drill down and can tailor the optimization criteria.
+Nevertheless, one can envision extending traditional
+and smart drill down to provide an additional option of anomaly detection.
+
+We further discuss related work in Section~\ref{sec:related}.
+
+\stitle{Overview of paper:} 
+\squishlist 
+
+\item In Section~\ref{sec:preliminaries}, we introduce the relevant
+notation and formally define smart drill down.
+
+\item In Section~\ref{sec:weighting}, we consider different schemes
+for weighting rules, along with their practical significance.
+
+\item In Section~\ref{sec:interface}, we describe our
+interactive user interface. 
+  
+\item In Section~\ref{sec:algorithms}, we present our algorithms for
+finding optimal sets of rules, as well as our sampling schemes
+for dealing with large tables.
+
+\item Based on our implemented smart drill down,
+in Section~\ref{sec:experiments} we experimentally evaluate
+performance on a real dataset,
+and show additional examples of smart drill down in action.
+
+\item In Section~\ref{sec:extensions}, we describe how to extend our results to summarize numerical attributes, and to use the $Sum$ aggregate instead of $Count$.
+
+\item In Section~\ref{sec:related}, we describe related work.
+\squishend 

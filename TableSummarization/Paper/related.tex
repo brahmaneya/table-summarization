@@ -1,0 +1,23 @@
+%!TEX root = TableSummarization.tex
+
+
+\section{Related Work}\label{sec:related}
+%TODO: Repeat what we said in intro about interactive, etc.
+There has been work on finding interesting rules in OLAP systems~\cite{Sarawagi:2001:UMA:767141.767148, Sarawagi00user-adaptiveexploration, Sarawagi98discovery-drivenexploration}. This work, along with other existing work~\cite{Mampaey:2011:TMI:2020408.2020499} focuses on finding values that occur more often or less often that expected from a max entropy distribution. The work does not guarantee good coverage of the table, since it rates infrequently occurring sets of values as highly as frequently occurring ones. 
+
+There is work on constructing `explanation tables', which are sets of rules that co-occur with a given binary attribute of the table~\cite{DBLP:journals/pvldb/GebalyAGKS14}. This work again focuses on displaying rules that will cause the max entropy distribution to best approximate the actual distribution of values. 
+
+Some related work~\cite{Golab_efficientand, Golab:2008:GNT:1453856.1453900} focuses on finding minimum sized Tableaux that provide improved support and confidence for conditional functional dependencies. There has also been work~\cite{Bu:2005:MSH:1083592.1083644, Lakshmanan:2002:GMA:1287369.1287435, Xiang_succinctsummarization, Geerts04tilingdatabases} on finding hyper-rectangle based covers for tables. All the existing works solve a fixed optimization problem, whereas  we focus on finding an optimal summary for a flexible user-specified weighting function.
+
+Our algorithm uses ideas from the a priori algorithm~\cite{apriori}. Several extensions for the algorithm have been proposed, including those for dealing with numerical attributes~\cite{Srikant:1996:MQA:233269.233311}. We can potentially use these ideas to improve handing of numerical attributes in our work. 
+
+% Related Work summary : Is ours the only only that is flexible (due to weight function black box)?
+% Explanation tables takes lots of papers and talks about them in one go in related work. saying they optimize for different opbjective functions. We can say that as well. We have a unique idea of flexible weighting functions for managing the tradeoff between coverage and specificity. 
+% Succintly summarizing with itemsets-- Mampaey:2011:TMI:2020408.2020499 -- Also seemed to optimize according to max entropy criterion
+% Efficient and Effective... Tableaux -- Golab_efficientand -- Similar to conditional functional dep. paper.
+% Near Optimal Tableaux Conditional functional dep. -- Golab:2008:GNT:1453856.1453900 -- Finding a smallest sized tableau that provides some confidence and support for a conditional functional dependency.
+% MDL Summarization with holes -- Bu:2005:MSH:1083592.1083644 -- Min sized summary with a rectangle and exceptions (holes). 
+% Generalized MDL Approach -- Lakshmanan:2002:GMA:1287369.1287435 -- Similar to MDL Approach.
+% Overlapped Hyperrectangle -- Xiang_succinctsummarization -- Efficiently find the set of hyperrectangles that covers the data (sets of itemsets)
+% Tiling Databases Geerts04tilingdatabases Simlar to hyper-rectangles. Probabilistic interpretation of frequent itemsets. 
+
