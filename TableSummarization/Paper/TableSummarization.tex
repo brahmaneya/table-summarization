@@ -60,92 +60,235 @@ Aditya Parameswaran\\Stanford University\\adityagp@cs.stanford.edu
 \begin{document}
 \maketitle
 
+
 \begin{abstract}
-In this paper, we study the following problem: Given a relational table, find the most `interesting' summary of the table, subject to user-specified constraints. The summary consists of a list of `rules', where a rule is a pattern specifying values occurring in some columns of the table, along with the number of tuples that satisfy that pattern. For instance, the rule $(a, b, \star, 1000)$ tell us that there are a $1000$ tuples with value $a$ in the first column and $b$ in the second column. We allow the user to specify what kind of rules to prefer in the summary via a black box weighting function, and to further selectively explore parts of the table. We describe an algorithm for finding the approximately optimal list of rules according to the user-specified weighting function, and an optimized sampling scheme for efficiently summarizing large tables. Finally, we demonstrate the usefulness of our summary by performing experiments on a real dataset.
+In this paper we present {\em smart drill down},
+a system for interactively exploring a relational table
+to discover ``interesting'' groups of tuples.
+Each group of tuples is described by a {\em rule}.
+For instance, the rule $(a, b, \star, 1000)$ tells us that
+there are a $1000$ tuples with value $a$ in the first column and $b$
+in the second column (and any value in the third column).
+Smart drill down presents an analyst with a list of rules that
+together describe interesting aspects of the table.
+The analyst can tailor the definition of interesting,
+and can interactively drill down on an existing rule to
+explore that part of the table.
+We describe an
+algorithm for finding the approximately optimal list of rules, and an optimized
+sampling scheme for efficiently summarizing large tables. Finally, we
+demonstrate the usefulness of smart drill down by performing experiments on
+a real dataset.
 \end{abstract}
 
 \section{Introduction}
 
-Data analysts need to sift through large amounts of data to learn about trends and obtain insights from it. Large amounts of data are hard for a human to make sense of. This necessitates summarizing the data in an informative, interpretable way. The summary also needs to be fast and interactive to facilitate deeper exploration.
-
-In this paper, we consider the following problem: Given a relational table, find the best list of `rules' to summarize the table, subject to user specified constraints. A `rule' is a pattern that describes a set of tuples in a relational table (defined more precisely in Section~\ref{sec:preliminaries}. Our summarization algorithm is highly {\em flexible}, allowing the user to specify what kind of rules are preferred, by taking a black box `weight function' as user input. In addition, the summary is {\em fast}, with a response time measured in seconds on our experimental datasets, and {\em interactive}, with a user interface that allows the user to explore parts of the table in greater detail. 
+Drill down (and roll up) [citation] are very useful tools for exploring
+relational tables.
+In this paper we study an extension of drill down
+that lets users zoom into the more ``interesting'' parts of a table,
+with fewer operations and without having to examine as much data
+as traditional drill down.
+We call our approach {\em smart drill down};
+it does not replace traditional drill down but we will argue is a very
+useful complement.
+The best way to explain smart drill down is through a simple example.
 
 \begin{example}\label{ex:introexample}
-Consider a table with columns `Department Store', `Product', `State' and `Number of Sales'. Suppose an investor wants to query for tuples where Sales were higher than some threshold, in order to decide where to invest his money. The resulting query can have a very large number of tuples, making it hard for a user to get valuable information out of it. We propose to summarize the result of the query with a set of `rules'. For example, a possible rule summarization for the query is shown in table~\ref{table:introexample}. The summary consists of a list of `rules', with the `count' denoting the number of tuples that satisfy the rule, and the `weight' in this case denoting the number of non-$\star$ values of the rule for each rule. The weight function can in general be customized by the user.
+Consider a table with columns `Department Store', `Product', `Region'
+and `Sales'. Suppose an analyst queries for tuples
+where Sales were higher than some threshold, in order
+to find the best selling products.
+If the resulting table has many tuples,
+the analyst can use traditional drill down to explore it.
+For instance, the system may initially tell the analyst there are
+6000 tuples in the answer, represented by the tuple ($\star$, $\star$, $\star$, $6000$, $0$),
+as shown in Table~\ref{table:introexample0}.
+The $\star$ character is a wildcard that matches any value in the database.
+The Count attribute can be replaced by another aggregate,
+e.g., the total sales.
+The right-most Weight attribute is the number of non-$\star$ attributes; 
+its significance will be discussed shortly.
+If the analyst drills down on the Store attribute (first $\star$),
+then the system displays all tuples of the form ($X$, $\star$, $\star$, $C$, $1$),
+where $X$ is a Store in the answer table, and $C$
+is the number of tuples for $X$ (or the aggregate sales for $X$).
+
+Instead, when the analyst uses smart drill down on Table~\ref{table:introexample0},
+he obtains Table~\ref{table:introexample}.
+The ($\star$, $\star$, $\star$, $6000$) tuple is expanded into $3$ tuples
+that display noteworthy or interesting drill downs.
+The number $3$ is a user specified parameter, which we call $k$.
+
+For example, the tuple (Target, bicycles, $\star$, $200$, $2$)
+says that there are $200$ tuples (out of the 6000) with
+Target as the first column value and bicycle as the second.
+This fact tells the analyst that Target is selling a lot of bicycles.
+The next tuple tells the analyst that comforters are selling well in
+the MA-3 region, across multiple stores. The last tuple
+states that Walmart is doing well in general over multiple products and regions.
+We call each tuple in Table~\ref{table:introexample} a {\em rule}
+to distinguish it from the tuples in the original table that is being explored.
+Each rule summarizes the set of tuples that are described by it.
+Again, instead of Count, the system can display some other aggregate, such as
+the total Sales.
 
 \begin{table}
 \centering
 \begin{tabular}{| l | l | l | l | l |}
-\hline Store & Product & State & Count & Weight \\
+\hline Store & Product & Region & Count & Weight \\
 \hline
 $\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
-$\triangleright$ target & bicycles & $\star$ & $200$ & $2$ \\ \hline
-$\triangleright$ $\star$ & comforters & Massachusetts & $600$ & $2$ \\ \hline
-$\triangleright$ walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
 \end{tabular}
-\caption{Example of a rule based table summary \label{table:introexample}}
+\caption{Initial summary}\label{table:introexample0}
 \end{table}
-
-% Things to work into example : Number of rules. Ordering.
-
-The first rule tells the user that there are $6000$ tuples in all. We call it an `empty' rule, because it has only $\star$ values. The three additional rules give more information about the table. The number of additional rules ($3$ in this case) is a parameter that can be set by the user. The rules are shown in decreasing order by weight. 
-
-The second rule in the table says that there are $200$ tuples with target as the first column value and bicycle as the second, which tells the user that Target is selling a lot of bicycles. The rule after that tells the user that comforters are selling a lot in Massachusetts, across multiple department stores. The last rule tells the user that walmart is doing well in general over multiple products and states. 
-
-This gives the user an overall summary of the results. But after seeing this summary, the user may want to dig deeper to get more details on certain rules. For instance, the user may want to know which states walmart has more sales in, or which products they sell the most. In this case, the user can click on the rule with walmart, and will see an expanded summary as given in table~\ref{table:introexample2}. 
 
 \begin{table}
 \centering
 \begin{tabular}{| l | l | l | l | l |}
-\hline Store & Product & State & Count & Weight \\
+\hline Store & Product & Region & Count & Weight \\
 \hline
-$\star$ & $\star$ & $\star$ & $6000$ & $0$ \\  \cline{1-5}
-$\triangleright$ target & bicycles & $\star$ & $200$ & $2$ \\ \cline{1-5}
-$\triangleright$ $\star$ & comforters & Massachusetts & $600$ & $2$ \\ \cline{1-5}
-$\triangleright$ walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \cline{2-5}
-$\triangleright$ $\triangleright$ walmart & cookies & $\star$ & $200$ & $2$ \\ \cline{2-5}
-$\triangleright$ $\triangleright$ walmart & $\star$ & California & $150$ & $2$ \\ \cline{2-5}
-$\triangleright$ $\triangleright$ walmart & $\star$ & Washington & $130$ & $2$ \\ \hline
+$\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
+$\triangleright$ Target & bicycles & $\star$ & $200$ & $2$ \\ \hline
+$\triangleright$ $\star$ & comforters & MA-3 & $600$ & $2$ \\ \hline
+$\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
 \end{tabular}
-\caption{Example of a rule based table summary \label{table:introexample2}}
+\caption{Result after first smart drill down}\label{table:introexample}
 \end{table}
 
-The three new rules in this table give the user additional information about the $1000$ walmart tuples. This table tells the user that walmart sells a lot of cookies and that it has the most sales in California and Washington, in addition to the information given by the rules in the previous table.
+\begin{table}
+\centering
+\begin{tabular}{| l | l | l | l | l |}
+\hline Store & Product & Region & Count & Weight \\
+\hline
+$\star$ & $\star$ & $\star$ & $6000$ & $0$ \\  \cline{1-5}
+$\triangleright$ Target & bicycles & $\star$ & $200$ & $2$ \\ \cline{1-5}
+$\triangleright$ $\star$ & comforters & MA-3 & $600$ & $2$ \\ \cline{1-5}
+$\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \cline{2-5}
+$\triangleright$ $\triangleright$ Walmart & cookies & $\star$ & $200$ & $2$ \\ \cline{2-5}
+$\triangleright$ $\triangleright$ Walmart & $\star$ & CA-1 & $150$ & $2$ \\ \cline{2-5}
+$\triangleright$ $\triangleright$ Walmart & $\star$ & WA-5 & $130$ & $2$ \\ \hline
+\end{tabular}
+\caption{Result after second smart drill down} \label{table:introexample2}
+\end{table}
 
-In our summary, we want our rules to be descriptive by having fewer $\star$ values, but at the same time, we want our limited set of rules to cover as many tuples as possible. Thus choosing rules involves a tradeoff between highly specific rules like (walmart, cookies, California, $30$, $3$) and highly general rules like (walmart, $\star$, $\star$, $1000$, $1$). Our decision on what rules to choose is influenced by a rule-weighting scheme, which is further discussed in Section~\ref{sec:weighting}. Briefly, we allow the user to specify a weighting function $W$ as a black box, and display the optimal set of rules as per that weighting function. 
+Say that after seeing the results of Table~\ref{table:introexample},
+the analyst wishes to dig deeper into the Walmart tuples
+represented by the last rule.
+For instance, the analyst may want to know
+which states Walmart has more sales in, or which products they sell
+the most. In this case, the analyst clicks on the Walmart rule,
+obtaining the expanded summary in Table~\ref{table:introexample2}.
+The three new rules in this table provide additional information
+about the $1000$ Walmart tuples.
+In particular, one of the new rules shows that
+Walmart sells a lot of cookies and the others show it sells a lot of products in
+the regions CA-1 and WA-5.
 
-This example also raises questions on what operations to allow the user to perform to dig deeper into the rules. We describe our user interface in Section \ref{sec:interface}. 
+When the analyst clicks on a rule $r$, smart drill down
+expands $r$ into $k$ sub-rules that as a set are deemed to be ``interesting.''
+(We discuss other smart drill down operations in Section~\ref{sec:interface}.)
+There are three factors that make a rule set interesting.
+One is if contains rules with high Count (or total sales) fields,
+since the larger the count, the more tuples are summarized.
+A second factor is if the rules have high weight (number of non-$\star$ attributes).
+For instance, the rule (Walmart, cookies, AK-1, $200$, $3$)
+seems more interesting than (Walmart, cookies, $*$, $200$, $2$)
+since the former rule tells us the high sales are concentrated in a single region.
+A third desirability factor is diversity:
+For example, if we already have the rule (Walmart, $\star$, $\star$, $1000$, $1$)
+in our set, we would rather have the rule (Target, bicycles, $\star$, $200$, $2$)
+than (Walmart, bicycles, $\star$, $200$, $2$) since the former rule
+describes tuples that are not described by the first rule.
+
+In this paper we describe how to combine or blend these three factors
+in order to obtain a single desirability score for a set of rules.
+Our score function can actually be tuned by the analyst
+(by specifying how weights are computed),
+providing significant flexibility in what is considered a good set of rules.
+We also present an efficient optimization procedure to maximize score, invoked
+by smart drill down to select the set of $k$ rules to display.
+
 \end{example}
 
-To summarize, we attempt to summarize relational data in a way that is:
-\squishlist
-\item \textbf{Flexible : } We allow users to specify a weight function, which can be used among other things, to express preferences for rules of a certain size, or for rules containing values from some specific column.
-\item \textbf{Interactive : } We have a user interface that allows a user to dig deeper into certain parts of the table.
-\item \textbf{Online : } Does not require any heavy pre-computation. 
-\squishend
+Compared to traditional drill down, our smart drill down has two important advantages:
+\begin{itemize}
+\item
+Smart drill down limits the information displayed
+to the most interesting $k$ facts (rules).
+With traditional drill down, a column is expanded and {\em all}
+attribute values are displayed in arbitrary order.
+In our example, if we drill down on say the store attribute,
+we would see all stores listed, which may be a very large number.
+\item
+Smart drill down explores several attributes to open up together,
+and automatically selects combinations that are interesting.
+For example, in Table~\ref{table:introexample},
+the rule (Target, bicycles, $\star$, $200$, $2$)
+is obtained after a single drill down;
+with a traditional approach, the analyst would first have to drill down on
+Store, examine the results, drill down on Product,
+look through all the displayed rules and then find the interesting rule
+(Target, bicycles, $\star$, $200$, $2$).
+\end{itemize}
 
-There has been some work on finding anomalies in a dataset~\cite{Sarawagi:2001:UMA:767141.767148, Sarawagi00user-adaptiveexploration, Sarawagi98discovery-drivenexploration, DBLP:journals/pvldb/GebalyAGKS14}. These papers mostly focuses on giving the most 'surprising' information to the user i.e. information that would minimize the Kullback-Liebler(KL) divergence of the resulting max entropy distribution. For instance, if a certain set of values occur together in an unexpectedly small number of tuples, that set of values may be displayed to the user. In contrast, our algorithm focuses on rules with high counts and low intersection, covering as much of the table as possible. Our approaches are thus complementary and serve different purposes.
-% TODO: max-entropy is hard to interpret for human, even though formally very clear. Our thing also works well when user doesn't know the set of column values. The set, at least number of column values, are needed for imagining the max-entropy distribution.
+Incidentally, note that in the example we only described one type of smart drill down,
+where the analyst selects a {\em rule} to drill down on
+(e.g., the Walmart rule going from Table~\ref{table:introexample}
+Table~\ref{table:introexample2}.
+In Section~\ref{sec:interface} we describe another option
+where the analyst clicks an a {\em *} to obtain
+rules that have values in that location.
 
-OLAP (Online-Analytic-Processing) systems attempt to summarize a dataset by computing counts for all `rules'. They have an operation called drill-down, which allows a user to get counts for rules having values in a given column. For instance in our example, a user can first drill down along the `Department Store' column, which will show the total number of tuples for each Department Store. After that, the user may drill down along the product column for `Walmart', which will show the user the number of tuples for each product in Walmart. Thus the user is required to decide which columns to drill down along in order to get interesting or frequent rules, and requires $k$ drill downs to get to rules of size $k$. In contrast, our summary may immediately display a size $k$ rule to the user if it has sufficiently high weight and count. There is no notion of ranking or ordering of rules in OLAP, since all possible rules are displayed for any drill down. In contrast, we only display the top few rules in terms of their score, and display them in decreasing order by weight. This makes the summary shorter and more readable by focusing only on the frequently occurring values in columns.
+Our work on smart drill down is related
+to table summarization and anomaly
+detection~\cite{Sarawagi:2001:UMA:767141.767148,
+Sarawagi00user-adaptiveexploration,
+Sarawagi98discovery-drivenexploration,
+DBLP:journals/pvldb/GebalyAGKS14}.
+These papers mostly focus on
+giving the most ``surprising'' information to the user, i.e., information
+that would minimize the Kullback-Liebler(KL) divergence of the
+resulting maximum entropy distribution. For instance, if a certain set of
+values occur together in an unexpectedly small number of tuples, that
+set of values may be displayed to the user. In contrast, our algorithm
+focuses on rules with high counts, covering as
+much of the table as possible.
+Furthermore, our summarization is couched in
+an interactive environment, where the analyst
+directs the drill down and can tailor the optimization criteria.
+Nevertheless, one can envision extending traditional
+and smart drill down to provide an additional option of anomaly detection.
 
 We further discuss related work in Section~\ref{sec:related}.
 
 \stitle{Overview of paper:} 
 \squishlist 
 
-\item In Section~\ref{sec:preliminaries}, we introduce the relevant notation and formally define our problem.
+\item In Section~\ref{sec:preliminaries}, we introduce the relevant
+notation and formally define smart drill down.
 
-\item In Section~\ref{sec:weighting}, we consider different schemes for weighting rules, along with their practical significance.
+\item In Section~\ref{sec:weighting}, we consider different schemes
+for weighting rules, along with their practical significance.
 
-\item In Section~\ref{sec:interface}, we describe our user interface. 
+\item In Section~\ref{sec:interface}, we describe our
+interactive user interface. 
   
-\item In Section~\ref{sec:algorithms}, we present our algorithms for finding optimal rule-based summaries, as well as our sampling schemes for dealing with large tables.
+\item In Section~\ref{sec:algorithms}, we present our algorithms for
+finding optimal sets of rules, as well as our sampling schemes
+for dealing with large tables.
 
-\item In Section~\ref{sec:experiments}, we experimentally evaluate the performance of our algorithms on a real dataset.
+\item Based on our implemented smart drill down,
+in Section~\ref{sec:experiments} we experimentally evaluate
+performance on a real dataset,
+and show additional examples of smart drill down in action.
+
+\item In Section~\ref{sec:extensions}, we describe how to extend our results to summarize numerical attributes, and to use the $Sum$ aggregate instead of $Count$.
 
 \item In Section~\ref{sec:related}, we describe related work.
 \squishend 
+
+
 
 \section{Preliminaries} 
 \label{sec:preliminaries}
@@ -155,13 +298,12 @@ Our objective (formally defined later) is to summarize the table with a list of 
 
 A rule $r$ is said to {\em cover} a tuple  $t$ from the table if all non-$\star$ values for all columns of the rule match the corresponding values in the tuple. We abuse notation to write this as $t \in r$.
 
-A {\em rule-list} is an ordered list of rules returned by our system as a summary of the table, or a part of the table specified by the user. 
-%TODO: Give name to out system (and paper)
+A {\em rule-list} is an ordered list of rules returned by our system as a result of a smart drill-down by the user. 
 
 We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. We also write $r_1 \geq r_2$ to denote that $r_1$ subsumes $r_2$, and $r_1 > r_2$ if $r_1$ subsumes but is not equal to $r_2$ i.e. there is at least one column $c$ such that $r_2$ has a non-$\star$ value in $c$ where $r_1$ does not. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
 
-When a user clicks on a rule to know more about the part of the table covered by that rule, we display a rule-list of sub-rules of the rule.
-For instance, the second, third and fourth rule from Table~\ref{table:introexample} form a rule-list, which is displayed when the user expands the first (trivial) rule. Similarly, the second, third and fourth rules in Table~\ref{table:introexample2} form a rule-list, as do the fifth, sixth and seventh rules. 
+When a user drills down on a rule $r$ to know more about the part of the table covered by $r$, we display a rule-list of sub-rules of $r$.
+For instance, the second, third and fourth rule from Table~\ref{table:introexample} form a rule-list, which is displayed when the user clicks on the first (trivial) rule. Similarly, the second, third and fourth rules in Table~\ref{table:introexample2} form a rule-list, as do the fifth, sixth and seventh rules. 
 
 Let $R$ denote a rule-list. For any rule $r \in R$, we let $SEQ(r)$ denote the position of $r$ in the list $R$. 
 Thus the $SEQ$ value of the cookies rule in Table~\ref{table:introexample2} is $1$, since it is the first rule in the list of rules obtained by expanding the walmart rule. 
@@ -174,6 +316,8 @@ We now define some additional properties of rules. Let $r$ be a rule. Then:
 \item We let $W$ denote a function that assigns a {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. A weighting function is {\em monotonic} if for all rules $r_1$, $r_2$ such that $r_1$ is a sub-rule of $r_2$, we have $W(r_1) \leq W(r_2)$. We further describe our weighting functions in Section~\ref{sec:weighting}. 
 \squishend
 
+Throughout this paper, we use the {\em Count} aggregate of a rule when determining what rules to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ in Section~\ref{sec:extensions-sum}.
+
 The total score for our list of rules is given by $$\text{Score}(R) = \sum_{r \in R} MCount(r)W(r)$$ Our problem is to choose the rule-list that maximises total score. We use $MCount$ rather than Count to increase coverage of the table. If we had defined total score as $\sum_{r \in R} \text{Count}(r)W(r)$, then our optimal rule-list would contain rules that repeatedly refer to the most `summarizable' part of the table. For instance, if $a$ and $b$ were the most common values in columns $A$ and $B$, then the summary could consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$.
 
 We now formally define our problem:
@@ -181,10 +325,10 @@ We now formally define our problem:
 \begin{problem}\label{prob:optimal-subrule-list}
 Given a table $T$, a monotonic weighting function $W$, and a number $k$, find the list $R$ of $k$ rules that maximizes 
 $$\sum_{r \in R} W(r)MCount(r)$$
-for one of the following interactions:
+for one of the following smart drill-downs:
 \begin{enumerate}
-\item $[$Rule Interaction$]$ If the user clicked on a rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$
-\item $[$Star Interaction$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
+\item $[$Rule Drill-Down$]$ If the user clicked on a rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$
+\item $[$Star Drill-Down$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
 \end{enumerate}
 \end{problem}
 
@@ -226,23 +370,13 @@ Even though we have given two example weighting functions here, our algorithms a
 
 \section{Our interface}
 \label{sec:interface}
-We now explain how the user can interact with our system to explore the contents of a table. 
+We now explain how the user can use smart drill-downs in our system to explore the contents of a table. 
 
-When the user starts using our system, he sees a table with a single trivial rule, as shown in table~\ref{table:trivial}. At any point, the user can click on either a rule, or a star within a rule, to `expand' the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user. As an example of this operation, clicking on the trivial rule of table~\ref{table:trivial} would display table~\ref{table:introexample}. Clicking further on the second rule would display table~\ref{table:introexample2}. The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
+When the user starts using our system, he sees a table with a single trivial rule as shown in table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill-down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user. As an example of this operation, clicking on the trivial rule of table~\ref{table:introexample0} would display table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display table~\ref{table:introexample2}. The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
 
 Instead of clicking on a rule, the user can click on one of the $\star$s, say in column $c$ of rule $r$. This will also cause the rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. For instance, if the user clicks on the $\star$ in the product column of the walmart rule, he will see table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise. 
 
 Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation i.e. collapses it. For example, clicking on the walmart rule in table~\ref{table:introexample3} or table~\ref{table:introexample2} would take the user back to table~\ref{table:introexample}.
-
-\begin{table}
-\centering
-\begin{tabular}{| l | l | l | l | l |}
-\hline Store & Product & State & Count & Weight \\
-\hline
-$\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
-\end{tabular}
-\caption{Table with only the trivial rule \label{table:trivial}}
-\end{table}
 	
 \begin{table}
 \centering
@@ -250,7 +384,7 @@ $\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
 \hline Store & Product & State & Count & Weight \\
 \hline
 $\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \cline{1-5}
-$\triangleright$ target & bicycles & $\star$ & $200$ & $1$ \\ \cline{1-5}
+$\triangleright$ target & bicycles & $\star$ & $200$ & $2$ \\ \cline{1-5}
 $\triangleright$ $\star$ & comforters & Massachusetts & $600$ & $2$ \\ \cline{1-5}
 $\triangleright$ walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \cline{2-5}
 $\triangleright$ $\triangleright$ walmart & cookies & California & $80$ & $2$ \\ \cline{2-5}
@@ -262,7 +396,7 @@ $\triangleright$ $\triangleright$ walmart & bicycles & $\star$ & $150$ & $2$ \\ 
 
 \section{Algorithms}
 \label{sec:algorithms}
-When the user expands a rule $r^{\prime}$, we want to find the highest scoring list of rules to expand rule $r^{\prime}$ into. If the user had clicked on a $\star$ in a column $c$, then we have the additional restriction that all resulting rules must have a non-$\star$ value in column $c$. We can reduce Problem~\ref{prob:optimal-subrule-list} to the following simpler problem by removing the user-interaction based constraints: 
+When the user drills down on a rule $r^{\prime}$, we want to find the highest scoring list of rules to expand rule $r^{\prime}$ into. If the user had clicked on a $\star$ in a column $c$, then we have the additional restriction that all resulting rules must have a non-$\star$ value in column $c$. We can reduce Problem~\ref{prob:optimal-subrule-list} to the following simpler problem by removing the user-interaction based constraints: 
 
 \begin{problem}\label{prob:optimal-rule-list}
 Given a table $T$, a weight function $W$, and a number $k$, to find the list $R$ of $k$ rules that maximizes the total score given by :
@@ -273,8 +407,8 @@ $W$ is required to be non-negative and monotonic. $k$ will usually be small (tho
 
 Problem~\ref{prob:optimal-subrule-list} with parameters $(T, W, k)$ can be reduced to Problem~\ref{prob:optimal-rule-list} as follows:
 \squishlist
-\item $[$Rule Interaction$]$ If the user clicked on rule $r$ in Problem~\ref{prob:optimal-subrule-list}, then we make on pass through the table $T$ to filter for tuples covered by rule $r$, and store them in a temporary table $T_r$. Then we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W, k)$.
-\item $[$Star Interaction$]$ If the user clicked on a $\star$ in column $c$ of rule $r$, then we first filter table $T$ to get $T_r$ consisting of tuples from $T$ that are covered by $r$. In addition, we change the weight function $W$ from Problem~\ref{prob:optimal-subrule-list} to a weight function $W^{\prime}$ such that : For any rule $r^{\prime}$, $W^{\prime}(r^{\prime}) = 0$ if $r^{\prime}$ has a $\star$ in column $c$, and $W^{\prime}(r^{\prime}) = W(r^{\prime})$ otherwise. Then we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W^{\prime}, k)$.
+\item $[$Rule Drill-Down$]$ If the user clicked on rule $r$ in Problem~\ref{prob:optimal-subrule-list}, then we make on pass through the table $T$ to filter for tuples covered by rule $r$, and store them in a temporary table $T_r$. Then we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W, k)$.
+\item $[$Star Drill-Down$]$ If the user clicked on a $\star$ in column $c$ of rule $r$, then we first filter table $T$ to get $T_r$ consisting of tuples from $T$ that are covered by $r$. In addition, we change the weight function $W$ from Problem~\ref{prob:optimal-subrule-list} to a weight function $W^{\prime}$ such that : For any rule $r^{\prime}$, $W^{\prime}(r^{\prime}) = 0$ if $r^{\prime}$ has a $\star$ in column $c$, and $W^{\prime}(r^{\prime}) = W(r^{\prime})$ otherwise. Then we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W^{\prime}, k)$.
 \squishend
 
 We will describe a greedy algorithm for finding the approximately highest scoring rule-list. First, we show that the rules in the optimal list must effectively be ordered in decreasing order by weight.
@@ -345,11 +479,11 @@ Because Score is a submodular function of the set $S$, this greedy algorithm is 
 
 Our algorithm pseudo-code is given in the box labelled Algorithm~\ref{algo:best-rule-set}. The algorithm takes four parameters as input: the table $T$, the number $k$ of rules required in the final solution list, a parameter $m_w$ (which we describe in the next paragraph), and the weight function $W$. 
 
-The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, our algorithm is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by our algorithm does not contain $r$. Our algorithm runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practise, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, it's Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set are small.
+The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, Algorithm~\ref{algo:best-rule-set} is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by Algorithm~\ref{algo:best-rule-set} does not contain $r$. Algorithm~\ref{algo:best-rule-set} runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, it's Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small.
 
 % TODO: scheme/heuristic for finding good m_w values, since it seems arbitrary. Later, experiments testing effect of m_w on running time, and experiments to test finding heuristic, and show that values are in fact small.
 
-The \textbf{Greedy Algorithm} initializes the solution set $S$ to be empty, and then iterates for $k$ steps, adding the best marginal rule at each step. To find the best marginal rule, it calls a function to find the best marginal rule given the existing set of rules $S$. 
+Algorithm~\ref{algo:best-rule-set} initializes the solution set $S$ to be empty, and then iterates for $k$ steps, adding the best marginal rule at each step. To find the best marginal rule, it calls a function to find the best marginal rule given the existing set of rules $S$. 
 
 In order to find the best marginal rule, we need to find the marginal values of several rules and then choose the best one. A brute-force way to do this would be to enumerate all possible rules, and to find the marginal value for each of those rules in a single pass over the data. But the number of possible rules may be almost as large as the size of the table itself, making this step very expensive in terms of computation and memory. 
 
@@ -429,41 +563,41 @@ But if we are willing to accept approximate counts rather than exact counts for 
 Thus, we use sampling to trade-off a small amount of accuracy for a faster response time. Our system includes a {\em SampleHandler}, which is given a certain memory capacity $M$, and a minimum sample size $minSS$ (specified by the user).
 The $minSS$ parameter is the minimum number of sample tuples that are used to find counts while running our greedy algorithm, and this parameter determines how accurate our count estimates will be. We provide a way to find reasonable values of $minSS$ later.
 
-At all points, the SampleHandler maintains a set of Samples in memory. Each sample $s$ is an object with three attributes: A `filter' rule $f_s$, a scaling factor $N_s$ and a set $T_s$ of tuples from the table. The set $T_s$ consists of a $\frac{1}{N_s}$ uniformly sampled fraction of tuples covered by $f_s$. The scaling factor $N_s$ is used to translate counts of a rule on the sample, into estimated counts on the entire table. The sum of $|T_s|$ is not allowed to exceed capacity $M$ at any point. 
+At all points, the SampleHandler maintains a set of Samples in memory. Each sample $s$ is an object with three attributes: A `filter' rule $f_s$, a scaling factor $N_s$ and a set $T_s$ of tuples from the table. The set $T_s$ consists of a $\frac{1}{N_s}$ uniformly sampled fraction of tuples covered by $f_s$. The scaling factor $N_s$ is used to translate the count of a rule on the sample into an estimate of the count over the entire table. The sum of $|T_s|$ over all samples $s$ is not allowed to exceed capacity $M$ at any point. 
 
-Whenever the user expands a rule $r$, our system calls the SampleHandler with argument $r$, which returns a sample $s$ whose filter value is given by $f_s = r$ and has $|T_s| \geq minSS$. The SampleHandler also computes $N_s$ when a sample is created. Then we run our greedy algorithm on the sample (with a modified weight function in case the user clicked on a $\star$) to obtain the list of rules to display. The counts of the rules on the sample are multiplied by $N_s$ before being displayed, to get the estimated count on the entire table. 
+Whenever the user drills down on a rule $r$, our system calls the SampleHandler with argument $r$, which returns a sample $s$ whose filter value is given by $f_s = r$ and has $|T_s| \geq minSS$. The SampleHandler also computes $N_s$ when a sample is created. Then we run Algorithm~\ref{algo:best-rule-set} on sample $s$ (with a modified weight function in case the user clicked on a $\star$) to obtain the list of rules to display. The counts of the rules on the sample are multiplied by $N_s$ before being displayed, to get estimated counts on the entire table. 
 
 When the SamplerHandler gets called with argument $r$, it needs to find or create a sample with $r$ as the filter rule. At the beginning when it gets called with the empty rule as an argument, there are no samples in memory and it must make a pass through the data to generate a sample. Creating a new sample by making a pass through the table is called \textbf{Create} (further described below). At later stages, when there are potentially multiple samples available, there are multiple ways it could return a sample for rule $r$:
 \begin{enumerate}
-\item \textbf{Find:} If the SampleHandler finds an existing sample $s$ in memory, which has $r$ as it's filter rule (i.e. $f_s = r$) and at least $minSS$ tuples ($|T_s| \geq \text{minSS}$, then it simply returns sample $s$. Our greedy algorithm can then be run on $s$. 
+\item \textbf{Find:} If the SampleHandler finds an existing sample $s$ in memory, which has $r$ as it's filter rule (i.e. $f_s = r$) and at least $minSS$ tuples ($|T_s| \geq \text{minSS}$, then it simply returns sample $s$. Algorithm~\ref{algo:best-rule-set} can then be run on $s$. 
 
-\item \textbf{Combine:} If \textbf{Find} doesn't work i.e. if the SampleHandler cannot find an existing sample with filter $r$ and $\geq minSS$ tuples, then it looks at all existing samples $s^{\prime}$ such that $f_{s^{\prime}}$ is a sub-rule of $r$. If the set of all tuples that are covered by $r$, from all such $T_{s^{\prime}}$'s combined, exceeds minSS in size, then we can simply treat that set as our sample for rule $r$.
+\item \textbf{Combine:} If \textbf{Find} doesn't work i.e. if the SampleHandler cannot find an existing sample with filter $r$ and $\geq minSS$ tuples, then it looks at all existing samples $s^{\prime}$ such that $f_{s^{\prime}}$ is a sub-rule of $r$. If the set of all tuples that are covered by $r$, from all such $T_{s^{\prime}}$'s combined, exceeds $minSS$ in size, then we can simply treat that set as our sample for rule $r$.
 We can show that tuples that are covered by $r$, from the combination of $T_{s^{\prime}}$s, follow a uniform distribution. That is, each table tuple $t$ that is covered by $r$ is equally likely to appear in a $T_{s^{\prime}}$. 
 
-Note that the \textbf{Combine} procedure doesn't really require additional memory. Since all the tuples in the `new' sample are already present in existing samples, it can simply store a set of pointers to the tuples, and the pointers can be deleted as soon as the sample has been processed by the Greedy Algorithm. 
+Note that the \textbf{Combine} procedure doesn't really require additional memory. Since all the tuples in the `new' sample are already present in existing samples, it can simply store a set of pointers to the tuples, and the pointers can be deleted as soon as the sample has been processed by Algorithm~\ref{algo:best-rule-set}. 
 
-\item \textbf{Create:} If \textbf{Combine} doesn't work either, then the SampleHandler needs to create a new sample by making a pass through the table. Making a pass can be expensive for big tables, so we only use \textbf{Create} when \textbf{Find} and \textbf{Combine} cannot be used. In addition, creating a new sample requires memory, and since capacity is limited, it may necessitate shrinking or deleting some existing samples. 
+\item \textbf{Create:} If \textbf{Combine} doesn't work either, then the SampleHandler needs to create a new sample by making a pass through the table. Making a pass can be expensive for big tables, so we only use \textbf{Create} when \textbf{Find} and \textbf{Combine} cannot be used. In addition, creating a new sample requires memory, and since memory capacity is limited (given by parameter $M$), it may necessitate shrinking or deleting some existing samples. 
 We can use reservoir sampling~\cite{maibdr1983,Vitter:1985:RSR:3147.3165} to get a uniformly random sample of given size in a single pass through the table. 
 
-In addition, the SampleHandler can choose to create a sample of $minSS$ size, or larger (if enough memory is available). Making a larger sample is advantageous not only to get higher accuracy, but also because, when the user later expands a sub-rule $r^{\prime}$ of $r$, having a large $r$ sample increases the chance that the \textbf{Combine} strategy will work for $r^{\prime}$, which can let us avoid making another expensive pass through the table. For example, if $minSS = 500$, but we get a size $2000$ sample $s$ for the empty rule, then when the user clicks on one of it's sub-rules, say $r$, there is a good chance the $2000$ tuples from $T_s$ contain at least $500$ tuples covered by $r$ and that allows us to display the rule-list expanding $r$ quickly instead of making another pass through the table. 
+In addition, the SampleHandler can choose to create a sample of $minSS$ size, or larger (if enough memory is available). Making a larger sample is advantageous not only to get higher accuracy, but also because, when the user later drills down on a sub-rule $r^{\prime}$ of $r$, having a large $r$ sample increases the chance that the \textbf{Combine} strategy will work for $r^{\prime}$, which can let us avoid making another expensive pass through the table. For example, if $minSS = 500$, but we get a size $2000$ sample $s$ for the empty rule, then when the user clicks on one of it's sub-rules, say $r$, there is a good chance the $2000$ tuples from $T_s$ contain at least $500$ tuples covered by $r$ and that allows us to display the rule-list expanding $r$ quickly instead of making another pass through the table. 
 
 \item \textbf{Delete/Shrink:} When the SampleHandler uses \textbf{Create}, it may happen that there is not enough memory left to create a new sample. In that case, the SampleHandler needs to delete or shrink an existing sample. It can use a heuristic, like a LRU (Least-Recently-Used) policy to decide which sample to delete or shrink. Note that shrinking a sample by randomly deleting some tuples (even if the sample size goes below $minSS$) may be better than deleting it entirely, because in future, we may be able to recreate a sample using \textbf{Combine} on the existing shrinked sample along with other samples.
 %For shrink, prefer shrinking samples of the largest size (> minSS) first?
 \end{enumerate}
 
-We describe our algorithm for deciding what samples to shrink, and what sized samples to create, in section~\ref{sec:sampling_algorithms}. 
+We describe our algorithm for deciding what samples to shrink, and what sized samples to create, in Section~\ref{sec:sampling_algorithms}. 
 
-\textbf{Pre-fetching:} When the user clicks on rule $r$ (the rule itself or a $\star$ in the rule), we need to get a sample, run the greedy algorithm, and display a rule-list to the user. If we use \textbf{Find} or \textbf{Combine}, then we can display the rule-list much faster because we don't have to read the entire table. But after expanding $r$, there is a high chance that the user goes further and expands one of the sub-rules $r^{\prime}$ of $r$. We may not be able to use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ with the existing samples. So while the user is reading the current rule-list from expanding $r$, we can start making a pass through the table to create a bigger sample of $r$ in the background. That way, when the user expands $r^{\prime}$, some of the newly loaded tuples for $r$ will also be covered by $r^{\prime}$, increasing the chance that we can use \textbf{Combine} on $r^{\prime}$, and reduce our response time. 
+\textbf{Pre-fetching:} When the user clicks on rule $r$ (the rule itself or a $\star$ in the rule), we need to get a sample, run the greedy algorithm, and display a rule-list to the user. If we use \textbf{Find} or \textbf{Combine}, then we can display the rule-list much faster because we don't have to read the entire table. But after expanding $r$, there is a high chance that the user goes further and drills down on of the sub-rules $r^{\prime}$ of $r$. We may not be able to use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ with the existing samples. So while the user is reading the current rule-list obtained from drilling down on $r$, we can start making a pass through the table to create a bigger sample of $r$ in the background. That way, when the user expands $r^{\prime}$, some of the newly loaded tuples for $r$ will also be covered by $r^{\prime}$, increasing the chance that we can use \textbf{Combine} on $r^{\prime}$, and reduce our response time. 
 In addition, while we are making the pass in the background, we can find the exact counts for currently displayed rules (which only have estimated counts shown), and update them when our pass is complete.
 
 \subsubsection{Algorithms for deciding what to sample}\label{sec:sampling_algorithms}
-We now discuss algorithms for the SampleHandler to decide what sizes of Samples to maintain in memory. Suppose at some stage, we have a tree $U$ of rules displayed to the user. Internal nodes of $U$ are rules that have been expanded, while leaves are rules that have not been expanded. Let $L$ be the set of leaves. Each leaf is something that the user can potentially expand in the next step, and thus we would like to have pre-fetched samples for leaves. 
+We now discuss algorithms for the SampleHandler to decide what sizes of Samples to maintain in memory. Suppose at some stage, we have a tree $U$ of rules displayed to the user. Internal nodes of $U$ are rules that have been expanded, while leaves are rules that have not been expanded. Let $L$ be the set of leaves. Each leaf is something that the user can potentially expand (drill down on) in the next step, and thus we would like to have pre-fetched samples for leaves.
 
-We assume that we have a probability distribution over leaves, which assigns a probability that each leaf will be the next one to be expanded. In the absence of additional information, we can assume a uniform distribution. That is, every leaf is equally likely to be expanded next. However, we can also use Machine Learning on past user behaviour, along with rule features such as `rule depth in tree' and `rule distance from last expanded rule' to get a better probability estimate of each rule being expanded. 
+We assume that we have a probability distribution over leaves, which assigns a probability that each leaf will be the next one to be expanded. In the absence of additional information, we can assume a uniform probability distribution. That is, we can assume that every leaf is equally likely to be expanded next. However, we can also use Machine Learning on past user behaviour, along with rule features such as `rule depth in tree' and `rule distance from last expanded rule' to get a better probability estimate of each rule being expanded.
 
 When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to make a pass through the entire table, as well as potentially shrink some existing samples to free up memory. Since making a pass over the the table from the Hard Disk is usually a bottleneck, it can also do things like creating samples for rules other than $r$, and augmenting existing samples, in the same pass. Hence, we assume that in a \textbf{Create} phase, the SampleHandler not only creates one new sample for $r$, but also potentially creates other new samples, or resizes existing samples. For each displayed rule $r^{\prime}$, it may create a new sample for $r^{\prime}$ in the same pass through the table. Based on the current leaves and their expansion probabilities, it finds an optimal set of sizes of samples to create for each displayed rule. More specifically, for every displayed rule $r^{\prime}$, it determines an integer $n_{r^{\prime}}$, and then creates a fresh sample $s_{r^{\prime}}$ with $f_{s_{r^{\prime}}} = r^{\prime}$ and $|T_{s_{r^{\prime}}}| = n_{r^{\prime}}$ while making it's pass through the table. 
 
-We choose the $n_{r^{\prime}}$ values so as to maximise the probability that the next user click can be satisfied using samples available in memory. We define some terms required to formalise this problem next. 
+We choose the $n_{r^{\prime}}$ values so as to maximise the probability that the next user drill down can be satisfied using samples available in memory. We define some terms required to formalise this problem next. 
 
 For each pair of rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. We define $S(r_1, r_2)$ to be $0$ if $r_1$ is not a sub-rule of $r_2$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$ For any $r^{prime}$, define the function {\em ess} (for `effective sample size') as $\text{ess}(r^{\prime}) = \sum_{r \in U} S(r, r^{\prime})n_r$. If $\text{ess}(r^{\prime}) \geq \text{minSS}$ then if the user expands $r^{\prime}$, we display the next rule list using \textbf{Find} or \textbf{Combine}, instead of having to make another pass through the table. We wish to maximise the probability that we can respond to the next user expansion without making another pass. 
 
@@ -521,8 +655,10 @@ filled out by shopping mall customers in the San Francisco Bay area. This datase
 The columns (in order) are as follows:
 (Annual Income of Household, Sex, Marital Status, Age, Education, Occupation, How long have you lived in the San Fran./Oakland/San Jose Area, Dual Incomes?, Persons in Household, Persons in Household under $18$, Householder Status, Type of Home, Ethnic Classification, Language most spoken in home).
 
+Unless otherwise specified, in all our experiments, we restrict the table to the first $7$ columns in order to make the result tables fit into the page. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting function, and $20$ for the Bits weighting function. 
+
 \subsection{User interface testing}
-We restrict the table to the first $7$ columns in order to make the result tables fit into the page. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$. We now present the rule-based summaries displayed as a result of a few different user actions.
+We now present the rule-based summaries displayed as a result of a few different user actions.
 
 To begin with, the user sees an empty rule with the total number of tuples as the count. After this, suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Are for $> 10$ years. Note that the latter two rules give very specific information which would require upto $3$ user clicks to find using Data Cube Drill-Downs, whereas our system displays that information to the user with a single click. 
 
@@ -638,9 +774,14 @@ The value of $m_w$ required to ensure a correct answer is equal to the maximum w
 \end{figure}
 
 \subsection{Effects of $minSS$}
-We now study the effects of the sampling parameter $minSS$. This parameter tells the SampleHandler the minimum sample size on which we run Algorithm~\ref{algo:best-rule-set}.   Higher values of $minSS$ give us more accurate counts for rules, but also increase computation time. 
+We now study the effects of the sampling parameter $minSS$. This parameter tells the SampleHandler the minimum sample size on which we run Algorithm~\ref{algo:best-rule-set}.   Higher values of $minSS$ cause our system to use bigger samples, which increases the accuracy of count estimates for displayed rules, but also correspondingly increases computation time. 
 
-We consider a value of $minSS$, and a weight function $W$. For those parameters, we expand the empty rule and find the time taken to expand it, as well the the error in counts of the displayed rules. The error is the absolute value of the difference between the actual count of the rule on the entire table, and it's estimated count from the sample. We repeat this $50$ times for each $minSS$ and $W$, and find the average time and error per $minSS$ and $W$. The average time over these $50$ iterations is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}. The average error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error}.
+We consider one value of $minSS$ and one weight function $W$ at a time. For those values of $minSS$ and $W$, we drill down on the empty rule and measure the time taken for this operation. We also measure the percent error in the estimated counts of the displayed rules. That is, for each displayed rule $r$, if the displayed (estimated) count if $c_1$ and the actual count (computed separately on the entire table) is $c_2$, then the percent error for rule $r$ is $\frac{100 \times |c_1-c_2|}{c_2}$. We consider the average of percent errors over all displayed rules. For each value of $minSS$ and $W$, we drill down on the empty rule and find the computation time and percent error $50$ times, and take the average value for time and error over those $50$ iterations. This average time is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}. The average percent error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error_percent}. 
+
+The computation time increases approximately linearly with $minSS$. This is expected, because Algorithm~\ref{algo:best-rule-set} makes a constant number of passes over the entire sample, which takes time linear in the size of the sample. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$. 
+
+In addition, we measure the number of incorrect rules per iteration. If the correct set of rules to display is $r_1, r_2, r_3$ and the displayed set is $r_1, r_3, r_4$ then that means there is one incorrect rule. We find the number of incorrect displayed rules across $50$ iterations, and display the average value in Figure~\ref{fig:minSS_error_rule}. This number is almost always $0$ for the Size weighting function, and between $1$ and $2$ for the Bits weighting function. Note that even when we display an `incorrect' rule, it is usually the $5^{th}$ or $6^{th}$ best rule instead of one of the top $4$ rules, which still results in a reasonably good summary of the table.
+
 
 \begin{figure}
 \hspace{-20pt}
@@ -650,12 +791,19 @@ We consider a value of $minSS$, and a weight function $W$. For those parameters,
 \vspace{-13pt}
 \end{figure}
 
+\begin{figure}
+\hspace{-20pt}
+  \includegraphics[height=2in]{graphs/minSS_error_percent.pdf}%change height to 2 inch for actual paper, 5 inch for single column
+\vspace{-10pt}
+  \caption{Error in Count for different values of parameter $minSS$ \label{fig:minSS_error_percent}}
+\vspace{-13pt}
+\end{figure}
 
 \begin{figure}
 \hspace{-20pt}
-  \includegraphics[height=2in]{graphs/minSS_error_count.pdf}%change height to 2 inch for actual paper, 5 inch for single column
+  \includegraphics[height=2in]{graphs/minSS_error_rule.pdf}%change height to 2 inch for actual paper, 5 inch for single column
 \vspace{-10pt}
-  \caption{Error in Count for different values of parameter $minSS$ \label{fig:minSS_error}}
+\caption{Average number of incorrect rules for different values of parameter $minSS$ \label{fig:minSS_error_rule}}
 \vspace{-13pt}
 \end{figure}
 
@@ -671,12 +819,15 @@ We don't have the binary thing. Is it useful? Maybe we can summarize better with
 \end{comment}
 
 \section{Extensions}\label{sec:extensions}
-\subsection{Dealing with Numerical Attributes}
+\subsection{Dealing with Numerical Attributes}\label{sec:extensions-numerical}
 Our algorithm assumes that all attributes are categorical in nature. Attributes that have a large domain d to have a smaller tuple count per value, and hence don't appear in rule summaries. Thus our algorithm does not summarise information about numerical attributes. 
 
 However, we can modify the algorithm to deal with numerical attributes. Suppose we have a numerical attribute $A$. A simple approach is to create buckets for values of $A$. We choose a number of buckets $k$, and divide the range of values of $A$ into $k$ intervals, each corresponding to a bucket. We can create buckets having an equal range size, or decide their range such that there is an approximately equal number of tuples in each bucket. Then we can use our algorithm, treating the bucket number as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
 
 The distribution of values for the $A$ may not be similar in different parts of the table. For instance, we may create buckets have approximately equal numbers of tuples in the table. But then suppose a user tries to expand a rule $r$. The part of the table covered by $r$ might have a very different distribution of age values. For instance, in our MD dataset, if the user looks at people who own a house, their age distribution would be different from that of people who are still renting an apartment. To prevent the buckets from getting a skewed distribution when expanding $r$, we could recompute the bucket ranges every time the user expands a rule, and use the new bucket ranges to determine which rules to display upon expansion. 
+
+\subsection{Using Sum instead of Count}\label{sec:extensions-sum}
+Throughout the paper, we define the total score of a rule-list using the marginal counts of rules in the list, and display the count of each rule in our table summary. However, if we have a numerical column (i.e. a `measure' column) in the table, it is straightforward to extend our summary to the `Sum' aggregate over that column instead. Suppose we are given a measure column $c_m$. Then the {\em Sum} for a rule can be defined to be the sum of $c_m$ values over all tuples covered by the rule. {\em MSum} of a rule $r$ in a rule-list $R$ is the sum of $c_m$ values over all tuples covered by $r$ and not covered by any rule in $R$ that occurs before $r$. The Score for $R$ becomes $\text{Score}(R) = \sum_{r\in R} MSum(r)W(r)$. Algorithm~\ref{algo:best-rule-set} can be modified to find the best rule set using the new definition of Score, simply by replacing $Count(r)$ by $Sum(r)$ and computing sum and marginal sum instead of count and marginal count in each pass over the table.
 
 \section{Related Work}\label{sec:related}
 %TODO: Repeat what we said in intro about interactive, etc.

@@ -206,11 +206,11 @@ public class RuleTreeDisplay {
 		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeBitsScorer(), mw_bits_outFile);
 		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeScorer(), mw_size_outFile);
 		
-		Experiments.minSSSpeedTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_outFile);
-		Experiments.minSSSpeedTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_outFile);
+		//Experiments.minSSSpeedTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_outFile);
+		//Experiments.minSSSpeedTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_outFile);
 		
-		//Experiments.minSSErrorTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_error_outFile);
-		//Experiments.minSSErrorTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_error_outFile);
+		Experiments.minSSErrorTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_error_outFile);
+		Experiments.minSSErrorTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_error_outFile);
 				
 		if(1!=2)return;
 		int minSampleSize = Integer.MAX_VALUE;
