@@ -6,7 +6,8 @@ Analysts often use OLAP (Online Analytical Processing) operations
 such as drill-down (and roll-up)~\cite{export:69578} to explore
 relational databases. 
 These operations are very useful for analytics and data exploration and have stood the test of time;
-all commercial database systems in existence support these operations.
+all commercial OLAP systems 
+in existence support these operations. (Recent reports estimate the size of the OLAP market to be \$10+ Billion~\cite{gartner}.)
 
 
 However, there are cases where drill-down is ineffective; 
@@ -15,8 +16,8 @@ in a column is large, vanilla drill-down
 could easily overwhelm analysts by presenting them with too many 
 results (i.e., aggregates). 
 Further, drill-down only allows us to instantiate values
-in one column at a time, instead of allowing simultaneous drill-downs
-on multiple columns---simultaneous drill-down on multiple columns 
+ one column at a time, instead of allowing simultaneous drill-downs
+on multiple columns---this simultaneous drill-down on multiple columns 
 could once again suffer from the problem
 of having too many results, stemming from many distinct combinations of column values.
 
