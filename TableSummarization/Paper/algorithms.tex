@@ -7,7 +7,7 @@ When the user drills down on a rule $r^{\prime}$, we want to find the highest sc
 
 \begin{problem}\label{prob:optimal-rule-list}
 Given a table $T$, a weight function $W$, and a number $k$, to find the list $R$ of $k$ rules that maximizes the total score given by :
-$$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r)$$
+$$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r,R)$$
 \end{problem}
 
 $W$ is required to be non-negative and monotonic. $k$ will usually be small (though the correctness of our solution does not depend on this), since the $k$ rules generated should constitute an easily visualizable summary of the table. 
@@ -35,7 +35,7 @@ as required.
 Thus it is sufficient to restrict our attention to rule-lists that have rules sorted in decreasing order by weight. Or equivalently, given any set $S$ of rules, we can define the Score$(S)$ to be the score of the list obtained by sorting elements of $S$ in decreasing weight order. This gives us 
 \begin{problem}\label{prob:optimal-rule-set}
 Given a table $T$, a weight function $W$, and a number $k$, to find the set $R$ of $k$ rules such that if $R^{\prime}$ is the rule-list obtained by ordering rules in $R$ in decreasing weight order, then the following quantity is maximised:
-$$\text{Score}(R) = \text{Score}(R^{\prime}) = \sum_{r \in R^{\prime}}W(r)MCount(r)$$
+$$\text{Score}(R) = \text{Score}(R^{\prime}) = \sum_{r \in R^{\prime}}W(r)MCount(r,R)$$
 \end{problem}
 
 The reduction from Problem~\ref{prob:optimal-rule-list} to Problem~\ref{prob:optimal-rule-set} is clear. We now show an approximation algorithm for Problem~\ref{prob:optimal-rule-set}.
@@ -50,7 +50,7 @@ Intuitively, this means that the marginal value of adding an element to a set $S
 
 \begin{lemma}\label{lemma:submodular}
 For a given table $T$, the Score function over sets $S$ of rules, defined by :
-$$\text{Score}(S) = \sum_{r \in S} MCount(r)W(r)$$
+$$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
 is submodular.
 \end{lemma}
 \begin{proof}

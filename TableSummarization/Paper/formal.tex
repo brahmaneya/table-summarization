@@ -21,7 +21,7 @@ the result of our drill-downs are lists of {\em rules}.
 A {\em rule} is a tuple with a value for each column of the table. 
 In addition, a rule has other attributes, such as count and weight 
 (which we define later) associated with it. 
-The value in each column of the rule can either be one of the values in the corresponding column of the table, or $\star$, representing a wildcard character representing all values in the column. For a column with numerical values in the table, we allow the corresponding rule-value to be a range instead of a single value. The {\em trivial rule} is one that has a $\star$ value in all columns. 
+The value in each column of the rule can either be one of the values in the corresponding column of the table, or $\star$, representing a wildcard character representing all values in the column. For a column with numerical values in the table, we allow the corresponding rule-value to be a range instead of a single value. The {\em trivial rule} is one that has a $\star$ value in all columns. The {\em Size} of a rule is defined as the number of non-starred values in that rule.
 
 \stitle{Coverage:} A rule $r$ is said to {\em cover} a tuple  $t$ from the table if all non-$\star$ values for all columns of the rule match the corresponding values in the tuple. We abuse notation to write this as $t \in r$. At a high level, we are interested
 in identifying rules that cover many tuples. We next define the concept of subsumption that allow us to 
@@ -33,11 +33,6 @@ We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no mor
 A {\em rule-list} is an ordered list of rules returned by our system as a result of a smart drill-down by the user. 
 When a user drills down on a rule $r$ to know more about the part of the table covered by $r$, we display a rule-list of sub-rules of $r$.
 For instance, the second, third and fourth rule from Table~\ref{table:introexample} form a rule-list, which is displayed when the user clicks on the first (trivial) rule. Similarly, the second, third and fourth rules in Table~\ref{table:introexample2} form a rule-list, as do the fifth, sixth and seventh rules. 
-
-\agp{seems useless to describe here.}  
-\sout{Let $R$ denote a rule-list. 
-For any rule $r \in R$, we let $SEQ(r)$ denote the position of $r$ in the list $R$. 
-Thus the $SEQ$ value of the cookies rule in Table~\ref{table:introexample2} is $1$, since it is the first rule in the list of rules obtained by expanding the walmart rule.}
 
 \stitle{Scoring:} We now define some additional properties of rules; these properties
 help us ``score'' individual rules as part of a rule-list. 
@@ -54,10 +49,6 @@ We now describe the first portion:
 we define {\em Count}($r$) is the total number of tuples $t \in T$ that are covered by $r$. 
 Further, we define {\em MCount}($r, R$) (which stands for `Marginal Count') is the number of tuples covered by $r$ but not by any rule before $r$ in the rule-list $R$. A high value of $MCount$ indicates that the rule not only covers a lot of tuples, but also covers parts of the table not covered by previous rules. We want to pick rules with a high value of $MCount$ to display to the user
 as part of the smart drill-down result, to increase the coverage of the rule-list. 
-
-\agp{not sure you are using size at this point. not essential to describe now:} 
-\sout{{\em Size}($r$) refers to the number of non-starred values in rule $r$.}
-
 
 Now, onto the second portion: we let $W$ denote a function that assigns a {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. 
 As we will see, the weighting function does not depend on the specific
@@ -86,7 +77,7 @@ the summary may potentially consist of rules $(a, b, \star)$, $(a, \star, \star)
 
 \begin{problem}\label{prob:optimal-subrule-list}
 Given a table $T$, a monotonic weighting function $W$, and a number $k$, find the list $R$ of $k$ rules that maximizes 
-$$\sum_{r \in R} W(r) \times MCount(r)$$
+$$\sum_{r \in R} W(r) \times MCount(r,R)$$
 for one of the following smart drill-down operations:
 \begin{enumerate}
 \item $[$Rule Drill-Down$]$ If the user clicked on a rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$
@@ -110,11 +101,11 @@ Here we set weight equal to the number of non-starred values in the rule $r$; we
 To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a $100$ of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those. Thus $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.
 
 \stitle{Weighting Function 2:}
-$W(r) = \sum_{c \in C : r(c) \neq \star} \text{log}_2(|c|)$ where $|c|$ refers to the number of distinct possible values in column $c$. Like the previous scoring function, this one adds some weight for every non-starred value in a rule. But instead of adding a weight of $1$ for every non-starred value, it varies the weight added depending on the `complexity' of the column. The reason behind this is the following: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
+$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. Like the previous scoring function, this one adds some weight for every non-starred value in a rule. But instead of adding a weight of $1$ for every non-starred value, it varies the weight added depending on the `complexity' of the column. The reason behind this is the following: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
 
-The interpretation for this function is similar to the one for the last function. Once again, we can imagine trying to reconstruct the table from the rules, and look at how much of the table is pre-filled by the rules. But this time, we count the number of `bits' that are pre-filled. For a column $c$, specifying a value in the column takes log($|c|$) bits of information. A non-starred valued in a rule $r$ thus pre-fills $MCount(r) \text{log}(|c|)$ bits of the table. Hence this scoring function gives us the number of pre-filled bits of the table by the rule-set. 
+The interpretation for this function is similar to the one for the last function. Once again, we can imagine trying to reconstruct the table from the rules, and look at how much of the table is pre-filled by the rules. But this time, we count the number of `bits' that are pre-filled. For a column $c$, specifying a value in the column takes $\lceil \text{log}(|c|)\rceil$ bits of information. A non-starred valued in a rule $r$ thus pre-fills $MCount(r,R) \lceil \text{log}(|c|) \rceil$ bits of the table. Hence this scoring function gives us the number of pre-filled bits of the table by the rule-set. 
 
-Note that this scoring function is closely related to the Minimum Description Length (MDL)~\cite{Grunwald:2007:MDL:1213810} of a table. If we describe a table using the rule-set, plus values to fill in for $\star$s in the rules to get tuples, then finding a set of rules that tries to minimize the length of this description, is equivalent to finding the rule-set that maximises the total score. 
+Note that this scoring function is closely related to the Minimum Description Length (MDL)~\cite{Grunwald:2007:MDL:1213810} of a table. If we describe a table using the rule-set, plus values to fill in for $\star$s in the rules to get tuples, then finding a set of rules of given size $k$ that tries to minimize the length of this description, is equivalent to finding the rule-set that maximises the total score. 
 
 \smallskip
 
@@ -124,6 +115,8 @@ Even though we have given two example weighting functions here, our algorithms a
 \item Non-negativity : For all rules $r$, $W(r) \geq 0$ 
 \item Monotonicity: If $r_1 \geq r_2$, then $W(r_1) \leq W(r_2)$. Monotonicity means that a rule that is less descriptive than another must be assigned a lower weight.
 \end{enumerate}
+
+A weight function can be used in several ways, including to express higher preference for a column (by assigning higher weight to rules having a non-$\star$ value in that column), or to express indifference to a column (by adding zero weight for having non-$\star$ value in that column).
 
 \begin{table}
 \centering

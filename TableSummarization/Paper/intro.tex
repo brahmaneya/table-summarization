@@ -3,7 +3,7 @@
 
 \section{Introduction}
 
-Drill down (and roll up) [citation] are very useful tools for exploring
+Drill down (and roll up)~\cite{export:69578} are very useful tools for exploring
 relational tables.
 In this paper we study an extension of drill down
 that lets users zoom into the more ``interesting'' parts of a table,
@@ -154,10 +154,10 @@ look through all the displayed rules and then find the interesting rule
 
 Incidentally, note that in the example we only described one type of smart drill down,
 where the analyst selects a {\em rule} to drill down on
-(e.g., the Walmart rule going from Table~\ref{table:introexample}
+(e.g., the Walmart rule going from Table~\ref{table:introexample} to
 Table~\ref{table:introexample2}.
 In Section~\ref{sec:interface} we describe another option
-where the analyst clicks an a {\em *} to obtain
+where the analyst clicks an a $\star$ to obtain
 rules that have values in that location.
 
 Our work on smart drill down is related
@@ -168,8 +168,8 @@ Sarawagi98discovery-drivenexploration,
 DBLP:journals/pvldb/GebalyAGKS14}.
 These papers mostly focus on
 giving the most ``surprising'' information to the user, i.e., information
-that would minimize the Kullback-Liebler(KL) divergence of the
-resulting maximum entropy distribution. For instance, if a certain set of
+that would minimize the Kullback-Liebler(KL) divergence between the
+resulting maximum entropy distribution and the actual value distribution. For instance, if a certain set of
 values occur together in an unexpectedly small number of tuples, that
 set of values may be displayed to the user. In contrast, our algorithm
 focuses on rules with high counts, covering as
