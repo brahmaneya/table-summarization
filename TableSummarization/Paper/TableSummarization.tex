@@ -5,14 +5,14 @@
 %\documentstyle[amsmath,amsthm,amssymb,twocolumn]{article}
 %\newcommand{\mytitle}{Evaluating the Crowd with Confidence}
 
-%\usepackage{amsmath}
+\usepackage{amsmath}
 \makeatletter
 \let\@copyrightspace\relax
 \makeatother
 \pdfpagewidth=8.5in
 \pdfpageheight=11in
 
-\renewcommand{\baselinestretch}{1.0}
+
 
 \usepackage{enumitem}
 \usepackage{times}
@@ -24,6 +24,14 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{framed}
 \usepackage[normalem]{ulem}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\renewcommand*\ttdefault{cmvtt}
+\usepackage[T1]{fontenc}
+
+
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 \newtheorem{definition}{Definition}
@@ -52,14 +60,14 @@
 \newcommand{\calD}{\mathcal{D}\xspace}
 
 
-\title{Interactive Summarization of Relational Tables}
+\title{Smart Drill-Down: Interactive Summarization of Relational Tables}
 
 \author{
 Manas Joglekar\\Stanford University\\manasrj@stanford.edu
 \and
 Hector Garcia-Molina\\Stanford University\\hector@cs.stanford.edu
 \and
-Aditya Parameswaran\\Stanford University\\adityagp@cs.stanford.edu
+Aditya Parameswaran\\University of Illinois\\adityagp@illinois.edu
 }
 \begin{document}
 \maketitle
