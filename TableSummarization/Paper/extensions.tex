@@ -3,13 +3,15 @@
 
 \section{Extensions}\label{sec:extensions}
 \subsection{Dealing with Numerical Attributes}\label{sec:extensions-numerical}
-Our algorithm assumes that all attributes are categorical in nature. Attributes that have a large domain d to have a smaller tuple count per value, and hence don't appear in rule summaries. Thus our algorithm does not summarise information about numerical attributes. 
+Our algorithm assumes that all attributes are categorical in nature. Attributes that have a large domain tend to have a smaller tuple count per value, and hence don't appear in rule summaries. Thus our algorithm does not summarise information about numerical attributes. 
 
 However, we can modify the algorithm to deal with numerical attributes. Suppose we have a numerical attribute $A$. A simple approach is to create buckets for values of $A$. We choose a number of buckets $k$, and divide the range of values of $A$ into $k$ intervals, each corresponding to a bucket. We can create buckets having an equal range size, or decide their range such that there is an approximately equal number of tuples in each bucket. Then we can use our algorithm, treating the bucket number as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
 
+\begin{comment}
 The distribution of values for the $A$ may not be similar in different parts of the table. For instance, we may create buckets have approximately equal numbers of tuples in the table. But then suppose a user tries to expand a rule $r$. The part of the table covered by $r$ might have a very different distribution of age values. For instance, in our MD dataset, if the user looks at people who own a house, their age distribution would be different from that of people who are still renting an apartment. To prevent the buckets from getting a skewed distribution when expanding $r$, we could recompute the bucket ranges every time the user expands a rule, and use the new bucket ranges to determine which rules to display upon expansion. 
 
-\agp{we should mention this right up front when we're describing the problem.}
+ask : we should mention this right up front when we're describing the problem.
+\end{comment}
 
 \subsection{Using Sum instead of Count}\label{sec:extensions-sum}
 Throughout the paper, we define the total score of a rule-list using the marginal counts of rules in the list, and display the count of each rule in our table summary. However, if we have a numerical column (i.e. a `measure' column) in the table, it is straightforward to extend our summary to the `Sum' aggregate over that column instead. Suppose we are given a measure column $c_m$. Then the {\em Sum} for a rule can be defined to be the sum of $c_m$ values over all tuples covered by the rule. {\em MSum} of a rule $r$ in a rule-list $R$ is the sum of $c_m$ values over all tuples covered by $r$ and not covered by any rule in $R$ that occurs before $r$. The Score for $R$ becomes $\text{Score}(R) = \sum_{r\in R} MSum(r,R)W(r)$. Algorithm~\ref{algo:best-rule-set} can be modified to find the best rule set using the new definition of Score, simply by replacing $Count(r)$ by $Sum(r)$ and computing sum and marginal sum instead of count and marginal count in each pass over the table.

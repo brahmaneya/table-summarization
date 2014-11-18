@@ -1,7 +1,7 @@
 %!TEX root = TableSummarization.tex
 
 
-\section{Formal Description} 
+\section{Formal Description}\label{sec:formal}
 We describe our formal problem
 in Section~\ref{sec:preliminaries},
 describe different scoring functions
@@ -55,7 +55,7 @@ we define {\em Count}($r$) is the total number of tuples $t \in T$ that are cove
 Further, we define {\em MCount}($r, R$) (which stands for `Marginal Count') is the number of tuples covered by $r$ but not by any rule before $r$ in the rule-list $R$. A high value of $MCount$ indicates that the rule not only covers a lot of tuples, but also covers parts of the table not covered by previous rules. We want to pick rules with a high value of $MCount$ to display to the user
 as part of the smart drill-down result, to increase the coverage of the rule-list. 
 
-Now, onto the second portion: we let $W$ denote a function that assigns a {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. 
+Now, onto the second portion: we let $W$ denote a function that assigns a non-negative {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. 
 As we will see, the weighting function does not depend on the specific
 tuples in $\calD$, but could, as we will see later, 
 depend on the number of $\star$s in $r$,
@@ -121,10 +121,10 @@ Note that this scoring function is closely related to the Minimum Description Le
 
 \stitle{Other Weighting Functions:}
 Even though we have given two example weighting functions here, our algorithms allow the user to set any weighting function $W$, subject to only two conditions:
-\begin{enumerate}
+\squishlist
 \item Non-negativity: For all rules $r$, $W(r) \geq 0$.
 \item Monotonicity: If $r_1 \geq r_2$, then $W(r_1) \leq W(r_2)$. Monotonicity means that a rule that is less descriptive than another must be assigned a lower weight.
-\end{enumerate}
+\squishend
 A weight function can be used in several ways, including to express higher preference for a column (by assigning higher weight to rules having a non-$\star$ value in that column), or to express indifference to a column (by adding zero weight for having non-$\star$ value in that column).
 
 \begin{table}

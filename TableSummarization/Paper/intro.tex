@@ -222,22 +222,13 @@ directs the drill down and can tailor the optimization criteria.
 Nevertheless, one can envision extending traditional
 and smart drill down to provide an additional option of anomaly detection. We discuss related work in detail in  Section~\ref{sec:related}..
 
-\agp{fix the contributions by combining 1, 2, 3}
-
-\agp{add 1 paragraph on chief technical contribution of solution.}
+Briefly, the contributions of our paper can be summarized are follows: We develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill down operation. In addition, we develop a scheme for maintaining and using multiple samples of the table in memory to improve response time on large tables.
 
 \stitle{Overview of paper:} 
 \squishlist 
 
-\item In Section~\ref{sec:preliminaries}, we introduce the relevant
-notation and formally define smart drill down.
+\item In Section~\ref{sec:formal}, we introduce the relevant notation and formally define smart drill down. After that, we discuss different schemes for weighting rules, and describe our interactive user interface.
 
-\item In Section~\ref{sec:weighting}, we consider different schemes
-for weighting rules, along with their practical significance.
-
-\item In Section~\ref{sec:interface}, we describe our
-interactive user interface. 
-  
 \item In Section~\ref{sec:algorithms}, we present our algorithms for
 finding optimal sets of rules, as well as our sampling schemes
 for dealing with large tables.

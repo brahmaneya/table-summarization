@@ -11,24 +11,18 @@ the smart drill-down operator.
 When the user drills down on a rule $r^{\prime}$, we want to find the highest scoring list of rules to expand rule $r^{\prime}$ into. If the user had clicked on a $\star$ in a column $c$, then we have the additional restriction that all resulting rules must have a non-$\star$ value in column $c$. We can reduce Problem~\ref{prob:optimal-subrule-list} to the following simpler problem by removing the user-interaction based constraints: 
 
 \begin{problem}\label{prob:optimal-rule-list}
-Given a table $T$, a weight function $W$, and a number $k$, to find the list $R$ of $k$ rules that maximizes the total score given by :
+Given a table $T$, a monotonic weight function $W$, and a number $k$, to find the list $R$ of $k$ rules that maximizes the total score given by :
 $$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r,R)$$
 \end{problem}
 
-\agp{not essential to mention here.}
-\sout{$W$ is required to be non-negative and monotonic. $k$ will usually be small (though the correctness of our solution does not depend on this), since the $k$ rules generated should constitute an easily visualizable summary of the table.}
-
 \noindent Problem~\ref{prob:optimal-subrule-list} with parameters $(T, W, k)$ can be reduced to Problem~\ref{prob:optimal-rule-list} as follows:
-\squishlist
+\begin{enumerate}
 \item $[$Rule Drill-Down$]$ If the user clicked on rule $r$ in Problem~\ref{prob:optimal-subrule-list}, then we can conceptually make one pass through the table $T$ to filter for tuples covered by rule $r$, and store them in a temporary table $T_r$. Then we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W, k)$.
 \item $[$Star Drill-Down$]$ If the user clicked on a $\star$ in column $c$ of rule $r$, then we first filter table $T$ to get a smaller table $T_r$ consisting of tuples from $T$ that are covered by $r$. In addition, we change the weight function $W$ from Problem~\ref{prob:optimal-subrule-list} to a weight function $W^{\prime}$ such that : For any rule $r^{\prime}$, $W^{\prime}(r^{\prime}) = 0$ if $r^{\prime}$ has a $\star$ in column $c$, and $W^{\prime}(r^{\prime}) = W(r^{\prime})$ otherwise. Then we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W^{\prime}, k)$.
-\squishend
+\end{enumerate}
 
-\agp{not essential to mention here}\sout{We will describe a greedy algorithm for finding the approximately highest scoring rule-list.}
 
-First, we show that the rules in the optimal list must effectively be ordered in decreasing order by weight.
-\agp{mention that this is independent of MCount. Also give intuition--this is because
-we can transfer tuples from one rule to a better rule adn only increase score.}
+First, we show that the rules in the optimal list must effectively be ordered in decreasing order by weight. Note that the weight of a rule is independent of its $MCount$. The $MCount$ of a rule is the number of tuples that have been `assigned' to it, and each tuple assigned to rule $r$ contributes $W(r)$ to the total score. Thus if the rules are not in decreasing order by weight in a rule list $R$, then switching the order of rules in $R$ transfers some tuples from a lower weight rule to a higher weight rule, which can increase total score.
 
 \begin{lemma}\label{lemma:rule-ordering}
 Let $R$ be a rule-list. Let $R^{\prime}$ be the rule-list having the same rules as $R$, but ordered in descending order by weight. Then
@@ -42,26 +36,42 @@ $$\text{Score}(R^{\prime}) \geq \text{Score}(R)$$
 as required.
 \end{proof}
 
-\noindent Thus it is sufficient to restrict our attention to rule-lists that have rules sorted in decreasing order by weight. Or equivalently, given any set $S$ of rules, we can define the Score$(S)$ to be the score of the list obtained by sorting elements of $S$ in decreasing weight order. This gives us 
+\noindent Thus it is sufficient to restrict our attention to rule-lists that have rules sorted in decreasing order by weight. Or equivalently, we can define Score for a set of rules as follows:
+
+\begin{definition}\label{def:set-score}
+Let $R$ be a set of rules. Then the Score of $R$ is defined by
+$$\text{Score}(R) = \text{Score}(R^{\prime})$$
+where $R^{\prime}$ is the list of rules obtained by ordering the rules in $R$ in decreasing order by weight.
+\end{definition}
+
+This gives us a reduced version of Problem~\ref{prob:optimal-rule-list}: 
 \begin{problem}\label{prob:optimal-rule-set}
-Given a table $T$, a weight function $W$, and a number $k$, to find the set $R$ of $k$ rules such that if $R^{\prime}$ is the rule-list obtained by ordering rules in $R$ in decreasing weight order, then the following quantity is maximised:
-$$\text{Score}(R) = \text{Score}(R^{\prime}) = \sum_{r \in R^{\prime}}W(r)MCount(r,R)$$
+Given a table $T$, a monotonic weight function $W$, and a number $k$, find the set $R$ of $k$ rules which maximizes Score($R$) as defined in Definition~\ref{def:set-score}.
 \end{problem}
 
-\agp{Confusing since you're conflating lists and sets. Explicitly define the score of a set of rules
-is the score of the best rule list (and in the equation above, have max over all R' where R' is an ordered
-version of S)}
+\noindent The reduction from Problem~\ref{prob:optimal-rule-list} to Problem~\ref{prob:optimal-rule-set} is clear. We now first show that Problem~\ref{prob:optimal-rule-set}, and consequently Problem~\ref{prob:optimal-subrule-list} and Problem~\ref{prob:optimal-rule-list} are NP-Hard, and then present an approximation algorithm for solving Problem~\ref{prob:optimal-rule-set}.
 
-\noindent The reduction from Problem~\ref{prob:optimal-rule-list} to Problem~\ref{prob:optimal-rule-set} is clear. We now show an approximation algorithm for Problem~\ref{prob:optimal-rule-set}.
+\subsection{NP-Hardness for Problem~\ref{prob:optimal-rule-set}}
+We reduce the well known NP-Hard problem called the {\em Maximum Coverage Problem} to a special case of Problem~\ref{prob:optimal-rule-set}, which will prove NP-Hardness for Problem~\ref{prob:optimal-rule-set}. The Maximum Coverage Problem is given below: 
+\begin{problem}\label{prob:maximum-coverage}
+Given a universe set $U$, an integer $k$, and a set $S = \left\lbrace S_1, S_2, ... S_m \right\rbrace$ of subsets of $U$ (so each $S_i \subset U$), find $S^{\prime} \subset S$ such that $|S^{\prime}| = k$, which maximises $\text{Coverage}(S^{\prime}) = |\bigcup_{s \in S^{\prime}} s|$.
+\end{problem}
+Thus the maximum coverage problem is to find a set of $k$ of the given subsets of $U$ whose union `covers' as much of $U$ as possible. We now reduce an instance of the Maximum Coverage Problem (with parameters $U, k, S$) to an instance of Problem~\ref{prob:optimal-rule-set}. 
 
+Then we construct the table $T$ as follows: $T$ has $|U|$ tuples and $|S|$ columns. Column $i$ of $T$ corresponds to set $S_i \in S$ and each tuple of $T$ corresponds to one $u \in U$. For each $u \in U$, the tuple $t_u$ corresponding to $u$ defined as follows: For each $S_i \in S$, $$t_u(i) = 1 \textrm{ if } u \in S_i \textrm{ else } t_u(i) = 0$$
+
+Define the weight function $W$ as follows:
+$$W(r) = \textrm{min}(1, |\left\lbrace i \in \left\lbrace 1, 2, ... m \right\rbrace : r(i) = 1 \right\rbrace|)$$
+Thus $W$ gives weight $0$ to rules that do not have value $1$ in any column, and weight $1$ to all other rules. An optimal rule set for weight function $W$ on table $T$ need only contain rules having a single $1$ value and no $0$ values, because adding more values can only reduce $MCount$, without increasing weight. 
+
+Then a solution to the instance of Problem~\ref{prob:optimal-rule-set} with table $T$, weight function $W$, and required number of rules $k$ gives us a solution to the instance of Problem~\ref{prob:maximum-coverage} as follows: For each rule $r$ in the solution of the Problem~\ref{prob:optimal-rule-set} instance, if it has value $1$ in column $i$ and $\star$ in all other columns, then add $S_i$ to the solution set of the Problem~\ref{prob:maximum-coverage} instance. This completes our reduction.
+ 
 \subsection{Algorithm Overview}\label{sec:alg-overview}
-\agp{Give a high-level perspective of the algorithm; 
-Basics: greedy approximation + a-priori; 
-Advanced: Sampling for larger datasets: comprising two parts
-how to best use samples, and how to select samples}
+We now present our algorithms for approximating the solution to Problem~\ref{prob:optimal-rule-set}. The problem consists of finding a set of given size $k$, that maximises Score. We first show that the Score function is {\em submodular}, and hence an approximately optimal set can be obtained using a greedy algorithm. We start with an empty rule set $R$, and then run the greedy algorithm for $k$ steps, where in each step, we add the rule $r$ to $R$ that maximises Score($R \cup \left\lbrace r \right\rbrace$). In order to find the rule $r$ to add in each step, we need to measure $Score(R \cup \left\lbrace r \right\rbrace) - Score(R)$ for each $r$. This is done in several passes over the table, using ideas from the a priori algorithm~\cite{apriori} for frequent itemset mining. 
+
+In addition, the greedy algorithm can be run over a sample of the table instead of over the entire table, to reduce computation time for large tables. We later describe a scheme for maintaining multiple samples in memory and using them to improve response time for different drill down operations performed by the user. 
 
 \subsection{Greedy Approximation Algorithm}\label{sec:greedy-approx}
-\agp{can we show hardness in data or schema complexity?}
 We will now show that the Score function over sets of rules has a property called {\em submodularity}, which gives us a greedy approximation algorithm for optimizing it. 
 \begin{definition}
 A function $f: 2^S \rightarrow \mathbb{R}$ for any set $S$ is said to be submodular if and only if, for every $s \in S$, and $A \subset B \subset S$ with $s \notin A$:
@@ -186,16 +196,16 @@ $H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
 \end{algorithm}
 
 \subsection{Sampling for big tables}
+\subsubsection{Sampling Overview}
+We now describe our sampling schemes for improving the running time of our algorithm on tables that are too large to fit in main memory. First in Section~\ref{sec:sample-using}, we motivate the need for sampling. Then we describe a component of our system, called the {\em SampleHandler}, which is responsible for creating and maintaining samples of the table in memory, subject to user specified memory constraints. The SampleHandler maintains multiple samples corresponding to different parts of the table, which can be used depending on which rule the user decides to expand next. Then in Section~\ref{sec:sampling_algorithms}, we describe ways to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk. Finally, we mention some additional optimizations we can make, and heuristics for setting the minimum sample size required from the SampleHandler.
 
-\agp{Here also, there is a need for some organization. There are clearly
-some good ideas here, but you need to give a high-level picture first before
-diving in.}
+\subsubsection{Using samples to respond to user operations}\label{sec:sample-using}
 Our greedy algorithm needs to make multiple passes over the entire table in order to find counts of rules. These passes can be very expensive if the table is large, especially if it does not fit in main memory. If we want exact counts for rules, we have no choice but to read the entire table. 
 
 But if we are willing to accept approximate counts rather than exact counts for rules, we can speed up our algorithm by loading a sample of the table into main memory, finding rule counts on the sample, and scaling up the count. If we had obtained the sample by sampling each tuple with probability $p$, then we must scale up the sample count of each rule by $\frac{1}{p}$ to get an estimate of it's count over the full table.
 
-Thus, we use sampling to trade-off a small amount of accuracy for a faster response time. Our system includes a {\em SampleHandler}, which is given a certain memory capacity $M$, and a minimum sample size $minSS$ (specified by the user).
-The $minSS$ parameter is the minimum number of sample tuples that are used to find counts while running our greedy algorithm, and this parameter determines how accurate our count estimates will be. We provide a way to find reasonable values of $minSS$ later.
+Thus, we use sampling to trade-off a small amount of accuracy for a faster response time. Our system includes a {\em SampleHandler}, which is given a certain memory capacity $M$, and a minimum sample size $minSS$ (both specified by the user).
+The $minSS$ parameter is the minimum number of sample tuples that are used to find counts while running our greedy algorithm, and this parameter determines how accurate our count estimates will be. We later provide a way to find reasonable values of $minSS$.
 
 At all points, the SampleHandler maintains a set of Samples in memory. Each sample $s$ is an object with three attributes: A `filter' rule $f_s$, a scaling factor $N_s$ and a set $T_s$ of tuples from the table. The set $T_s$ consists of a $\frac{1}{N_s}$ uniformly sampled fraction of tuples covered by $f_s$. The scaling factor $N_s$ is used to translate the count of a rule on the sample into an estimate of the count over the entire table. The sum of $|T_s|$ over all samples $s$ is not allowed to exceed capacity $M$ at any point. 
 
@@ -227,25 +237,27 @@ In addition, while we are making the pass in the background, we can find the exa
 \subsubsection{Algorithms for deciding what to sample}\label{sec:sampling_algorithms}
 We now discuss algorithms for the SampleHandler to decide what sizes of Samples to maintain in memory. Suppose at some stage, we have a tree $U$ of rules displayed to the user. Internal nodes of $U$ are rules that have been expanded, while leaves are rules that have not been expanded. Let $L$ be the set of leaves. Each leaf is something that the user can potentially expand (drill down on) in the next step, and thus we would like to have pre-fetched samples for leaves.
 
-We assume that we have a probability distribution over leaves, which assigns a probability that each leaf will be the next one to be expanded. In the absence of additional information, we can assume a uniform probability distribution. That is, we can assume that every leaf is equally likely to be expanded next. However, we can also use Machine Learning on past user behaviour, along with rule features such as `rule depth in tree' and `rule distance from last expanded rule' to get a better probability estimate of each rule being expanded.
+We assume that we have a probability distribution over leaves, which assigns a probability that each leaf will be the next one to be expanded. In the absence of additional information, we can assume a uniform probability distribution. That is, we can assume that every leaf is equally likely to be expanded next. However, we can also use Machine Learning on past user behaviour, along with rule features such as `rule depth in tree' and `rule distance from last expanded rule' to get a better probability estimate of each rule being expanded. 
 
 When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to make a pass through the entire table, as well as potentially shrink some existing samples to free up memory. Since making a pass over the the table from the Hard Disk is usually a bottleneck, it can also do things like creating samples for rules other than $r$, and augmenting existing samples, in the same pass. Hence, we assume that in a \textbf{Create} phase, the SampleHandler not only creates one new sample for $r$, but also potentially creates other new samples, or resizes existing samples. For each displayed rule $r^{\prime}$, it may create a new sample for $r^{\prime}$ in the same pass through the table. Based on the current leaves and their expansion probabilities, it finds an optimal set of sizes of samples to create for each displayed rule. More specifically, for every displayed rule $r^{\prime}$, it determines an integer $n_{r^{\prime}}$, and then creates a fresh sample $s_{r^{\prime}}$ with $f_{s_{r^{\prime}}} = r^{\prime}$ and $|T_{s_{r^{\prime}}}| = n_{r^{\prime}}$ while making it's pass through the table. 
 
 We choose the $n_{r^{\prime}}$ values so as to maximise the probability that the next user drill down can be satisfied using samples available in memory. We define some terms required to formalise this problem next. 
 
-For each pair of rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. We define $S(r_1, r_2)$ to be $0$ if $r_1$ is not a sub-rule of $r_2$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$ For any $r^{prime}$, define the function {\em ess} (for `effective sample size') as $\text{ess}(r^{\prime}) = \sum_{r \in U} S(r, r^{\prime})n_r$. If $\text{ess}(r^{\prime}) \geq \text{minSS}$ then if the user expands $r^{\prime}$, we display the next rule list using \textbf{Find} or \textbf{Combine}, instead of having to make another pass through the table. We wish to maximise the probability that we can respond to the next user expansion without making another pass. 
-
-\agp{not clear what problem you're trying to solve here. consider raising it up as a subsection
-and giving it a name. }
-Thus formally our problem is :
-Choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximize}$ :
+For each pair of rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. We define $S(r_1, r_2)$ to be $0$ if $r_1$ is not a sub-rule of $r_2$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$ For any $r^{prime}$, define the function {\em ess} (for `effective sample size') as below: 
+\begin{definition}\label{def:ess}
+$$\text{ess}(r^{\prime}) = \sum_{r \in U} S(r, r^{\prime})n_r$$ 
+\end{definition}
+If $\text{ess}(r^{\prime}) \geq \text{minSS}$ then if the user expands $r^{\prime}$, we display the next rule list using \textbf{Find} or \textbf{Combine}, instead of having to make another pass through the table. We wish to maximise the probability that we can respond to the next user expansion without making another pass. We now formally define our problem below:
+\begin{problem}\label{prob:sample-sizes}
+Given a tree of rules $U$ with leaves $L$, a probability distribution $p$ over $L$, an integer `capacity', and selectivity ratio $S(r_1, r_2)$ for each $r_1, r_2 \in U$, 
+choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximize}$ :
 $$\sum_{r^{\prime} \in L} p_{r^{\prime}}I_{\text{ess}(r^{\prime}) \geq \text{minSS}}$$
 where the $I$'s are indicator variables, subject to :
 $$\sum_{r \in U} n_r < \text{capacity}$$
-This problem is non-linear and non-convex because of the indicator variables. If the tree $U$ is not too big, then it might be feasible to use an exponential algorithm to solve the problem. 
+\end{problem}
+Problem~\ref{prob:sample-sizes} is non-linear and non-convex because of the indicator variables. If the tree $U$ is not too big, then it might be feasible to use an exponential algorithm to solve the problem. 
 
 Otherwise, with an additional simplification, we can reduce it to the knapsack-like problem, and use a PTAS (Polynomial Time Approximation Scheme) to find the approximately optimal solution. The simplification is: For each $r \in L$, we assume that it will get tuples only from samples obtained for itself (filter $= r$) and it's immediate parent. That is, we set $S(r_1, r_2)$ to be zero if $r_1 \neq r_2$ and $r_2$ is not a child of $r_1$. $\text{ess}(r)$ is redefined according to the new value of $S$ as well. So $$\text{ess}(r^{\prime}) = n_{r^{\prime}} + n_rS(r, r^{\prime})$$ where $r$ is the parent of $r^{\prime}$. 
-
 
 Now consider a rule in $r_0 \in U \setminus L$ along with all it's children. Let $M_{r_0}$ denote the set containing $r_0$ and all it's leaf children. Then by our simplification, the number of tuples $n_{r^{\prime}}$ for any rule in $r^{\prime} \in M_{r_0}$ only affects the ess value of rules in $M_{r_0}$. This allows us to effectively split the problem into multiple subproblems, one per $M_{r_0}$. Thus for each non-leaf rule $r_0$ and all it's children, we compute all `locally optimal' assignments of $n_r \mid r \in M_{r_0}$. Locally optimal means that we cannot get a higher value of `probability value' $\sum_{r \in M_{r_0}} p_rI_{\text{ess}(r) \geq \text{minSS}}$ for the same `sampling cost' $\sum_{r\in M_{r_0}} n_r$. Then we can use dynamic programming to combine the locally optimal solutions of different $M_{r_0}$s. We describe both these steps in detail below:
 
