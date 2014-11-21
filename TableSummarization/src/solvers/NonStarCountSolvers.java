@@ -900,6 +900,97 @@ public class NonStarCountSolvers {
 	
 	/**
 	 * Finds rule that adds the most marginal value, given the chosen solution rules. 
+	 * This function starts afresh, not accessing the old values of ruleMap or superRules.
+	 */
+	public static List<Rule> getTopKRules (TableInfo table, Integer maxRuleScore, Scorer scorer, int numRules) throws IOException {
+		List<Rule> solution = new ArrayList<Rule>();
+		final Integer length = table.dictionary.size();
+		List<List<Rule>> singleRules = getSingleRulesWithMarginalValues (table, new HashSet<Rule>(), scorer);
+		Map<Rule, Set<Rule>> superRules = new HashMap<Rule, Set<Rule>>();
+		Map<Rule, Rule> ruleMap = new HashMap<Rule, Rule>();
+		Map<List<Integer>, Rule> ruleListMap = new HashMap<List<Integer>, Rule>();
+		Integer valueThreshold = -1;
+		List<Rule> candidateRules = new ArrayList<Rule>();
+		
+		for (int col = 0; col < singleRules.size(); col++) {
+			final List<Rule> colRules = singleRules.get(col);
+			for (int val = 0; val < colRules.size(); val++) {
+				Rule rule = colRules.get(val);
+				ruleMap.put(rule, rule);
+				ruleListMap.put(rule.values, rule);
+				superRules.put(rule, new HashSet<Rule>());
+				candidateRules.add(rule);
+			}
+		}			
+		Collections.sort(candidateRules);
+		Collections.reverse(candidateRules);
+		valueThreshold = candidateRules.get(numRules).maxMarginalValue;
+				
+		Set<Rule> latestSuperRules = ruleMap.keySet();
+		
+		for (int currentSize = 2; currentSize < 7; currentSize++) {
+			//out.println(bestMarginalRuleValue);
+			Set<Rule> nextSuperRules = new HashSet<Rule>();
+			for (Rule r : latestSuperRules) {
+				Rule rule = ruleMap.get(r);
+				if (rule.maxMarginalValue + rule.count * (maxRuleScore - rule.score) >= valueThreshold) {
+					nextSuperRules.addAll(rule.findSuperRules(table, currentSize));					
+				}
+			}
+			//out.println("Generated " + nextSuperRules.size() + " candidate rules of size " + currentSize);
+			Iterator<Rule> ruleIter = nextSuperRules.iterator();
+			while (ruleIter.hasNext()) {
+				Rule rule = ruleIter.next();
+				rule.setScore(table, scorer);
+				//final Integer countUpperBound = countUpperBound(rule, ruleMap);
+				//setMarginalValueUpperBound(rule, countUpperBound, ruleMap);
+				//final Integer upperBound = rule.maxMarginalValue + (maxRuleScore - rule.score) * countUpperBound;
+				final Integer upperBound = subRuleMarginalValueUpperBoundLimited(rule, ruleListMap, ruleMap, superRules, maxRuleScore, valueThreshold);
+				if (upperBound < valueThreshold) { 
+					ruleIter.remove();
+				}
+			}
+			if (nextSuperRules.isEmpty()) {
+				break;
+			}
+			//out.println("Accepted " + nextSuperRules.size() + " candidate rules of size " + currentSize);
+			for (Rule rule : nextSuperRules) {
+				Rule r = new Rule(table, rule.valueMap, rule.length(), 0, false, scorer); // Unnecessary doubling of memory?
+				r.maxMarginalValue = rule.maxMarginalValue;
+				Set<Rule> subRules = r.findSubRules(currentSize - 1);
+				for (Rule subRule : subRules) {
+					if (ruleMap.containsKey(subRule)) {
+						superRules.get(subRule).add(r);
+						break;
+					}
+				}
+				ruleMap.put(r, r);
+				ruleListMap.put(r.values, r);
+				superRules.put(r, new HashSet<Rule>());
+			}
+			//long initial = System.currentTimeMillis();
+			if (currentSize == 2) { // Update marginal counts here and below.
+				updateCountsAndMarginalValuesSizeTwo (table, ruleMap, new HashSet<Rule>());
+			} else {
+				updateCountsAndMarginalValuesSingleHash (table, ruleMap, new HashSet<Rule>());	
+			}
+			//out.println(System.currentTimeMillis() - initial);
+			
+			latestSuperRules = nextSuperRules;
+			for (Rule r : nextSuperRules) {
+				candidateRules.add(ruleMap.get(r));
+			}
+			Collections.sort(candidateRules);
+			Collections.reverse(candidateRules);
+			valueThreshold = candidateRules.get(numRules).maxMarginalValue;
+		}	
+		Collections.sort(candidateRules);
+		Collections.reverse(candidateRules);
+		return candidateRules.subList(0, numRules);
+	}
+	
+	/**
+	 * Finds rule that adds the most marginal value, given the chosen solution rules. 
 	 * This function takes the existing ruleMap, etc as input, which already contains several count values and other info. 
 	 */
 	public static Rule getBestMarginalRule (TableInfo table, Map<Rule, Rule> ruleMap, Map<Rule, Set<Rule>> superRules, 
@@ -1173,6 +1264,17 @@ public class NonStarCountSolvers {
 	
 	public static void main (String[] args) throws IOException {
 		TableInfo table = Marketing.parseData();
+		List<Integer> cols = new ArrayList<Integer>();
+		final Integer firstNumColumns = 7;
+		for (int i = 1; i < firstNumColumns; i++) {
+			cols.add(i);
+		}
+		TableInfo subTable = table.getSubTable(cols);
+		List<Rule> topKRules = getTopKRules (subTable, 5, new Rule.sizeScorer(), 8);
+		for (Rule r : topKRules) {
+			out.println(r.fullRuleStringTex(subTable));
+		}
+		if (1!=2) return;
 		Integer maxRuleScore = 5; // We will only consider rules scoring upto this. This parameter is important as it determines out threshold for which smaller rules to drop.
 		Map<Rule, Rule> ruleMap = new HashMap<Rule, Rule>();
 		

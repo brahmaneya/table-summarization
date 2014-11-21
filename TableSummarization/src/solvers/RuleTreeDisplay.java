@@ -14,6 +14,7 @@ import java.util.Stack;
 import dataextraction.Marketing;
 import dataextraction.SampleHandler;
 import dataextraction.TableInfo;
+import dataextraction.USCensus1990;
 import solvers.Rule.sizeBitsScorer;
 import solvers.Rule.sizeMinusKScorer;
 import solvers.Rule.sizeScorer;
@@ -189,28 +190,41 @@ public class RuleTreeDisplay {
 	}
 	
 	public static void main (String[] args) throws IOException {
-		final String mw_bits_outFile = "Data_Graphs/mw_speed_bits";
-		final String mw_size_outFile = "Data_Graphs/mw_speed_size";
-		final String minSS_size_outFile = "Data_Graphs/minSS_speed_size";
-		final String minSS_bits_outFile = "Data_Graphs/minSS_speed_bits";
-		final String minSS_size_error_outFile = "Data_Graphs/minSS_error_size";
-		final String minSS_bits_error_outFile = "Data_Graphs/minSS_error_bits";
 		List<Integer> columns = new ArrayList<Integer>();
 		final Integer firstNumColumns = 7;
 		for (int i = 1; i < firstNumColumns; i++) {
 			columns.add(i);
 		}
-		TableInfo fullTable = Marketing.parseData();
+		//TableInfo fullTable = Marketing.parseData();
+		TableInfo fullTable = USCensus1990.parseData(0.01);
 		TableInfo table = fullTable.getSubTable(columns);
 		Integer ruleNums = 4;
+		final String mw_bits_outFile = "Data_Graphs/mw_speed_bits";
+		final String mw_size_outFile = "Data_Graphs/mw_speed_size";
+		final String mw_bits_USCensus_outFile = "Data_Graphs/mw_speed_USCensus_bits";
+		final String mw_size_USCensus_outFile = "Data_Graphs/mw_speed_USCensus_size";
 		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeBitsScorer(), mw_bits_outFile);
 		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeScorer(), mw_size_outFile);
+		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeBitsScorer(), mw_bits_USCensus_outFile);
+		//Experiments.mwSpeedTest(table, 1, 20, ruleNums, new Rule.sizeScorer(), mw_size_USCensus_outFile);
 		
+		final String minSS_size_outFile = "Data_Graphs/minSS_speed_size";
+		final String minSS_bits_outFile = "Data_Graphs/minSS_speed_bits";
+		final String minSS_size_USCensus_outFile = "Data_Graphs/minSS_speed_USCensus_size";
+		final String minSS_bits_USCensus_outFile = "Data_Graphs/minSS_speed_USCensus_bits";
 		//Experiments.minSSSpeedTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_outFile);
 		//Experiments.minSSSpeedTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_outFile);
+		//Experiments.minSSSpeedTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_USCensus_outFile);
+		//Experiments.minSSSpeedTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_USCensus_outFile);
 		
-		Experiments.minSSErrorTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_error_outFile);
-		Experiments.minSSErrorTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_error_outFile);
+		final String minSS_size_error_outFile = "Data_Graphs/minSS_error_size";
+		final String minSS_bits_error_outFile = "Data_Graphs/minSS_error_bits";
+		final String minSS_size_USCensus_error_outFile = "Data_Graphs/minSS_error_USCensus_size";
+		final String minSS_bits_USCensus_error_outFile = "Data_Graphs/minSS_error_USCensus_bits";
+		//Experiments.minSSErrorTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_error_outFile);
+		//Experiments.minSSErrorTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_error_outFile);
+		Experiments.minSSUSCensusErrorTest(table, columns, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_USCensus_error_outFile);
+		//Experiments.minSSUSCensusErrorTest(table, columns, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_USCensus_error_outFile);
 				
 		if(1!=2)return;
 		int minSampleSize = Integer.MAX_VALUE;
@@ -220,7 +234,7 @@ public class RuleTreeDisplay {
 		RuleTreeDisplay ruleTreeDisplay = new RuleTreeDisplay(ruleTree);
 		Integer maxRuleScore = 5;
 		Scanner scanner = new Scanner(System.in);
-		Scorer scorer = new Rule.sizeBitsScorer();
+		Scorer scorer = new Rule.sizeScorer();
 		String input = "0";
 		do {
 			long timer = System.currentTimeMillis();
