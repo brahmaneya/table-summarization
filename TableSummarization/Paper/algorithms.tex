@@ -52,27 +52,48 @@ Given a table $T$, a monotonic weight function $W$, and a number $k$, find the s
 \noindent The reduction from Problem~\ref{prob:optimal-rule-list} to Problem~\ref{prob:optimal-rule-set} is clear. We now first show that Problem~\ref{prob:optimal-rule-set}, and consequently Problem~\ref{prob:optimal-subrule-list} and Problem~\ref{prob:optimal-rule-list} are NP-Hard, and then present an approximation algorithm for solving Problem~\ref{prob:optimal-rule-set}.
 
 \subsection{NP-Hardness for Problem~\ref{prob:optimal-rule-set}}
-We reduce the well known NP-Hard problem called the {\em Maximum Coverage Problem} to a special case of Problem~\ref{prob:optimal-rule-set}, which will prove NP-Hardness for Problem~\ref{prob:optimal-rule-set}. The Maximum Coverage Problem is given below: 
+We reduce the well known NP-Hard {\em Maximum Coverage Problem} to a special case of Problem~\ref{prob:optimal-rule-set};
+thus demonstrating the NP-Hardness of Problem~\ref{prob:optimal-rule-set}. The Maximum Coverage Problem is as follows: 
 \begin{problem}\label{prob:maximum-coverage}
 Given a universe set $U$, an integer $k$, and a set $S = \left\lbrace S_1, S_2, ... S_m \right\rbrace$ of subsets of $U$ (so each $S_i \subset U$), find $S^{\prime} \subset S$ such that $|S^{\prime}| = k$, which maximises $\text{Coverage}(S^{\prime}) = |\bigcup_{s \in S^{\prime}} s|$.
 \end{problem}
-Thus the maximum coverage problem is to find a set of $k$ of the given subsets of $U$ whose union `covers' as much of $U$ as possible. We now reduce an instance of the Maximum Coverage Problem (with parameters $U, k, S$) to an instance of Problem~\ref{prob:optimal-rule-set}. 
+Thus, the goal of the maximum coverage problem is to find a set of $k$ of the given subsets of $U$ whose union `covers' as much of $U$ as possible. We now reduce an instance of the Maximum Coverage Problem (with parameters $U, k, S$) to an instance of Problem~\ref{prob:optimal-rule-set}. 
 
-Then we construct the table $T$ as follows: $T$ has $|U|$ tuples and $|S|$ columns. Column $i$ of $T$ corresponds to set $S_i \in S$ and each tuple of $T$ corresponds to one $u \in U$. For each $u \in U$, the tuple $t_u$ corresponding to $u$ defined as follows: For each $S_i \in S$, $$t_u(i) = 1 \textrm{ if } u \in S_i \textrm{ else } t_u(i) = 0$$
+\begin{proof}
+We construct the table $T$ as follows: $T$ has $|U|$ tuples and $|S|$ columns. Column $i$ of $T$ corresponds to set $S_i \in S$ and each tuple of $T$ corresponds to one $u \in U$. For each $u \in U$, the tuple $t_u$ corresponding to $u$ defined as follows: For each $S_i \in S$, $$t_u(i) = 1 \textrm{ if } u \in S_i \textrm{ else } t_u(i) = 0$$
 
 Define the weight function $W$ as follows:
 $$W(r) = \textrm{min}(1, |\left\lbrace i \in \left\lbrace 1, 2, ... m \right\rbrace : r(i) = 1 \right\rbrace|)$$
 Thus $W$ gives weight $0$ to rules that do not have value $1$ in any column, and weight $1$ to all other rules. An optimal rule set for weight function $W$ on table $T$ need only contain rules having a single $1$ value and no $0$ values, because adding more values can only reduce $MCount$, without increasing weight. 
 
-Then a solution to the instance of Problem~\ref{prob:optimal-rule-set} with table $T$, weight function $W$, and required number of rules $k$ gives us a solution to the instance of Problem~\ref{prob:maximum-coverage} as follows: For each rule $r$ in the solution of the Problem~\ref{prob:optimal-rule-set} instance, if it has value $1$ in column $i$ and $\star$ in all other columns, then add $S_i$ to the solution set of the Problem~\ref{prob:maximum-coverage} instance. This completes our reduction.
- 
-\subsection{Algorithm Overview}\label{sec:alg-overview}
-We now present our algorithms for approximating the solution to Problem~\ref{prob:optimal-rule-set}. The problem consists of finding a set of given size $k$, that maximises Score. We first show that the Score function is {\em submodular}, and hence an approximately optimal set can be obtained using a greedy algorithm. We start with an empty rule set $R$, and then run the greedy algorithm for $k$ steps, where in each step, we add the rule $r$ to $R$ that maximises Score($R \cup \left\lbrace r \right\rbrace$). In order to find the rule $r$ to add in each step, we need to measure $Score(R \cup \left\lbrace r \right\rbrace) - Score(R)$ for each $r$. This is done in several passes over the table, using ideas from the a priori algorithm~\cite{apriori} for frequent itemset mining. 
+Then, a solution to the instance of Problem~\ref{prob:optimal-rule-set} with table $T$, weight function $W$, and required number of rules $k$ gives us a solution to the instance of Problem~\ref{prob:maximum-coverage} as follows: For each rule $r$ in the solution of the Problem~\ref{prob:optimal-rule-set} instance, if it has value $1$ in column $i$ and $\star$ in all other columns, then add $S_i$ to the solution set of the Problem~\ref{prob:maximum-coverage} instance. This completes our reduction.
+\end{proof} 
 
-In addition, the greedy algorithm can be run over a sample of the table instead of over the entire table, to reduce computation time for large tables. We later describe a scheme for maintaining multiple samples in memory and using them to improve response time for different drill down operations performed by the user. 
+\subsection{Algorithm Overview}\label{sec:alg-overview}
+Given that the problem is NP-Hard, we now present our algorithms 
+for approximating the solution to Problem~\ref{prob:optimal-rule-set}. 
+The problem consists of finding a set of given size $k$, that maximizes 
+Score. 
+
+
+The next few sections fully develop the
+details of our solution:
+
+\squishlist
+\item We show that the Score function is {\em submodular}, and hence an approximately optimal set can be obtained using a greedy algorithm. At a high level, this greedy algorithm is simple to state. The algorithm runs for $k$ steps;
+we start with an empty rule set $R$, and then at each step, we add the next best rule that maximizes Score
+ 
+\item In order to find the rule $r$ to add in each step, we need to measure the impact on Score for each $r$. This is done in several passes over the table, using ideas from the a priori algorithm~\cite{apriori} for frequent item-set mining. 
+\squishend
+
+In some cases, the dataset may still be too large for us to return a good rule set in
+a reasonable time; in such cases, we may want to run our algorithm on a sample of the table
+rather than the entire table. In Section~\ref{sec:sampling}, we describe a scheme 
+for maintaining multiple samples in memory and using them to improve response 
+time for different drill down operations performed by the user. 
 
 \subsection{Greedy Approximation Algorithm}\label{sec:greedy-approx}
-We will now show that the Score function over sets of rules has a property called {\em submodularity}, which gives us a greedy approximation algorithm for optimizing it. 
+\stitle{Submodularity:} We will now show that the Score function over sets of rules has a property called {\em submodularity}, giving us a greedy approximation algorithm for optimizing it. 
 \begin{definition}
 A function $f: 2^S \rightarrow \mathbb{R}$ for any set $S$ is said to be submodular if and only if, for every $s \in S$, and $A \subset B \subset S$ with $s \notin A$:
 $$f(A \cup \left\lbrace s \right\rbrace) - f(A) \geq f(B \cup \left\lbrace s \right\rbrace) - f(B)$$
@@ -100,8 +121,8 @@ $$\text{Score}(S \cup \left\lbrace r \right\rbrace) - \text{Score}(S) \geq \text
 which means that Score is submodular.
 \end{proof}
 
-Now consider the greedy algorithm:
-
+\stitle{High-Level Procedure:} Now, based on the submodularity property, the greedy procedure,
+as listed below, has desirable approximation guarantees:
 \begin{framed}
 \vspace{-15pt}
 \begin{enumerate}
@@ -114,10 +135,17 @@ Now consider the greedy algorithm:
 \end{enumerate}
 \vspace{-15pt}
 \end{framed}
+Since Score is a submodular function of the set $S$, 
+this greedy procedure is guaranteed to give us a score within a $1 - \frac{1}{e}$ factor of the optimum. 
 
-Because Score is a submodular function of the set $S$, this greedy algorithm is guaranteed to give us a score within a $1 - \frac{1}{e}$ factor of the optimum. 
+The expensive step in the above procedure is the step where the Score is computed for every
+single rule. Given the number of rules can be very large, this can be an especially time-consuming process.
 
-Our algorithm pseudo-code is given in the box labelled Algorithm~\ref{algo:best-rule-set}. The algorithm takes four parameters as input: the table $T$, the number $k$ of rules required in the final solution list, a parameter $m_w$ (which we describe in the next paragraph), and the weight function $W$. 
+Instead of using the procedure described above directly, we instead develop a ``parameterized'' version 
+that will admit further approximation (depending on the parameter) in order to reduce computation further. We describe
+this algorithm next.
+
+\stitle{Parametrized Algorithm:} Our algorithm pseudo-code is given in the box labelled Algorithm~\ref{algo:best-rule-set}. The algorithm takes four parameters as input: the table $T$, the number $k$ of rules required in the final solution list, a parameter $m_w$ (which we describe in the next paragraph), and the weight function $W$. 
 
 The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, Algorithm~\ref{algo:best-rule-set} is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by Algorithm~\ref{algo:best-rule-set} does not contain $r$. Algorithm~\ref{algo:best-rule-set} runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, it's Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small.
 
@@ -125,7 +153,7 @@ The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells th
 
 Algorithm~\ref{algo:best-rule-set} initializes the solution set $S$ to be empty, and then iterates for $k$ steps, adding the best marginal rule at each step. To find the best marginal rule, it calls a function to find the best marginal rule given the existing set of rules $S$. 
 
-In order to find the best marginal rule, we need to find the marginal values of several rules and then choose the best one. A brute-force way to do this would be to enumerate all possible rules, and to find the marginal value for each of those rules in a single pass over the data. But the number of possible rules may be almost as large as the size of the table itself, making this step very expensive in terms of computation and memory. 
+\stitle{Finding the Best Marginal Rule:} In order to find the best marginal rule, we need to find the marginal values of several rules and then choose the best one. A brute-force way to do this would be to enumerate all possible rules, and to find the marginal value for each of those rules in a single pass over the data. But the number of possible rules may be almost as large as the size of the table itself, making this step very expensive in terms of computation and memory. 
 
 In order to avoid counting too many rules, we use an idea from the {\em a priori} algorithm for frequent itemset mining~\cite{apriori}. We compute the best marginal rule over several passes, with the maximum number of passes equal to the maximum size of a rule. In the $j^{th}$ pass, we compute counts for rules of size $j$. To give an example, suppose we had three columns $c_1$, $c_2$, and $c_3$. In the first pass, we would compute the marginal values of all rules of size $1$. In the second pass, instead of finding marginal values for all size $2$ rules, we can use our knowledge of counts from the first pass to upper bound the potential counts of size $2$ rules, and be more selective about which rules to count in the second pass. For instance, suppose we know that the rule $(a, \star, \star)$ has a count of $1000$, while $(\star, b, \star)$ has a count of $100$. Then for any value $c$ in column $c_3$ we would know that the count of $(\star, b, c)$ is at most $100$ because it cannot exceed that of $(\star, b, \star)$. This implies that the maximum marginal value of any super-rule of $(\star, b, c)$ having weight $\leq m_w$ is at most $100m_w$. If the rule $(a, \star, \star)$ has a marginal value of $800$, then the marginal value of any super-rule of $(\star, b, \star)$ cannot possibly exceed that of $(a, \star, \star)$. Since our aim is to only find the highest marginal value rule, we can skip counting for all super-rules of $(\star, b, \star)$ for future passes.
 
@@ -195,7 +223,7 @@ $H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
 \caption{Find best marginal rule}
 \end{algorithm}
 
-\subsection{Sampling for big tables}
+\subsection{Sampling for big tables}\label{sec:sampling}
 \subsubsection{Sampling Overview}
 We now describe our sampling schemes for improving the running time of our algorithm on tables that are too large to fit in main memory. First in Section~\ref{sec:sample-using}, we motivate the need for sampling. Then we describe a component of our system, called the {\em SampleHandler}, which is responsible for creating and maintaining samples of the table in memory, subject to user specified memory constraints. The SampleHandler maintains multiple samples corresponding to different parts of the table, which can be used depending on which rule the user decides to expand next. Then in Section~\ref{sec:sampling_algorithms}, we describe ways to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk. Finally, we mention some additional optimizations we can make, and heuristics for setting the minimum sample size required from the SampleHandler.
 
