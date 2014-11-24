@@ -9,6 +9,8 @@ There is work on constructing `explanation tables', which are sets of rules that
 
 Some related work~\cite{Golab_efficientand, Golab:2008:GNT:1453856.1453900} focuses on finding minimum sized Tableaux that provide improved support and confidence for conditional functional dependencies. There has also been work~\cite{Bu:2005:MSH:1083592.1083644, Lakshmanan:2002:GMA:1287369.1287435, Xiang_succinctsummarization, Geerts04tilingdatabases} on finding hyper-rectangle based covers for tables. Several existing works also deal with the problem of frequent itemset mining~\cite{apriori, 1411744, Han:2000:MFP:342009.335372}. All the existing works solve a fixed optimization problem, whereas  we focus on finding an optimal summary for a flexible user-specified weighting function.
 
+We use sampling to find approximate estimates of rule counts. Various other database systems~\cite{Acharya:1999:AAQ:304182.304581, Agarwal:2013:BQB:2465351.2465355} use samples to find approximate results to SQL aggregation queries. These systems create samples in advance and only update them when the database changes. In contrast, we keep updating our samples on the fly, as the user interacts with our system. 
+
 Our algorithm uses ideas from the a priori algorithm~\cite{apriori}. Several extensions have been proposed, including those for dealing with numerical attributes~\cite{Srikant:1996:MQA:233269.233311, Miller:1997:ARO:253260.253361}. We can potentially use these ideas to improve handing of numerical attributes in our work. 
 
 % Related Work summary : Is ours the only only that is flexible (due to weight function black box)?

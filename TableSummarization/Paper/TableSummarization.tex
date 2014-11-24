@@ -17,7 +17,9 @@
 \usepackage{enumitem}
 \usepackage{times}
 \usepackage{subfigure}
-\usepackage{amsmath,amssymb}
+\let\proof\relax
+\let\endproof\relax
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx,color}
 \usepackage{verbatim}
 \usepackage{framed}
@@ -30,9 +32,12 @@
 \renewcommand*\ttdefault{cmvtt}
 \usepackage[T1]{fontenc}
 
+\usepackage{floatrow}
+\floatsetup[table]{font=scriptsize}
 
-
+\newtheorem*{theorem*}{Theorem}
 \newtheorem{theorem}{Theorem}
+\newtheorem*{lemma*}{Lemma}
 \newtheorem{lemma}{Lemma}
 \newtheorem{definition}{Definition}
 \newtheorem{example}[definition]{Example}
@@ -55,7 +60,7 @@
 \newcommand{\squishend}{\end{list}}
 \newcommand{\eat}[1]{}
 \newcommand{\papertext}[1]{#1}
-\newcommand{\techreporttext}[1]{}
+\newcommand{\techreporttext}[1]{#1}
 
 
 \newcommand{\calD}{\mathcal{D}\xspace}
@@ -70,7 +75,9 @@ Hector Garcia-Molina\\Stanford University\\hector@cs.stanford.edu
 \and
 Aditya Parameswaran\\University of Illinois\\adityagp@illinois.edu
 }
+
 \begin{document}
+
 \maketitle
 
 
@@ -108,25 +115,10 @@ real datasets.
 
 \input{related}
 
-
-
-
-
-
-% TODO: Experiments on Sampling schemes.
-
-\begin{comment}
-Notes based on Explanation Tables paper: Prove that our problem is NP-Hard to solve exactly. Something like the Set Cover Problem. 
-
-The way we deal with overlap, is that the key differentiating factor?
-
-We don't have the binary thing. Is it useful? Maybe we can summarize better without it. We are solving a different problem, optimising for coverage rather than explaining the binary attribute. They are optimising for KL divergence of max entropy distribution. They mention many other papers that optimize for cardinality or similar. We do weight times cardinality, which is a compromise between descriptiveness and coverage, and allow user to change the weight function. But should check those papers out anyway. 
-
-\end{comment}
-
 {\small 
 \bibliographystyle{plain}
 \bibliography{TableSummarization}
 }
+\techreporttext{\input{appendix}}
 
 \end{document}

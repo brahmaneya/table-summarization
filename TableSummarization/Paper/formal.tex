@@ -115,7 +115,7 @@ $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where 
 
 The interpretation for this function is similar to the one for the last function. Once again, we can imagine trying to reconstruct the table from the rules, and look at how much of the table is pre-filled by the rules. But this time, we count the number of `bits' that are pre-filled. For a column $c$, specifying a value in the column takes $\lceil \text{log}(|c|)\rceil$ bits of information. A non-starred valued in a rule $r$ thus pre-fills $MCount(r,R) \lceil \text{log}(|c|) \rceil$ bits of the table. Hence this scoring function gives us the number of pre-filled bits of the table by the rule-set. 
 
-Note that this scoring function is closely related to the Minimum Description Length (MDL)~\cite{Grunwald:2007:MDL:1213810} of a table. If we describe a table using the rule-set, plus values to fill in for $\star$s in the rules to get tuples, then finding a set of rules of given size $k$ that tries to minimize the length of this description, is equivalent to finding the rule-set that maximises the total score. 
+Note that this scoring function is closely related to the Minimum Description Length (MDL)~\cite{Grunwald:2007:MDL:1213810} of a table. If we describe a table using the rule-set, plus values to fill in for $\star$s in the rules to get tuples, then finding a set of rules of given size $k$ that tries to minimize the length of this description, is equivalent to finding the rule-set that maximizes the total score. 
 
 \smallskip
 

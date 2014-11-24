@@ -32,4 +32,5 @@ plot "minSS_error_size" using 1:3 w linespoints title "Size weighting" ls 1, "mi
 set output "../Paper/graphs/minSS_error_rule.pdf"
 set xlabel "minSS Parameter value"
 set ylabel "Number of incorrect rules"
-plot "minSS_error_size" using 1:4 w linespoints title "Size weighting" ls 1, "minSS_error_bits" using 1:4 w linespoints title "Bits weighting" ls 2
+plot "minSS_error_size" using 1:4 w linespoints title "Marketing Size weighting" ls 1, "minSS_error_bits" using 1:4 w linespoints title "Marketing Bits weighting" ls 2, \
+"minSS_error_USCensus_size" using 1:4 w linespoints title "Census Size weighting" ls 3, "minSS_error_USCensus_bits" using 1:4 w linespoints title "Census Bits weighting"
