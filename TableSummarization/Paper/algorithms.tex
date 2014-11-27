@@ -3,7 +3,7 @@
 
 \section{Smart Drill-Down Algorithms} \label{sec:algorithms}
 We now describe online algorithms for implementing
-the smart drill-down operator. We assume in this section that all columns are categorical (so numerical columns have been bucketized beforehand). We further discuss bucketization of numerical attributes in Section~\ref{sec:extensions}.
+the smart drill-down operator. We assume in this section that all columns are categorical (so numerical columns have been bucketized beforehand). We further discuss bucketization of numerical attributes in Section~\ref{sec:extensions} in the technical report~\cite{tr}.
 
 
 \subsection{Problem Reduction and Important Property} \label{sec:reduction}
@@ -249,7 +249,7 @@ When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to make a 
 
 We choose the $n_{r^{\prime}}$ values so as to maximize the probability that the next user drill down can be satisfied using samples available in memory. We define some terms required to formalise this problem next. 
 
-Let the `selectivity' of a rule be the fraction of tuples in $T$ that are covered by the rule. For each pair of rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. We define $S(r_1, r_2)$ to be $0$ if $r_1$ is not a sub-rule of $r_2$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$ For any $r^{prime}$, define the function {\em ess} (for `effective sample size') as below: 
+Let the `selectivity' of a rule be the fraction of tuples in $T$ that are covered by the rule. For each pair of rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. We define $S(r_1, r_2)$ to be $0$ if $r_1$ is not a sub-rule of $r_2$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$ For any $r^{\prime}$, define the function {\em ess} (for `effective sample size') as below: 
 \begin{definition}\label{def:ess}
 $$ess(r^{\prime}) = \sum_{r \in U} S(r, r^{\prime})n_r$$ 
 \end{definition}

@@ -5,12 +5,10 @@
 \subsection{Dealing with Numerical Attributes}\label{sec:extensions-numerical}
 Our algorithm assumes that all attributes are categorical in nature. Attributes that have a large domain tend to have a smaller tuple count per value, and hence don't appear in rule summaries. Thus our algorithm does not summarise information about numerical attributes. 
 
-However, we can modify the algorithm to deal with numerical attributes. Suppose we have a numerical attribute $A$. A simple approach is to create buckets for values of $A$. We choose a number of buckets $k$, and divide the range of values of $A$ into $k$ intervals, each corresponding to a bucket. We can create buckets having an equal range size, or decide their range such that there is an approximately equal number of tuples in each bucket. Then we can use our algorithm, treating the bucket number as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
+However, we can modify the algorithm to deal with numerical attributes. Suppose we have a numerical attribute $A$. A simple approach is to create buckets for values of $A$. We choose a number of buckets $b$, and divide the range of values of $A$ into $b$ intervals, each corresponding to a bucket. We can create buckets having an equal range size, or decide their range such that there is an approximately equal number of tuples in each bucket. Then we can use our algorithm, treating the bucket number as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
 
 \begin{comment}
 The distribution of values for the $A$ may not be similar in different parts of the table. For instance, we may create buckets have approximately equal numbers of tuples in the table. But then suppose a user tries to expand a rule $r$. The part of the table covered by $r$ might have a very different distribution of age values. For instance, in our MD dataset, if the user looks at people who own a house, their age distribution would be different from that of people who are still renting an apartment. To prevent the buckets from getting a skewed distribution when expanding $r$, we could recompute the bucket ranges every time the user expands a rule, and use the new bucket ranges to determine which rules to display upon expansion. 
-
-ask : we should mention this right up front when we're describing the problem.
 \end{comment}
 
 \subsection{Using Sum instead of Count}\label{sec:extensions-sum}

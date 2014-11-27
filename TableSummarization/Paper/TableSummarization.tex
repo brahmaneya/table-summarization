@@ -1,19 +1,6 @@
-%\documentclass{vldb}
-\documentclass{sig-alternate}
-%\documentclass[12pt,letterpaper]{article}
-%\documentclass[12pt]{extreport}
-%\documentstyle[amsmath,amsthm,amssymb,twocolumn]{article}
-%\newcommand{\mytitle}{Evaluating the Crowd with Confidence}
-
-\usepackage{amsmath}
-\makeatletter
-\let\@copyrightspace\relax
-\makeatother
-\pdfpagewidth=8.5in
-\pdfpageheight=11in
-
-
-
+\documentclass{vldb}
+\usepackage{graphicx}
+\usepackage{balance}  % for  \balance command ON LAST PAGE  (only there!)
 \usepackage{enumitem}
 \usepackage{times}
 \usepackage{subfigure}
@@ -60,26 +47,36 @@
 \newcommand{\squishend}{\end{list}}
 \newcommand{\eat}[1]{}
 \newcommand{\papertext}[1]{#1}
-\newcommand{\techreporttext}[1]{#1}
+\newcommand{\techreporttext}[1]{}
 
 
 \newcommand{\calD}{\mathcal{D}\xspace}
 
 
-\title{Smart Drill-Down: Interactive Summarization of Relational Tables}
-
-\author{
-Manas Joglekar\\Stanford University\\manasrj@stanford.edu
-\and
-Hector Garcia-Molina\\Stanford University\\hector@cs.stanford.edu
-\and
-Aditya Parameswaran\\University of Illinois\\adityagp@illinois.edu
-}
-
 \begin{document}
 
+\title{Smart Drill-Down: Interactive Summarization of Relational Tables}
+\numberofauthors{3} 
+\author{
+\alignauthor
+Manas Joglekar\\
+       \affaddr{Stanford University}\\
+       \affaddr{353 Serra Mall}\\
+	   \affaddr{Stanford, California 94305}\\
+       \email{manasrj@stanford.edu}
+\alignauthor
+Hector Garcia-Molina\\
+       \affaddr{Stanford University}\\
+       \affaddr{353 Serra Mall}\\
+	   \affaddr{Stanford, California 94305}\\
+       \email{hector@cs.stanford.edu}
+\alignauthor 
+Aditya Parameswaran\\
+       \affaddr{University of Illinois at Urbana-Champaign}\\
+       \affaddr{Champaign, Illinois 61820}\\
+       \email{adityagp@illinois.edu}
+}
 \maketitle
-
 
 \begin{abstract}
 In this paper we present {\em smart drill down},
@@ -101,8 +98,6 @@ demonstrate the usefulness of smart drill down by performing experiments on
 real datasets.
 \end{abstract}
 
-
-
 \input{intro}
 
 \input{formal}
@@ -111,14 +106,15 @@ real datasets.
 
 \input{exp}
 
-\input{extensions}
+\techreporttext{\input{extensions}}
 
 \input{related}
+\bibliographystyle{abbrv}
+\bibliography{TableSummarization}  
 
-{\small 
-\bibliographystyle{plain}
-\bibliography{TableSummarization}
-}
+% Example of an appendix; typically would start on a new page
+%pagebreak
+
 \techreporttext{\input{appendix}}
 
 \end{document}

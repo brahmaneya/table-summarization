@@ -18,7 +18,7 @@ Annual Income of Household, Sex, Marital Status, Age, Education, Occupation, Tim
 
 The second dataset, denoted `Census', is a US 1990 Census dataset from the UCI Machine Learning repository~\cite{uciml}. It consists of about $2.5$ million tuples, with each tuple corresponding to a person. It has $68$ columns, including ancestry, age, and citizenship. Numerical columns, such as age, have been bucketized beforehand in the dataset. We use this dataset in the experiments in Section~\ref{sec:quantitative_study} in order to study the accuracy and performance of sampling on a large dataset.
 
-Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit into the page. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting function, and $20$ for the Bits weighting function. Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
+Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit into the page. We use our current implementation of our algorithms, which directly outputs tables in latex format. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting function, and $20$ for the Bits weighting function. Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
 \subsection{Qualitative Study}
 We first perform a qualitative study of our Smart Drill Down system. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out a few different weight functions to study their effects.
@@ -138,11 +138,11 @@ For the Census dataset, the running time is dominated by time spent in making a 
 The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus for size scoring on the Marketing dataset, according to Table~\ref{table:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Table~\ref{table:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
 
 \begin{figure}
-\hspace{-20pt}
+\hspace{-15pt}
   \includegraphics[height=2in]{graphs/mw_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
 \vspace{-5pt}
   \caption{Running time for different values of parameter $m_w$ \label{fig:mw_speed}}
-\vspace{-20pt}
+\vspace{-15pt}
 \end{figure}
 
 \subsubsection{Effects of $minSS$}
@@ -155,27 +155,27 @@ The computation time increases approximately linearly with parameter $minSS$. Th
 In addition, we measure the number of incorrect rules per iteration. If the correct set of rules to display is $r_1, r_2, r_3$ and the displayed set is $r_1, r_3, r_4$ then that means there is one incorrect rule. We find the number of incorrect displayed rules across $50$ iterations, and display the average value in Figure~\ref{fig:minSS_error_rule}. This number for the Marketing dataset is almost always $0$ for the Size weighting function, and between $1$ and $2$ for the Bits weighting function. For the Census dataset, it is around $1$ for $minSS \leq 1000$ and falls to about $0.3$ for larger values of $minSS$. Note that even when we display an `incorrect' rule, it is usually the $5^{th}$ or $6^{th}$ best rule instead of one of the top $4$ rules, which still results in a reasonably good summary of the table.
 
 \begin{figure}
-\hspace{-20pt}
+\hspace{-15pt}
   \includegraphics[height=2in]{graphs/minSS_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
 \vspace{-5pt}
   \caption{Running time for different values of parameter $minSS$ \label{fig:minSS_speed}}
-\vspace{-20pt}
+\vspace{-15pt}
 \end{figure}
 
 \begin{figure}
-\hspace{-20pt}
+\hspace{-15pt}
   \includegraphics[height=2in]{graphs/minSS_error_percent.pdf}%change height to 2 inch for actual paper, 5 inch for single column
 \vspace{-5pt}
   \caption{Error in Count for different values of parameter $minSS$ \label{fig:minSS_error_percent}}
-\vspace{-20pt}
+\vspace{-15pt}
 \end{figure}
 
 \begin{figure}
-\hspace{-20pt}
+\hspace{-15pt}
   \includegraphics[height=2in]{graphs/minSS_error_rule.pdf}%change height to 2 inch for actual paper, 5 inch for single column
 \vspace{-5pt}
 \caption{Average number of incorrect rules for different values of parameter $minSS$ \label{fig:minSS_error_rule}}
-\vspace{-20pt}
+\vspace{-15pt}
 \end{figure}
 
 \begin{comment}

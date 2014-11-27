@@ -92,7 +92,7 @@ for one of the following smart drill-down operations:
 \item $[$Star Drill-Down$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
 \end{enumerate}
 \end{problem}
-Throughout this paper, we use the {\em Count} aggregate of a rule when determining what rules to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ in Section~\ref{sec:extensions-sum}.
+Throughout this paper, we use the {\em Count} aggregate of a rule when determining what rules to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ in Section~\ref{sec:extensions-sum} in the technical report~\cite{tr}.
 
 
 % Describe architecture here? (With a diagram). Show SampleHandler, QueryEngine, etc.
@@ -104,13 +104,13 @@ At a high level, we want our rules to be as descriptive of the table as possible
 it conveys). Let us consider some canonical forms for the function $W(r)$ and their interpretation; later, we describe the full
 space of weighting functions our techniques can handle:
 
-\stitle{Weighting Function 1:} 
+\stitle{Size Weighting Function:} 
 $W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
 Here we set weight equal to the number of non-starred values in the rule $r$; we define this quantity to be the {\em size} of the rule. Consider the examples in Table \ref{table:sizescoringexample}. The weight for rule ($a$, $b_1$) is $2$, while weight for ($a$, $\star$) is $1$. Thus the total score for the rule-list with these two rules would be $2 \times 100 + 1 \times 900 = 1100$. If we replaced the rule ($a$, $\star$) by two rules ($a$, $b_2$) and ($a$, $\star$), then the $MCount$ of rule ($a$, $\star$) would reduce to $600$, since $300$ of its tuples would be covered by the previous rule $(a, b_2)$. Thus our total score would be $2 \times 100 + 2 \times 300 + 1 \times 600 = 1400$. If we had instead replaced ($a$, $\star$) by ($a$, $b_3$) and ($a$, $\star$), then our score would have been $1500$ which is $> 1400$. Thus when we marginalize on one extra column ($B$ in this case) and include a rule where that column is instantiated, it is better to do so on the value which occurs more frequently (in this case, $b_3$ which occurred $400$ times, compared to the $300$ of $b_2$). 
 
 To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a $100$ of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those. Thus $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.
 
-\stitle{Weighting Function 2:}
+\stitle{Bits Weighting Function:}
 $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. Like the previous scoring function, this one adds some weight for every non-starred value in a rule. But instead of adding a weight of $1$ for every non-starred value, it varies the weight added depending on the `complexity' of the column. The reason behind this variation is the following: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
 
 The interpretation for this function is similar to the one for the last function. Once again, we can imagine trying to reconstruct the table from the rules, and look at how much of the table is pre-filled by the rules. But this time, we count the number of `bits' that are pre-filled. For a column $c$, specifying a value in the column takes $\lceil \text{log}(|c|)\rceil$ bits of information. A non-starred valued in a rule $r$ thus pre-fills $MCount(r,R) \lceil \text{log}(|c|) \rceil$ bits of the table. Hence this scoring function gives us the number of pre-filled bits of the table by the rule-set. 

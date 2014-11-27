@@ -37,7 +37,7 @@ which the analyst is free to use whenever they find
 traditional drill-downs ineffective.
 
 In addition to presenting this new operator called smart drill-down, in this paper, 
-we also present techniques to compute the results for this
+we also present novel sampling techniques to compute the results for this
 operator {\em in an interactive fashion} on increasingly larger databases. 
 Unlike the traditional OLAP setting, these computations 
 require no pre-materialization, and can be implemented 
@@ -222,7 +222,7 @@ directs the drill down and can tailor the optimization criteria.
 Nevertheless, one can envision extending traditional
 and smart drill down to provide an additional option of anomaly detection. We discuss related work in detail in  Section~\ref{sec:related}..
 
-Briefly, the contributions of our paper can be summarized are follows: We develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill down operation. In addition, we develop a scheme for maintaining and using multiple samples of the table in memory to improve response time on large tables.
+Briefly, the contributions of our paper can be summarized are follows: We develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill down operation. In addition, we develop a scheme for dynamically maintaining and using multiple samples of the table in memory to improve response time on large tables.
 
 \stitle{Overview of paper:} 
 \squishlist 
@@ -230,15 +230,13 @@ Briefly, the contributions of our paper can be summarized are follows: We develo
 \item In Section~\ref{sec:formal}, we introduce the relevant notation and formally define smart drill down. After that, we discuss different schemes for weighting rules, and describe our interactive user interface.
 
 \item In Section~\ref{sec:algorithms}, we present our algorithms for
-finding optimal sets of rules, as well as our sampling schemes
+finding optimal sets of rules, as well as our dynamic sampling schemes
 for dealing with large tables.
 
 \item Based on our implemented smart drill down,
 in Section~\ref{sec:experiments} we experimentally evaluate
 performance on real datasets,
 and show additional examples of smart drill down in action.
-
-\item In Section~\ref{sec:extensions}, we describe how to extend our results to summarize numerical attributes, and to use the $Sum$ aggregate instead of $Count$.
 
 \item In Section~\ref{sec:related}, we describe related work.
 \squishend 
