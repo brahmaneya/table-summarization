@@ -55,7 +55,7 @@
 
 \begin{document}
 
-\title{Smart Drill-Down: Interactive Summarization of Relational Tables}
+\title{Smart Drill-Down}
 \numberofauthors{3} 
 \author{
 \alignauthor
@@ -80,7 +80,7 @@ Aditya Parameswaran\\
 
 \begin{abstract}
 In this paper we present {\em smart drill down},
-a system for interactively exploring a relational table
+an operator for interactively exploring a relational table
 to discover ``interesting'' groups of tuples.
 Each group of tuples is described by a {\em rule}.
 For instance, the rule $(a, b, \star, 1000)$ tells us that
@@ -89,13 +89,11 @@ in the second column (and any value in the third column).
 Smart drill down presents an analyst with a list of rules that
 together describe interesting aspects of the table.
 The analyst can tailor the definition of interesting,
-and can interactively drill down on an existing rule to
+and can interactively apply smart drill down on an existing rule to
 explore that part of the table.
 We describe an
-algorithm for finding the approximately optimal list of rules, and an optimized
-sampling scheme for efficiently summarizing large tables. Finally, we
-demonstrate the usefulness of smart drill down by performing experiments on
-real datasets.
+algorithm for finding the approximately optimal list of rules to display when the user uses a smart drill down, and a dynamic sampling scheme for efficiently dealing with large tables. Finally, we
+perform experiments on real datasets to demonstrate the usefulness of smart drill down and to study the performance of our algorithms.
 \end{abstract}
 
 \input{intro}
@@ -109,6 +107,9 @@ real datasets.
 \techreporttext{\input{extensions}}
 
 \input{related}
+
+\input{conc}
+
 \bibliographystyle{abbrv}
 \bibliography{TableSummarization}  
 

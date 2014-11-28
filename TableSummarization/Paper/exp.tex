@@ -42,6 +42,7 @@ Instead of expanding the 'Education' column, if the user had simply expanded the
 \cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $980$ & $3$ \\
 \hline 
 \end{tabular} 
+\vspace{-15pt}
 \caption{Summary after clicking on the empty rule \label{table:uiexample1}} 
 \end{table*} 
 
@@ -60,6 +61,7 @@ Instead of expanding the 'Education' column, if the user had simply expanded the
 \cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $980$ & $3$ \\
 \hline 
 \end{tabular} 
+\vspace{-15pt}
 \caption{Star expansion on 'Education' Column \label{table:uiexamplestar}} 
 \end{table*} 
 
@@ -78,6 +80,7 @@ Instead of expanding the 'Education' column, if the user had simply expanded the
 \cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2940$ & $2$ \\
 \hline 
 \end{tabular} 
+\vspace{-15pt}
 \caption{A Rule expansion \label{table:uiexamplerule}} 
 \end{table*} 
 
@@ -106,6 +109,7 @@ This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0
 \cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\star$ & Married & $\star$ & $\star$ & Professional / Managerial & > 10 years & $825$ & $10$ \\
 \hline 
 \end{tabular} 
+\vspace{-15pt}
 \caption{Bits scoring\label{table:weigtingbitwise}} 
 \end{table*} 
 
@@ -120,6 +124,7 @@ This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0
 \cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & Married & $\star$ & $\star$ & $\star$ & > 10 years & $823$ & $2$ \\
 \hline 
 \end{tabular} 
+\vspace{-15pt}
 \caption{Size minus one weighting \label{table:weightingsizeminusone}} 
 \end{table*}  
 
@@ -148,35 +153,21 @@ The value of $m_w$ required to ensure a correct answer is equal to the maximum w
 \subsubsection{Effects of $minSS$}
 We now study the effects of the sampling parameter $minSS$. This parameter tells the SampleHandler the minimum sample size on which we run Algorithm~\ref{algo:best-rule-set}.   Higher values of $minSS$ cause our system to use bigger samples, which increases the accuracy of count estimates for displayed rules, but also correspondingly increases computation time. 
 
-We consider one value of $minSS$ and one weight function $W$ at a time. For those values of $minSS$ and $W$, we drill down on the empty rule and measure the time taken for this operation. We also measure the percent error in the estimated counts of the displayed rules. That is, for each displayed rule $r$, if the displayed (estimated) count if $c_1$ and the actual count (computed separately on the entire table) is $c_2$, then the percent error for rule $r$ is $\frac{100 \times |c_1-c_2|}{c_2}$. We consider the average of percent errors over all displayed rules. For each value of $minSS$ and $W$, we drill down on the empty rule and find the computation time and percent error $50$ times, and take the average value for time and error over those $50$ iterations. This average time is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}. The average percent error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error_percent}. 
+We consider one value of $minSS$ and one weight function $W$ at a time. For those values of $minSS$ and $W$, we drill down on the empty rule and measure the time taken for this operation. We also measure the percent error in the estimated counts of the displayed rules. That is, for each displayed rule $r$, if the displayed (estimated) count if $c_1$ and the actual count (computed separately on the entire table) is $c_2$, then the percent error for rule $r$ is $\frac{100 \times |c_1-c_2|}{c_2}$. We consider the average of percent errors over all displayed rules. For each value of $minSS$ and $W$, we drill down on the empty rule and find the computation time and percent error $50$ times, and take the average value for time and error over those $50$ iterations. This average time is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}(a). The average percent error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error_percent}(b). 
 
 The computation time increases approximately linearly with parameter $minSS$. This is expected, because Algorithm~\ref{algo:best-rule-set} makes a constant number of passes over the entire sample, and each pass takes time linear in the size of the sample. The running time at very small values of $minSS$ is simply the time taken to read the table and create the sample. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.
 
-In addition, we measure the number of incorrect rules per iteration. If the correct set of rules to display is $r_1, r_2, r_3$ and the displayed set is $r_1, r_3, r_4$ then that means there is one incorrect rule. We find the number of incorrect displayed rules across $50$ iterations, and display the average value in Figure~\ref{fig:minSS_error_rule}. This number for the Marketing dataset is almost always $0$ for the Size weighting function, and between $1$ and $2$ for the Bits weighting function. For the Census dataset, it is around $1$ for $minSS \leq 1000$ and falls to about $0.3$ for larger values of $minSS$. Note that even when we display an `incorrect' rule, it is usually the $5^{th}$ or $6^{th}$ best rule instead of one of the top $4$ rules, which still results in a reasonably good summary of the table.
+In addition, we measure the number of incorrect rules per iteration. If the correct set of rules to display is $r_1, r_2, r_3$ and the displayed set is $r_1, r_3, r_4$ then that means there is one incorrect rule. We find the number of incorrect displayed rules across $50$ iterations, and display the average value in Figure~\ref{fig:minSS_error_rule}(c). This number for the Marketing dataset is almost always $0$ for the Size weighting function, and between $1$ and $2$ for the Bits weighting function. For the Census dataset, it is around $1$ for $minSS \leq 1000$ and falls to about $0.3$ for larger values of $minSS$. Note that even when we display an `incorrect' rule, it is usually the $5^{th}$ or $6^{th}$ best rule instead of one of the top $4$ rules, which still results in a reasonably good summary of the table.
 
-\begin{figure}
-\hspace{-15pt}
-  \includegraphics[height=2in]{graphs/minSS_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
-\vspace{-5pt}
-  \caption{Running time for different values of parameter $minSS$ \label{fig:minSS_speed}}
+\begin{figure*}[!ht]
+\centering
+\includegraphics[scale=0.46]{graphs/minSS_speed.pdf}
+\includegraphics[scale=0.46]{graphs/minSS_error_percent.pdf}
+\includegraphics[scale=0.46]{graphs/minSS_error_rule.pdf}
 \vspace{-15pt}
-\end{figure}
-
-\begin{figure}
-\hspace{-15pt}
-  \includegraphics[height=2in]{graphs/minSS_error_percent.pdf}%change height to 2 inch for actual paper, 5 inch for single column
-\vspace{-5pt}
-  \caption{Error in Count for different values of parameter $minSS$ \label{fig:minSS_error_percent}}
-\vspace{-15pt}
-\end{figure}
-
-\begin{figure}
-\hspace{-15pt}
-  \includegraphics[height=2in]{graphs/minSS_error_rule.pdf}%change height to 2 inch for actual paper, 5 inch for single column
-\vspace{-5pt}
-\caption{Average number of incorrect rules for different values of parameter $minSS$ \label{fig:minSS_error_rule}}
-\vspace{-15pt}
-\end{figure}
+\caption{(a) Running time for different values of parameter $minSS$ (b) Error in Count for different values of parameter $minSS$ (c) Average number of incorrect rules for different values of parameter $minSS$ \label{fig:minSS_speed}\label{fig:minSS_error_percent} \label{fig:minSS_error_rule}}
+\vspace{-10pt}
+\end{figure*}
 
 \begin{comment}
 more experiment stuff
@@ -189,6 +180,4 @@ $\star$ & Married & $\star$ & $\star$ & $\star$ & > 10 years & $2053$ & $2$ \\
 Male & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4075$ & $1$ \\
 Female & Married & $\star$ & $\star$ & $\star$ & $\star$ & $1966$ & $2$ \\
 $\star$ & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $1964$ & $2$ \\
-
-
 \end{comment}

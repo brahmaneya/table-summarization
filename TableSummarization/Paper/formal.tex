@@ -48,11 +48,11 @@ the second portion dictates how ``good'' the rule $r$ is (independent of how man
 tuples it covers). 
 The reason why we separate the scoring into these two portions is
 that they allow us to separate the inherent goodness of a rule from
-how much it captures of the data in $\calD$.
+how much it captures the data in $\calD$.
 
 We now describe the first portion:
-we define {\em Count}($r$) is the total number of tuples $t \in T$ that are covered by $r$. 
-Further, we define {\em MCount}($r, R$) (which stands for `Marginal Count') is the number of tuples covered by $r$ but not by any rule before $r$ in the rule-list $R$. A high value of $MCount$ indicates that the rule not only covers a lot of tuples, but also covers parts of the table not covered by previous rules. We want to pick rules with a high value of $MCount$ to display to the user
+we define {\em Count}($r$) as the total number of tuples $t \in T$ that are covered by $r$. 
+Further, we define {\em MCount}($r, R$) (which stands for `Marginal Count') as the number of tuples covered by $r$ but not by any rule before $r$ in the rule-list $R$. A high value of $MCount$ indicates that the rule not only covers a lot of tuples, but also covers parts of the table not covered by previous rules. We want to pick rules with a high value of $MCount$ to display to the user
 as part of the smart drill-down result, to increase the coverage of the rule-list. 
 
 Now, onto the second portion: we let $W$ denote a function that assigns a non-negative {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. 
@@ -80,7 +80,9 @@ If we had defined total score as $\sum_{r \in R} \text{Count}(r)W(r)$, then our 
 contain rules that repeatedly refer to the most `summarizable' part of the table. 
 For instance, if $a$ and $b$ were the most common values in columns $A$ and $B$, then 
 for some weighting functions $W$, 
-the summary may potentially consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$.
+the summary may potentially consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$. 
+
+Our smart drill downs still display the Count of each rule rather than the $MCount$. This is because while $MCount$ is useful in the rule selection process, Count is easier for a user to interpret. In any case, it would be a simple extension to display MCount in another column.
 
 \stitle{Formal Problem:} We now formally define our problem:
 \begin{problem}\label{prob:optimal-subrule-list}
@@ -92,15 +94,12 @@ for one of the following smart drill-down operations:
 \item $[$Star Drill-Down$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
 \end{enumerate}
 \end{problem}
-Throughout this paper, we use the {\em Count} aggregate of a rule when determining what rules to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ in Section~\ref{sec:extensions-sum} in the technical report~\cite{tr}.
-
-
-% Describe architecture here? (With a diagram). Show SampleHandler, QueryEngine, etc.
+Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ in the `Extensions' section of the technical report~\cite{tr}.
 
 \subsection{Weighting Rules}
 \label{sec:weighting}
 We now describe our weighting function $W$ that is used to score individual rules. 
-At a high level, we want our rules to be as descriptive of the table as possible, i.e. given the rules, it should be as easy as possible to reproduce the table. We consider a general family of weighting functions, that assigns for each rule $r$, a weight $W(r)$ that depends on how expressive the rule is (i.e., how much information
+At a high level, we want our rules to be as descriptive of the table as possible, i.e. given the rules, it should be as easy as possible to reproduce the table. We consider a general family of weighting functions, that assigns for each rule $r$, a weight $W(r)$ depending on how expressive the rule is (i.e., how much information
 it conveys). Let us consider some canonical forms for the function $W(r)$ and their interpretation; later, we describe the full
 space of weighting functions our techniques can handle:
 
@@ -108,24 +107,24 @@ space of weighting functions our techniques can handle:
 $W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
 Here we set weight equal to the number of non-starred values in the rule $r$; we define this quantity to be the {\em size} of the rule. Consider the examples in Table \ref{table:sizescoringexample}. The weight for rule ($a$, $b_1$) is $2$, while weight for ($a$, $\star$) is $1$. Thus the total score for the rule-list with these two rules would be $2 \times 100 + 1 \times 900 = 1100$. If we replaced the rule ($a$, $\star$) by two rules ($a$, $b_2$) and ($a$, $\star$), then the $MCount$ of rule ($a$, $\star$) would reduce to $600$, since $300$ of its tuples would be covered by the previous rule $(a, b_2)$. Thus our total score would be $2 \times 100 + 2 \times 300 + 1 \times 600 = 1400$. If we had instead replaced ($a$, $\star$) by ($a$, $b_3$) and ($a$, $\star$), then our score would have been $1500$ which is $> 1400$. Thus when we marginalize on one extra column ($B$ in this case) and include a rule where that column is instantiated, it is better to do so on the value which occurs more frequently (in this case, $b_3$ which occurred $400$ times, compared to the $300$ of $b_2$). 
 
-To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a $100$ of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those. Thus $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.
+To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a $100$ of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those tuples. Thus $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.
 
 \stitle{Bits Weighting Function:}
-$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. Like the previous scoring function, this one adds some weight for every non-starred value in a rule. But instead of adding a weight of $1$ for every non-starred value, it varies the weight added depending on the `complexity' of the column. The reason behind this variation is the following: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
+$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. Like the previous scoring function, this one adds some weight for every non-starred value in a rule. But instead of adding a weight of $1$ for every non-starred value, it varies the weight added depending on the inherent complexity of the column. The reason behind this variation is the following: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
 
-The interpretation for this function is similar to the one for the last function. Once again, we can imagine trying to reconstruct the table from the rules, and look at how much of the table is pre-filled by the rules. But this time, we count the number of `bits' that are pre-filled. For a column $c$, specifying a value in the column takes $\lceil \text{log}(|c|)\rceil$ bits of information. A non-starred valued in a rule $r$ thus pre-fills $MCount(r,R) \lceil \text{log}(|c|) \rceil$ bits of the table. Hence this scoring function gives us the number of pre-filled bits of the table by the rule-set. 
+The interpretation for this function is similar to the one for the last function. Once again, we can imagine trying to reconstruct the table from the rules, and look at how much of the table is pre-filled by the rules. But this time, we count the number of `bits' that are pre-filled. For a column $c$, specifying a value in the column takes $\lceil \text{log}(|c|)\rceil$ bits of information. A non-starred valued in a rule $r$ thus pre-fills $MCount(r,R) \lceil \text{log}(|c|) \rceil$ bits of the table. Hence this scoring function gives us the the number of bits of the table that are pre-filled by the rule set.
 
 Note that this scoring function is closely related to the Minimum Description Length (MDL)~\cite{Grunwald:2007:MDL:1213810} of a table. If we describe a table using the rule-set, plus values to fill in for $\star$s in the rules to get tuples, then finding a set of rules of given size $k$ that tries to minimize the length of this description, is equivalent to finding the rule-set that maximizes the total score. 
 
 \smallskip
 
 \stitle{Other Weighting Functions:}
-Even though we have given two example weighting functions here, our algorithms allow the user to set any weighting function $W$, subject to only two conditions:
+Even though we have given two example weighting functions here, our algorithms allow the user to leverage any weighting function $W$, subject to only two conditions:
 \squishlist
 \item Non-negativity: For all rules $r$, $W(r) \geq 0$.
 \item Monotonicity: If $r_1 \geq r_2$, then $W(r_1) \leq W(r_2)$. Monotonicity means that a rule that is less descriptive than another must be assigned a lower weight.
 \squishend
-A weight function can be used in several ways, including to express higher preference for a column (by assigning higher weight to rules having a non-$\star$ value in that column), or to express indifference to a column (by adding zero weight for having non-$\star$ value in that column).
+A weight function can be used in several ways, including expressing a higher preference for a column (by assigning higher weight to rules having a non-$\star$ value in that column), or expressing indifference towards a column (by adding zero weight for having non-$\star$ value in that column).
 
 \begin{table}
 \centering
@@ -135,13 +134,12 @@ A weight function can be used in several ways, including to express higher prefe
   ($a$, $b_1$)-$100$, ($a$, $b_2$)-$300$, ($a$, $\star$)-$600$ & $1400$  \\
   ($a$, $b_1$)-$100$, ($a$, $b_3$)-$400$, ($a$, $\star$)-$500$ & $1500$ \\ \hline
 \end{tabular}
+\vspace{-15pt}
 \caption{Example of Rule-based scoring with score equal to rule size \label{table:sizescoringexample}}
 \end{table}
 
-\subsection{Example: Smart Drill-Down Operations}
+\subsection{Smart Drill-Down Operations}
 \label{sec:interface}
-We now explain how a user can use smart drill-downs to explore the contents of a table. 
-
 When the user starts using a system equipped with
 the smart drill-down operator, they first see a table with a single trivial rule as shown in table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill-down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user. As an example of this operation, clicking on the trivial rule of table~\ref{table:introexample0} would display table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display table~\ref{table:introexample2}. The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
 
@@ -163,7 +161,7 @@ $\triangleright$ $\triangleright$ walmart & cookies & California & $80$ & $2$ \\
 $\triangleright$ $\triangleright$ walmart & cookies & $\star$ & $200$ & $2$ \\ \cline{2-5}
 $\triangleright$ $\triangleright$ walmart & bicycles & $\star$ & $150$ & $2$ \\  \hline
 \end{tabular}
+\vspace{-15pt}
 \caption{Result of clicking on a $\star$ \label{table:introexample3}}
 \end{table}
-
 

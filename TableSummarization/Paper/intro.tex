@@ -92,7 +92,7 @@ states that Walmart is doing well in general over multiple products and regions.
 We call each tuple in Table~\ref{table:introexample} a {\em rule}
 to distinguish it from the tuples in the original table that is being explored.
 Each rule summarizes the set of tuples that are described by it.
-Again, instead of Count, the system can display some other aggregate, such as
+Again, instead of Count, the system can display a sum aggregate, such as
 the total Sales.
 
 \begin{table}
@@ -102,6 +102,7 @@ the total Sales.
 \hline
 $\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
 \end{tabular}
+\vspace{-15pt}
 \caption{Initial summary}\label{table:introexample0}
 \end{table}
 
@@ -115,11 +116,13 @@ $\triangleright$ Target & bicycles & $\star$ & $200$ & $2$ \\ \hline
 $\triangleright$ $\star$ & comforters & MA-3 & $600$ & $2$ \\ \hline
 $\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
 \end{tabular}
+\vspace{-15pt}
 \caption{Result after first smart drill down}\label{table:introexample}
 \end{table}
 
 \begin{table}
 \centering
+\vspace{-10pt}
 \begin{tabular}{| l | l | l | l | l |}
 \hline Store & Product & Region & Count & Weight \\
 \hline
@@ -131,6 +134,7 @@ $\triangleright$ $\triangleright$ Walmart & cookies & $\star$ & $200$ & $2$ \\ \
 $\triangleright$ $\triangleright$ Walmart & $\star$ & CA-1 & $150$ & $2$ \\ \cline{2-5}
 $\triangleright$ $\triangleright$ Walmart & $\star$ & WA-5 & $130$ & $2$ \\ \hline
 \end{tabular}
+\vspace{-15pt}
 \caption{Result after second smart drill down} \label{table:introexample2}
 \end{table}
 
@@ -199,8 +203,8 @@ where the analyst selects a {\em rule} to drill down on
 (e.g., the Walmart rule going from Table~\ref{table:introexample} to
 Table~\ref{table:introexample2}.
 In Section~\ref{sec:interface} we describe another option
-where the analyst clicks an a $\star$ to obtain
-rules that have values in that location.
+where the analyst clicks on a $\star$ in a column to obtain
+rules that have non-$\star$ values in that column.
 
 Our work on smart drill down is related
 to table summarization and anomaly
@@ -220,14 +224,14 @@ Furthermore, our summarization is couched in
 an interactive environment, where the analyst
 directs the drill down and can tailor the optimization criteria.
 Nevertheless, one can envision extending traditional
-and smart drill down to provide an additional option of anomaly detection. We discuss related work in detail in  Section~\ref{sec:related}..
+and smart drill down to provide an additional option of anomaly detection. We discuss related work in detail in  Section~\ref{sec:related}.
 
 Briefly, the contributions of our paper can be summarized are follows: We develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill down operation. In addition, we develop a scheme for dynamically maintaining and using multiple samples of the table in memory to improve response time on large tables.
 
 \stitle{Overview of paper:} 
 \squishlist 
 
-\item In Section~\ref{sec:formal}, we introduce the relevant notation and formally define smart drill down. After that, we discuss different schemes for weighting rules, and describe our interactive user interface.
+\item In Section~\ref{sec:formal}, we introduce the relevant notation and formally define smart drill down. After that, we describe different schemes for weighting rules, and our interactive user interface.
 
 \item In Section~\ref{sec:algorithms}, we present our algorithms for
 finding optimal sets of rules, as well as our dynamic sampling schemes
@@ -238,5 +242,5 @@ in Section~\ref{sec:experiments} we experimentally evaluate
 performance on real datasets,
 and show additional examples of smart drill down in action.
 
-\item In Section~\ref{sec:related}, we describe related work.
+\item We describe related work in Section~\ref{sec:related}, and conclude in Section~\ref{sec:conclusion}.
 \squishend 
