@@ -19,8 +19,10 @@
 \renewcommand*\ttdefault{cmvtt}
 \usepackage[T1]{fontenc}
 
-\usepackage{floatrow}
-\floatsetup[table]{font=scriptsize}
+% \usepackage{floatrow}
+% \floatsetup[table]{font=scriptsize}
+% \renewcommand\FBbskip{-10pt}
+
 
 \newtheorem*{theorem*}{Theorem}
 \newtheorem{theorem}{Theorem}
@@ -65,39 +67,40 @@
 \alignauthor
 Manas Joglekar\\
        \affaddr{Stanford University}\\
-       \affaddr{353 Serra Mall}\\
-	   \affaddr{Stanford, California 94305}\\
+%       \affaddr{353 Serra Mall}\\
+%	   \affaddr{Stanford, California 94305}\\
        \email{manasrj@stanford.edu}
 \alignauthor
 Hector Garcia-Molina\\
        \affaddr{Stanford University}\\
-       \affaddr{353 Serra Mall}\\
-	   \affaddr{Stanford, California 94305}\\
+%       \affaddr{353 Serra Mall}\\
+%	   \affaddr{Stanford, California 94305}\\
        \email{hector@cs.stanford.edu}
 \alignauthor 
 Aditya Parameswaran\\
-       \affaddr{University of Illinois at Urbana-Champaign}\\
-       \affaddr{Champaign, Illinois 61820}\\
+       \affaddr{University of Illinois (UIUC)}\\
+%       \affaddr{Champaign, Illinois 61820}\\
        \email{adityagp@illinois.edu}
 }
 \maketitle
 
 \begin{abstract}
-In this paper we present {\em smart drill down},
+We present {\em smart drill-down},
 an operator for interactively exploring a relational table
-to discover ``interesting'' groups of tuples.
+to discover and summarize ``interesting'' groups of tuples.
 Each group of tuples is described by a {\em rule}.
 For instance, the rule $(a, b, \star, 1000)$ tells us that
-there are a $1000$ tuples with value $a$ in the first column and $b$
+there are a thousand tuples with value $a$ in the first column and $b$
 in the second column (and any value in the third column).
-Smart drill down presents an analyst with a list of rules that
+Smart drill-down presents an analyst with a list of rules that
 together describe interesting aspects of the table.
 The analyst can tailor the definition of interesting,
-and can interactively apply smart drill down on an existing rule to
+and can interactively apply smart drill-down on an existing rule to
 explore that part of the table.
-We describe an
-algorithm for finding the approximately optimal list of rules to display when the user uses a smart drill down, and a dynamic sampling scheme for efficiently dealing with large tables. Finally, we
-perform experiments on real datasets to demonstrate the usefulness of smart drill down and to study the performance of our algorithms.
+We demonstrate that the underlying optimization problems 
+are {\sc NP-Hard}, and describe an
+algorithm for finding the approximately optimal list of rules to display when the user uses a smart drill-down, and a dynamic sampling scheme for efficiently interacting with large tables. Finally, we
+perform experiments on real datasets to demonstrate the usefulness of smart drill-down and study the performance of our algorithms.
 \end{abstract}
 
 \input{intro}

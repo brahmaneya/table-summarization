@@ -128,14 +128,16 @@ A weight function can be used in several ways, including expressing a higher pre
 
 \begin{table}
 \centering
+\scriptsize
 \begin{tabular}{ | l | c | }
  \hline Rule-MCount list & Score \\ \hline
   ($a$, $b_1$)-$100$, ($a$, $\star$)-$900$ & $1100$ \\
   ($a$, $b_1$)-$100$, ($a$, $b_2$)-$300$, ($a$, $\star$)-$600$ & $1400$  \\
   ($a$, $b_1$)-$100$, ($a$, $b_3$)-$400$, ($a$, $\star$)-$500$ & $1500$ \\ \hline
 \end{tabular}
-\vspace{-15pt}
+\vspace{-10pt}
 \caption{Example of Rule-based scoring with score equal to rule size \label{table:sizescoringexample}}
+\vspace{-15pt}
 \end{table}
 
 \subsection{Smart Drill-Down Operations}
@@ -149,6 +151,7 @@ Finally, when the user clicks on a rule that has already been expanded, it rever
 roll-up, but for smart drill-downs instead of traditional drill-downs.
 	
 \begin{table}
+\scriptsize
 \centering
 \begin{tabular}{| l | l | l | l | l |}
 \hline Store & Product & State & Count & Weight \\
@@ -161,7 +164,8 @@ $\triangleright$ $\triangleright$ walmart & cookies & California & $80$ & $2$ \\
 $\triangleright$ $\triangleright$ walmart & cookies & $\star$ & $200$ & $2$ \\ \cline{2-5}
 $\triangleright$ $\triangleright$ walmart & bicycles & $\star$ & $150$ & $2$ \\  \hline
 \end{tabular}
-\vspace{-15pt}
+\vspace{-10pt}
 \caption{Result of clicking on a $\star$ \label{table:introexample3}}
+\vspace{-10pt}
 \end{table}
 
