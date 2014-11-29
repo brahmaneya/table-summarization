@@ -105,6 +105,7 @@ $\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
 \end{tabular}
 \vspace{-10pt}
 \caption{Initial summary}\label{table:introexample0}
+\vspace{-5pt}
 \end{table}
 
 \begin{table}
@@ -153,19 +154,19 @@ obtaining the expanded summary in Table~\ref{table:introexample2}.
 The three new rules in this table provide additional information
 about the $1000$ Walmart tuples.
 In particular, one of the new rules shows that
-Walmart sells a lot of cookies and the others show it sells a lot of products in
+Walmart sells a lot of cookies; the others show it sells a lot of products in
 the regions CA-1 and WA-5.
 
 When the analyst clicks on a rule $r$, smart drill-down
 expands $r$ into $k$ sub-rules that as a set are deemed to be ``interesting.''
 (We discuss other smart drill-down operations in Section~\ref{sec:interface}.)
 There are three factors that make a rule set interesting.
-One is if contains rules with high Count (or total sales) fields,
+One is if it contains rules with high Count (or total sales) fields,
 since the larger the count, the more tuples are summarized.
 A second factor is if the rules have high weight (number of non-$\star$ attributes).
 For instance, the rule (Walmart, cookies, AK-1, $200$, $3$)
 seems more interesting than (Walmart, cookies, $*$, $200$, $2$)
-since the former rule tells us the high sales are concentrated in a single region.
+since the former tells us the high sales are concentrated in a single region.
 A third desirability factor is diversity:
 For example, if we already have the rule (Walmart, $\star$, $\star$, $1000$, $1$)
 in our set, we would rather have the rule (Target, bicycles, $\star$, $200$, $2$)

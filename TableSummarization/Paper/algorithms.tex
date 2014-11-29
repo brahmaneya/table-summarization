@@ -21,7 +21,7 @@ $$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r,R)$$
 \end{enumerate}
 
 
-\begin{algorithm}\label{algo:best-rule-set}
+\begin{algorithm}
 \scriptsize
 \KwIn{$k$ (Number of rules required), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
 \KwOut{$S$ (Solution set of rules)}
@@ -33,7 +33,7 @@ $R_m = \text{Find\_best\_marginal\_rule}(S, T, m_w, W)$ \tcc*{Calling Algorithm~
 $S = S \cup \left\lbrace R_m \right\rbrace$
 }
 \Return $S$
-\caption{Greedy Algorithm for Problem~\ref{prob:optimal-rule-set}}
+\caption{Greedy Algorithm for Problem~\ref{prob:optimal-rule-set}\label{algo:best-rule-set}}
 \end{algorithm}
 
 
@@ -49,7 +49,7 @@ The proof of this lemma, as well as other proofs, can be found in the appendix o
 \noindent Thus it is sufficient to restrict our attention to rule-lists that have rules sorted in decreasing order by weight. Or equivalently, we can define Score for a \emph{set} of rules as follows:
 
 \begin{definition}\label{def:set-score}
-Let $R$ be a set of rules. Then the Score of $R$ is defined by
+Let $R$ be a set of rules. Then the Score of $R$ is
 $$\text{Score}(R) = \text{Score}(R^{\prime})$$
 where $R^{\prime}$ is the list of rules obtained by ordering the rules in $R$ in decreasing order by weight.
 \end{definition}
@@ -90,7 +90,7 @@ we start with an empty rule set $R$, and then at each step, we add the next best
 \squishend
 
 
-\begin{algorithm}\label{algo:best-marginal-rule}
+\begin{algorithm}
 \scriptsize
 \KwIn{$S$ (Current solution set), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
 \KwOut{$R_m$ (Rule which adds the highest marginal value among rules with weight $\leq m_w$)}
@@ -138,7 +138,7 @@ $C_n = \phi$
 $H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
 }
 \Return $\textrm{argmax}_{r \in C} \text{MarginalValue}(r)$
-\caption{Find best marginal rule}
+\caption{Find best marginal rule\label{algo:best-marginal-rule}}
 \end{algorithm}
 
 
@@ -157,31 +157,32 @@ $$f(A \cup \left\lbrace s \right\rbrace) - f(A) \geq f(B \cup \left\lbrace s \ri
 Intuitively, this means that the marginal value of adding an element to a set $S$ cannot increase if we add it to a superset of $S$ instead. For monotonic non-negative submodular functions, the problem of finding the set of a given size with maximum value for the function can be found approximately in a greedy fashion. 
 
 \begin{lemma}\label{lemma:submodular}
-For a given table $T$, the Score function over sets $S$ of rules, defined by :
+For a given table $T$, the Score function over sets $S$ of rules, defined by the following is submodular:
 $$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
-is submodular.
 \end{lemma}
 
 %TODO: Give  better name to `Greedy Algorithm', and use that name to reference in later as well, in sampling/experimental/extension sections. 
 \stitle{High-Level Procedure:} Now, based on the submodularity property, the greedy procedure,
 as listed below, has desirable approximation guarantees:
+\vspace{-10pt}
 \begin{framed}
-\vspace{-15pt}
-\begin{enumerate}
+\vspace{-5pt}
+\begin{denselist}
 \item Set $S = \phi$
 \item For $i$ from $1$ to $k$
-\begin{enumerate}
+\begin{denselist}
 \item Find the rule $r$ for which Score($S \cup \left\lbrace r \right\rbrace$) is the highest.
 \item $S = S \cup \left\lbrace r \right\rbrace$
-\end{enumerate}
-\end{enumerate}
-\vspace{-15pt}
+\end{denselist}
+\end{denselist}
+\vspace{-5pt}
 \end{framed}
+\vspace{-10pt}
 Since Score is a submodular function of the set $S$, 
 this greedy procedure is guaranteed to give us a score within a $1 - \frac{1}{e}$ factor of the optimum. 
 
 The expensive step in the above procedure is the step where the Score is computed for every
-single rule. Given the number of rules can be very large, this can be an especially time-consuming process.
+single rule. Given the number of rules can be large, this can be an especially time-consuming process.
 
 Instead of using the procedure described above directly, we instead develop a ``parameterized'' version 
 that will admit further approximation (depending on the parameter) in order to reduce computation further. We describe
