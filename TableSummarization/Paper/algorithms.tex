@@ -269,7 +269,8 @@ $$\sum_{r \in U} n_r < \text{capacity}$$
 \end{problem}
 Problem~\ref{prob:sample-sizes} is non-linear and non-convex because of the indicator variables. If the tree $U$ is not too big, then it might be feasible to use an exponential algorithm to solve the problem. 
 
-\begin{comment}
+-----Hinge-loss begin-----
+
 However, we can make the problem convex (and hence tractable) with two simplifications. The first simplification is, we modify our objective function to use hinge-loss instead of a step function. That is, our new objective function to maximise is $$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{min}(1, \frac{ess(r^{\prime})}{minSS} $$
 Here we assume that it is acceptable to run our algorithm on samples smaller than $minSS$,  though we still prefer bigger sample sizes upto $minSS$. The other simplification we make is assuming that the sample sizes $n_r$ are real numbers instead of integers. After obtaining our optimal sample sizes, we can round them up to get integer sample sizes. This will increase the memory usage by at most $|U|$, the number of nodes in displayed tree. $|U|$ is usually negligible compared to the memory capacity, or $minSS$.
 
@@ -283,8 +284,9 @@ $$\sum_{r \in U} n_r < \text{capacity}$$
 \end{problem}
 The constraint is linear in the $n_r$ variables, and hence convex. Each $ess$ value is a linear function of the $n_r$s, which makes $-\frac{ess(r^{\prime})}{minSS}$ convex. The constant function $-1$ is convex as well. Since the maximum of two convex functions is convex, Problem~\ref{prob:sample-sizes-hinge-loss} is a convex minimization problem, which means that its local optimum is also its global optimum. Thus we can initialize all $n_r$s to $0$ and then use stochastic gradient descent (or any other local optimization technique) to find their optimum values. 
 
-The main weakness of this approach is that the hinge-loss objective rewards values of $ess < minSS$, which may lead us to all leaves having large $ess$ values that are nonetheless less than $minSS$, and thus 
-\end{comment}
+The main weakness of this approach is that the hinge-loss objective rewards values of $ess < minSS$, which may lead us to all leaves having large $ess$ values that are nonetheless less than $minSS$, and thus gives lower quality count estimates than required by the user.
+
+----Hinge-loss-end-----
 
 Otherwise, with an additional simplification, we can reduce it to the knapsack-like problem, and use a PTAS (Polynomial Time Approximation Scheme) to find the approximately optimal solution. The simplification is: For each $r \in L$, we assume that it will get tuples only from samples obtained for itself (filter $= r$) and its immediate parent. That is, we set $S(r_1, r_2)$ to be zero if $r_1 \neq r_2$ and $r_2$ is not a child of $r_1$. $ess(r)$ is redefined according to the new value of $S$ as well. So $$ess(r^{\prime}) = n_{r^{\prime}} + n_rS(r, r^{\prime})$$ where $r$ is the parent of $r^{\prime}$. 
 
