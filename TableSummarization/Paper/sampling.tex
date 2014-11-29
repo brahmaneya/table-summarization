@@ -1,0 +1,146 @@
+%!TEX root = TableSummarization.tex
+
+
+\subsection{Dynamic Sampling for Large Tables}\label{sec:sampling}
+We now describe our sampling schemes for improving the running time of our algorithm on tables that are too large to fit in main memory. First in Section~\ref{sec:sample-using}, we motivate the need for sampling. Then we describe a component of our system, called the {\em SampleHandler}, which is responsible for creating and maintaining samples of the table in memory, subject to user specified memory constraints. The SampleHandler maintains multiple samples corresponding to different parts of the table, which can be used depending on which rule the user decides to expand next. Then in Section~\ref{sec:sampling_algorithms}, we describe ways to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk. 
+\papertext{In the technical report,}
+\techreporttext{Finally,}
+we mention some additional optimizations we can make, and
+describe how we can set the minimum sample size required from the SampleHandler.
+
+\subsubsection{Using samples to respond to user operations}\label{sec:sample-using}
+Our greedy algorithm needs to make multiple passes over the entire table in order to find counts of rules. These passes can be very expensive if the table is large, especially if the table does not fit in main memory. If we want exact counts for rules, we have no choice but to read the entire table. 
+
+But if we are willing to accept approximate counts rather than exact counts for rules, we can speed up our algorithm by loading a sample of the table into main memory, finding rule counts on the sample, and scaling up the count. Thankfully since our goal is to find a representative coverage of the table,
+if we miss out on a few rare tuples, it does not hurt us. If we had obtained the sample by sampling each tuple with probability $p$, then we must scale up the sample count of each rule by $\frac{1}{p}$ to get an estimate of its count over the full table. 
+
+Thus, we use sampling to trade-off a small amount of accuracy for a faster response time. Our system includes a {\em SampleHandler}, which is given a certain memory capacity $M$, and a minimum sample size $minSS$ (both specified by the user).
+The $minSS$ parameter is the minimum number of sample tuples that are used to determine counts while running our greedy algorithm, and this parameter determines how accurate our count estimates will be. We later provide a way to find reasonable values of $minSS$.
+
+% Example from situation in a previous table. And good and bad samples to keep there.
+At all points, the SampleHandler maintains a set of samples in memory. For instance, it may keep a sample of tuples used to expand the first (trivial) rule, and another sample used to expand the rule last clicked on by the user. Each sample $s$ is an object with three attributes: A `filter' rule $f_s$, a scaling factor $N_s$ and a set $T_s$ of tuples from the table. The set $T_s$ consists of a $\frac{1}{N_s}$ uniformly sampled fraction of tuples covered by $f_s$. The scaling factor $N_s$ is used to translate the count of a rule on the sample into an estimate of the count over the entire table. The sum of $|T_s|$ over all samples $s$ is not allowed to exceed capacity $M$ at any point. 
+% TODO: Give example of what samples we'd keep.
+
+Whenever the user drills down on a rule $r$, our system calls the SampleHandler with argument $r$, which returns a sample $s$ whose filter value is given by $f_s = r$ and has $|T_s| \geq minSS$. Thus the $T_s$ of the returned sample consists of a uniformly random set of tuples covered by $r$. The SampleHandler also computes $N_s$ when a sample is created. Then we run Algorithm~\ref{algo:best-rule-set} on sample $s$ (with a modified weight function in case the user clicked on a $\star$) to obtain the list of rules to display. The counts of the rules on the sample are multiplied by $N_s$ before being displayed, to get estimated counts on the entire table. In addition since the sample is uniformly random, we can also compute confidence intervals on the estimated count of each displayed rule, although we do not currently display the confidence intervals.
+
+When the SamplerHandler gets called with argument $r$, it needs to find or create a sample with $r$ as the filter rule. At the beginning when it gets called with the empty rule as an argument, there are no samples in memory and it must make a pass through the data to generate a sample. Creating a new sample by making a pass through the table is called \textbf{Create} (further described below). At later stages, when there are potentially multiple samples available, there are multiple ways it could return a sample for rule $r$:
+\begin{enumerate}
+\item \textbf{Find:} If the SampleHandler finds an existing sample $s$ in memory, which has $r$ as its filter rule (i.e. $f_s = r$) and at least $minSS$ tuples ($|T_s| \geq minSS$, then it simply returns sample $s$. Algorithm~\ref{algo:best-rule-set} can then be run on $s$. 
+
+\item \textbf{Combine:} If \textbf{Find} doesn't work i.e. if the SampleHandler cannot find an existing sample with filter $r$ and $\geq minSS$ tuples, then it looks at all existing samples $s^{\prime}$ such that $f_{s^{\prime}}$ is a sub-rule of $r$. If the set of all tuples that are covered by $r$, from all such $T_{s^{\prime}}$'s combined, exceeds $minSS$ in size, then we can simply treat that set as our sample for rule $r$.
+We can show that tuples that are covered by $r$, from the combination of $T_{s^{\prime}}$s, follow a uniform distribution. That is, each table tuple $t$ that is covered by $r$ is equally likely to appear in a $T_{s^{\prime}}$. 
+
+Note that the \textbf{Combine} procedure doesn't really require additional memory apart from the temporary memory used by Algorithm~\ref{algo:best-rule-set}. Since all the tuples in the `new' sample are already present in existing samples, it can give Algorithm~\ref{algo:best-rule-set} a set of temporary pointers to the tuples, and the memory for the pointers can be freed as soon as the sample has been processed by Algorithm~\ref{algo:best-rule-set}. In contrast, if we had created a new sample from hard disk, we would maintain the sample even after Algorithm~\ref{algo:best-rule-set} terminated, and would hence need to use memory from the SampleHandler's capacity $M$.
+%TODO: Not sure how clear/necessary this is.  
+
+\item \textbf{Create:} If \textbf{Combine} doesn't work either, then the SampleHandler needs to create a new sample $s$ with $f_s = r$ by making a pass through the table. Making a pass can be expensive for big tables, so we only use \textbf{Create} when \textbf{Find} and \textbf{Combine} cannot be used. In addition, creating a new sample requires memory, and since memory capacity is limited (given by parameter $M$), it may necessitate shrinking or deleting some existing samples. 
+We can use reservoir sampling~\cite{maibdr1983,Vitter:1985:RSR:3147.3165} to get a uniformly random sample of given size in a single pass through the table. 
+
+In addition, the SampleHandler needs to return a sample of size equal to $minSS$. It can create a new sample of $< minSS$ size if there are additional tuples covered by $r$ present in existing samples, or $> minSS$ (if enough memory is available). Making a larger sample is advantageous not only to get higher accuracy, but also because, when the user later drills down on a sub-rule $r^{\prime}$ of $r$, having a large $r$ sample increases the chance that the \textbf{Combine} strategy will work for $r^{\prime}$, which can let us avoid making another expensive pass through the table. For example, if $minSS = 500$, but we get a size $2000$ sample $s$ for the empty rule, then when the user clicks on one of its sub-rules, say $r$, there is a good chance the $2000$ tuples from $T_s$ contain at least $500$ tuples covered by $r$ and that allows us to display the rule-list expanding $r$ quickly instead of making another pass through the table. We describe our algorithms for deciding what sized samples to create, and what samples to shrink, in Section~\ref{sec:sampling_algorithms}.
+
+\item \textbf{Delete/Shrink:} When the SampleHandler uses \textbf{Create}, it may not have enough memory left to create a new sample. In that case, the SampleHandler needs to delete or shrink an existing sample. It could use a heuristic, like a LRU (Least-Recently-Used) policy to decide which sample to delete or shrink. Note that shrinking a sample by randomly deleting some tuples (even if the sample size goes below $minSS$) may be better than deleting it entirely, because in future, we may be able to recreate a sample using \textbf{Combine} on the existing shrinked sample along with other samples.
+%For shrink, prefer shrinking samples of the largest size (> minSS) first?
+\end{enumerate}
+
+We describe our algorithm for deciding what samples to shrink, and what sized samples to create, in Section~\ref{sec:sampling_algorithms}. 
+
+\textbf{Pre-fetching:} When the user clicks on rule $r$ (on the rule itself or on a $\star$ in the rule), we need to get a sample, run the Algorithm~\ref{algo:best-rule-set}, and display a rule-list to the user. If we use \textbf{Find} or \textbf{Combine}, then we can display the rule-list much faster because we don't have to read the entire table. But after expanding $r$, there is a high chance that the user goes further and drills down on one of the sub-rules $r^{\prime}$ of $r$. We may not be able to use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ with the existing samples. So while the user is reading the current rule-list obtained from drilling down on $r$, we can start making a pass through the table to create a bigger sample of $r$ in the background. That way, when the user expands $r^{\prime}$, some of the newly loaded tuples for $r$ will also be covered by $r^{\prime}$, increasing the chance that we can use \textbf{Combine} on $r^{\prime}$, and reduce our response time.
+In addition, while we are making the pass in the background, we can find the exact counts for currently displayed rules (which only have estimated counts shown), and update them when our pass is complete.
+
+\subsubsection{Algorithms for deciding what to sample}\label{sec:sampling_algorithms}
+We now discuss algorithms for the SampleHandler to decide what sizes of Samples to maintain in memory. Briefly, we want to determine sample sizes that maximize the probability that the next user click can be answered using the existing samples, without reading from the hard disk. We leverage techniques from approximation algorithms and optimization theory.
+
+At any stage, we have a tree $U$ displayed to the user, with each node of the tree corresponding to a displayed rule. The tree is formed as follows: The root of the tree corresponds to the trivial rule. And suppose the user expands a node with rule $r$, resulting in rules $r_1, r_2, .. r_k$ being displayed. Then we add children nodes to the expanded node, corresponding to rules $r_1, r_2, .. r_k$. Note that multiple nodes of the tree may correspond to the same rule. Internal nodes of $U$ are ones that have been expanded (drilled down on), while leaves are nodes that have not been expanded. Let $L$ be the set of leaves. Each leaf is something that the user can potentially expand in the next step, and thus we would like to have pre-fetched samples for rules corresponding to leaf nodes.
+In the rest of this section, we abuse notation to use the term rule to refer to any node that corresponds to that rule.
+
+We assume that we have a probability distribution over leaves, which assigns a probability that each leaf will be the next one to be expanded. In the absence of additional information, we can assume a uniform probability distribution. That is, we can assume that every leaf is equally likely to be expanded next. We can improve on this by assigning zero probability to leaves whose rule is also displayed in an internal node of the tree. We can also use Machine Learning on past user behaviour, along with node features such as `node depth in tree' and `node distance from last expanded node' to get a better probability estimate of each node being expanded next. 
+
+When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to make a pass through the entire table, as well as potentially shrink some existing samples to free up memory. Since making a pass over the the table from the hard disk is usually a bottleneck, it can also do things like creating samples for rules other than $r$, and augmenting existing samples, in the same pass. Hence, we assume that in a \textbf{Create} phase, the SampleHandler not only creates one new sample for $r$, but also potentially creates other new samples, or resizes existing samples. For each displayed rule $r^{\prime}$, it may create a new sample for $r^{\prime}$ in the same pass through the table. Based on the current leaves and their expansion probabilities, it finds an optimal set of sizes of samples to create for each displayed rule. More specifically, for every displayed rule $r^{\prime}$, it determines an integer $n_{r^{\prime}}$, and then creates a fresh sample $s_{r^{\prime}}$ with $f_{s_{r^{\prime}}} = r^{\prime}$ and $|T_{s_{r^{\prime}}}| = n_{r^{\prime}}$ while making its pass through the table. 
+
+We choose the $n_{r^{\prime}}$ values so as to maximize the probability that the next user drill down can be satisfied using samples available in memory. We define some terms required to formalise this problem next. 
+
+Let the `selectivity' of a rule be the fraction of tuples in $T$ that are covered by the rule. For each pair of rules $r_1, r_2 \in U$ such that $r_1$ is a sub-rule of $r_2$, we can estimate the ratio of selectivities of $r_1$ and $r_2$ using existing samples. Call this quantity $S(r_1, r_2)$. We define $S(r_1, r_2)$ to be $0$ if $r_1$ is not a sub-rule of $r_2$. If the same rule occurs in multiple nodes $r_1$, $r_2$ of the tree, then $S(r_1, r_2)$ is naturally $1$. Then if we have an $n_r$ sized sample with filter $r$ for each $r \in U$, the expected number of tuples covered by $r^{\prime} \in L$ is given by $$\sum_{r \in U} S(r, r^{\prime})n_r$$ For any $r^{\prime}$, define the function {\em ess} (for `effective sample size') as below: 
+\begin{definition}\label{def:ess}
+$$ess(r^{\prime}) = \sum_{r \in U} S(r, r^{\prime})n_r$$ 
+\end{definition}
+If $ess(r^{\prime}) \geq minSS$ then if the user expands $r^{\prime}$, we display the next rule list using \textbf{Find} or \textbf{Combine}, instead of having to make another pass through the table. We wish to maximize the probability that we can respond to the next user expansion without making another pass. We now formally define our problem below:
+\begin{problem}\label{prob:sample-sizes}
+Given a tree of rules $U$ with leaves $L$, a probability distribution $p$ over $L$, an integer `capacity', and selectivity ratio $S(r_1, r_2)$ for each $r_1, r_2 \in U$, 
+choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximize}$ :
+$$\sum_{r^{\prime} \in L} p_{r^{\prime}}I_{ess(r^{\prime}) \geq minSS}$$
+where the $I$'s are indicator variables, subject to :
+$$\sum_{r \in U} n_r < \text{capacity}$$
+\end{problem}
+Problem~\ref{prob:sample-sizes} is non-linear and non-convex because of the indicator variables. If the tree $U$ is not too big, then it might be feasible to use an exponential algorithm to solve the problem. 
+
+-----Hinge-loss begin-----
+
+However, we can make the problem convex (and hence tractable) with two simplifications. The first simplification is, we modify our objective function to use hinge-loss instead of a step function. That is, our new objective function to maximise is $$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{min}(1, \frac{ess(r^{\prime})}{minSS} $$
+Here we assume that it is acceptable to run our algorithm on samples smaller than $minSS$,  though we still prefer bigger sample sizes upto $minSS$. The other simplification we make is assuming that the sample sizes $n_r$ are real numbers instead of integers. After obtaining our optimal sample sizes, we can round them up to get integer sample sizes. This will increase the memory usage by at most $|U|$, the number of nodes in displayed tree. $|U|$ is usually negligible compared to the memory capacity, or $minSS$.
+
+In addition, in order to express our problem as a convex minimization problem, we negate the objective function and aim to minimize it (which is equivalent to maximizing the original objective function). Thus our new optimization problem becomes
+\begin{problem}\label{prob:sample-sizes-hinge-loss}
+Given a tree of rules $U$ with leaves $L$, a probability distribution $p$ over $L$, an integer `capacity', and selectivity ratio $S(r_1, r_2)$ for each $r_1, r_2 \in U$, 
+choose a real number $n_r \geq 0$ for each $r \in U$ so as to $\textrm{minimize}$ :
+$$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{max}(-1, -\frac{ess(r^{\prime})}{minSS} $$
+subject to :
+$$\sum_{r \in U} n_r < \text{capacity}$$
+\end{problem}
+The constraint is linear in the $n_r$ variables, and hence convex. Each $ess$ value is a linear function of the $n_r$s, which makes $-\frac{ess(r^{\prime})}{minSS}$ convex. The constant function $-1$ is convex as well. Since the maximum of two convex functions is convex, Problem~\ref{prob:sample-sizes-hinge-loss} is a convex minimization problem, which means that its local optimum is also its global optimum. Thus we can initialize all $n_r$s to $0$ and then use stochastic gradient descent (or any other local optimization technique) to find their optimum values. 
+
+The main weakness of this approach is that the hinge-loss objective rewards values of $ess < minSS$, which may lead us to all leaves having large $ess$ values that are nonetheless less than $minSS$, and thus gives lower quality count estimates than required by the user.
+
+----Hinge-loss-end-----
+
+Otherwise, with an additional simplification, we can reduce it to the knapsack-like problem, and use a PTAS (Polynomial Time Approximation Scheme) to find the approximately optimal solution. The simplification is: For each $r \in L$, we assume that it will get tuples only from samples obtained for itself (filter $= r$) and its immediate parent. That is, we set $S(r_1, r_2)$ to be zero if $r_1 \neq r_2$ and $r_2$ is not a child of $r_1$. $ess(r)$ is redefined according to the new value of $S$ as well. So $$ess(r^{\prime}) = n_{r^{\prime}} + n_rS(r, r^{\prime})$$ where $r$ is the parent of $r^{\prime}$. 
+
+Now consider a rule in $r_0 \in U \setminus L$ along with all its children. Let $M_{r_0}$ denote the set containing $r_0$ and all its leaf children. Then by our simplification, the number of tuples $n_{r^{\prime}}$ for any rule in $r^{\prime} \in M_{r_0}$ only affects the ess value of rules in $M_{r_0}$. This allows us to effectively split the problem into multiple subproblems, one per $M_{r_0}$. Thus for each non-leaf rule $r_0$ and all its children, we compute all `locally optimal' assignments of $n_r \mid r \in M_{r_0}$. Locally optimal means that we cannot get a higher value of `probability value' $\sum_{r \in M_{r_0}} p_rI_{ess(r) \geq minSS}$ for the same `sampling cost' $\sum_{r\in M_{r_0}} n_r$. Then we can use dynamic programming to combine the locally optimal solutions of different $M_{r_0}$s. We describe both these steps in detail below:
+
+Let $r_0 \in U \setminus L$. Let $d$ be the number of leaf children of $r_0$. Let the children be $r_1, r_2, ... r_d$. For any child $r_i$, $n_{r_i}$ only contributes to it's own $ess$, whereas $n_{r_0}$ contributes to the $ess$ of all children $r_1, ... r_d$. Given a value of $n_{r_0}$, in a locally optimal solution, each child $r_i$ must satisfy:
+\squishlist
+\item If $n_{r_0}S(r_0, r_i) \geq minSS$, then $n_{r_i} = 0$ because otherwise, decreasing $n_{r_i}$ to $0$ would lower its sampling cost without improving its probability score. 
+\item If $n_{r_0}S(r_0, r_i) < minSS$, then either $n_{r_i} = 0$ or $n_{r_i} = minSS - n_{r_0}S(r_0, r_i)$. This is because if $n_{r_i}$ is between $0$ and $minSS - n_{r_0}S(r_0, r_i)$, then we can decrease it to $0$, and if it is $> minSS - n_{r_0}S(r_0, r_i)$, then we can decrease it to $minSS - n_{r_0}S(r_0, r_i)$. Both these decreases would decrease sampling cost without affecting probability score. 
+\squishend
+Thus there are three kinds of children $r_i$: Those with $ess \geq minSS$ but $n_{r_i} = 0$, those with $ess < minSS$ and $n_{r_i} = 0$, and those with $ess \geq minSS$ and $n_{r_i} = minSS - n_{r_0}S(r_0, r_i)$. There are $3^d$ ways to assign each child to one of these categories, and each of those potentially gives us one locally optimal solution. Consider any such locally optimal solution $e$. For $e$ let children $r_{i_1}, r_{i_2}, ... r_{i_m}$ be in the first category, $r_{i_{m+1}}, .. r_{i_M}$ be in the second category, and $r_{i_{M+1}}, .. r_{i_d}$ in the third.  Then the `probability value' of solution $e$ is given by : 
+$$P(e) = \sum_{j = 1}^{i_M}p_{j}$$
+and its `Sampling Cost' is
+$$S(e) = \frac{minSS}{S(r_0, r_{i_m})} + \sum_{j=i_m+1}^{i_M} minSS - \frac{minSS}{S(r_0, r_{i_j})}$$
+Thus there are at most $3^d$ locally optimal solutions. $d$ is usually small, even when the rule tree $U$ itself is big, and so we can enumerate all $3^d$ locally optimal solutions and find their sampling cost and probability scores. 
+
+\begin{comment}
+Let $r_0 \in U \setminus L$. Let $d$ be the number of leaf children of $r_0$. Let the children be $r_1, r_2, ... r_d$, ordered such that $S(r_0, r_i) > S(r_0, r_j) \forall i > j$. Then we can show that for any locally optimal solution, there exist integers $i_m, i_M$ such that the following conditions hold:
+$$1 \leq i_m \leq i_M \leq d$$
+$$n_{r_0} = \frac{minSS}{S(r_0, r_{i_m})}$$
+$$1 \leq j \leq i_m \Rightarrow n_{r_j} = 0$$
+$$i_m < j \leq i_M \Leftrightarrow n_{r_j} = minSS - \frac{minSS}{S(r_0, r_{i_j})}$$
+$$i_M < j \Rightarrow n_{r_j} = 0$$
+And thus
+$$ess(r_j) \geq minSS \Leftrightarrow j \leq i_M$$
+
+Call this locally optimal solution $e$. Then we define its `probability value' to be
+$$P(e) = \sum_{j = 1}^{i_M}p_{j}$$
+and its `Sampling Cost' to be
+$$S(e) = \frac{minSS}{S(r_0, r_{i_m})} + \sum_{j=i_m+1}^{i_M} minSS - \frac{minSS}{S(r_0, r_{i_j})}$$
+Since there are at most $d^2$ possible values of $i_m$ and $i_M$, we can try out all of them and obtain all locally optimal solutions. 
+\end{comment}
+
+Then next step is to combine the solutions using dynamic programming. Let the $M$ sets be called $M_0, M_1, ... M_D$. Let our possible sample sizes range from $0$ to $\mathcal{S}$. The number of sample sizes can be pretty large ($\mathcal{S}$), but we can make it smaller by discretizing the sample sizes, say to have granularity $100$. Then we create a $D \times \mathcal{S}$ array $A$. The value $A\left[i\right]\left[j\right]$ contains the best probability score we can get from $M_0, M_1, ... M_i$ with total sample size at most $j$. We can populate $A\left[0\right]\left[j\right] \forall j$ using the locally optimal solutions for $M_0$. Let $E_{i+1}$ denote the set of locally optimal solutions for $M_{i+1}$. Then we have,
+$$A\left[i+1\right] \left[j \right] = \textrm{max} (A\left[i\right]\left[j\right], \textrm{max}_{e \in E_{i+1}}(A\left[i\right]\left[j-S(e)\right] + P(e)))$$
+This can be solved using dynamic programming, in $O(D\mathcal{S}d^2)$ time. 
+
+\techreporttext{
+\subsubsection{Additional optimizations}
+There are some additional minor optimizations we can make to reduce the memory cost per sample, allowing us to store more and bigger samples. 
+Suppose we have a sample $s$, and say its filter rule $f_s$ has value $v$ in column $c$. Then we know that each tuple $t$ in $T_s$ must also have value $v$ in column $c$, since it is covered by $f_s$. So we do not need to explicitly store the column $c$ value of any tuple in $T_s$. We only need to store the tuple values of columns that have a $\star$ value in $f_s$.
+In addition, we may have a tuple occur in multiple samples. Instead of storing the entire tuple repeatedly, we could create a dictionary of common tuples, and only store a pointer to the tuple's dictionary entry in $T_s$. 
+
+
+\subsubsection{Setting $minSS$}
+Suppose a rule $r$ covers $x$ fraction of the tuples of $T$ i.e. $x|T|$ tuples. Say we have a uniform random sample $s$ of $T$. The samples has size $|T_s|$, and let $X_{r,s}$ be the random variable denoting the number of tuples of $T_s$ covered by $r$. Then $E\left[ X_{r,s} \right] = x|T_s|$, and $\text{Dev}(X_{r,s}) \approx \sqrt{|T_s|x(1-x)}$. In order to get a good estimate of $x$ (and hence of Count$(r) = x|T|$), we want $E\left[X_{r,s}\right] >> \text{Dev}(X_{r,s})$. That is, $x|T_s| >> \sqrt{|T_s|x(1-x)} \Leftrightarrow \frac{x|T_s|}{1-x} >> 1$. 
+
+We want to set the parameter minSS such that we get good count estimates for rules when using a sample of size $|T_s| = minSS$. If a rule displayed in our summary has covers $x$ fraction of the tuples, we want minSS to be at least $\rho\frac{1-x}{x}$, So the value of minSS must be at least $\rho\frac{1-x}{x}$ where $\rho$ is a constant chosen by us based on how accurate we want the count estimate to be. Moreover, since we want good Count estimates for all rules displayed in the summary, we want $minSS >> \rho\frac{1-x}{x}$ where $x$ is the minimum fraction of tuples covered by any of the rules displayed in our summary.
+
+Thus a reasonable value of minSS can be found by obtaining a bound on $\frac{1-x}{x}$. This is hard to do for arbitrary weighting functions, but we can do it for the Size weighting function (where weight of a rule equals number of non-$\star$ values of the rule). Let $c$ be the column with the fewest distinct values. Say it has $|c|$ values. Then the rule that has the most frequent value of $c$, and $\star$ everywhere else, must have a score of at least $\frac{|T|}{|c|}$. For example, if the table has $10000$ tuples in all, and there is a `Education' column that has 5 possible values, then the most frequent value of Education must occur at least $2000$ times. So the rule with the most frequent value for Education, and $\star$s elsewhere, must have a score of at least $2000$. 
+
+The highest scoring rule can have weight at most $|C|$ (the total number of columns). Since the score of the highest scoring rule is at least $\frac{|T|}{|c|}$, the Count of the highest scoring rule must be at least $\frac{|T|}{|C||c|}$. Thus if minSS is significantly larger than $|C||c|$, then the Count of the first few highest scoring rules should be well-approximated in a sample of size more than minSS. For example, if $|T| = 10000$, $|c| = 5$, $|C| = 10$, then we want $minSS >> 5 \times 10$.
+}
