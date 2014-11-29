@@ -21,6 +21,23 @@ $$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r,R)$$
 \end{enumerate}
 
 
+\begin{algorithm}\label{algo:best-rule-set}
+\scriptsize
+\KwIn{$k$ (Number of rules required), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
+\KwOut{$S$ (Solution set of rules)}
+$S = \phi$ 
+
+\For {$i$ from $1$ to $k$}{
+$R_m = \text{Find\_best\_marginal\_rule}(S, T, m_w, W)$ \tcc*{Calling Algorithm~\ref{algo:best-marginal-rule}}
+
+$S = S \cup \left\lbrace R_m \right\rbrace$
+}
+\Return $S$
+\caption{Greedy Algorithm for Problem~\ref{prob:optimal-rule-set}}
+\end{algorithm}
+
+
+
 As a first step towards solving Problem~\ref{prob:optimal-rule-list}, we show that the rules in the optimal list must effectively be ordered in decreasing order by weight. Note that the weight of a rule is independent of its $MCount$. The $MCount$ of a rule is the number of tuples that have been `assigned' to it, and each tuple assigned to rule $r$ contributes $W(r)$ to the total score. Thus if the rules are not in decreasing order by weight in a rule list $R$, then switching the order of rules in $R$ transfers some tuples from a lower weight rule to a higher weight rule, which can increase total score.
 
 \begin{lemma}\label{lemma:rule-ordering}
@@ -71,6 +88,59 @@ we start with an empty rule set $R$, and then at each step, we add the next best
  
 \item In order to find the rule $r$ to add in each step, we need to measure the impact on Score for each $r$. This is done in several passes over the table, using ideas from the a-priori algorithm~\cite{apriori} for frequent item-set mining. 
 \squishend
+
+
+\begin{algorithm}\label{algo:best-marginal-rule}
+\scriptsize
+\KwIn{$S$ (Current solution set), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
+\KwOut{$R_m$ (Rule which adds the highest marginal value among rules with weight $\leq m_w$)}
+$H = 0$ \tcc*{Threshold for deciding if to count for a rule.}
+$C = C_o = C_n = \phi$ \tcc*{Set of all, old and new candidate rules respectively. }
+\For{$j$ from $1$ to number of columns in $T$}{
+\If {$j = 1$}{
+$C_n = \text{ all rules of size } 1$
+}
+\Else{ 
+$C_n = \text{all size-}i$ super-rules of rules from $C_o$
+}
+\ForEach {$R \in C_n$}{
+$M =\infty$ \tcc*{Upper bound on marginal value count of $R$}
+\ForEach {$R$-sub-rule $R^{\prime} \in C$}{  
+$M = \text{min}(M, \text{MarginalVal}(R^{\prime}) + \text{Count}(R^{\prime})(m_w - W(R^{\prime}))$
+}
+\If {$(M < H)$}{ 
+$C_n = C_n \setminus \left\lbrace R \right\rbrace$ \tcc{Delete $R$ if its max count is too small for $R$ to be in the solution}
+}
+}
+\If {$C_n = \phi$}{
+break;
+}
+\ForEach {$R \in C_n$}{
+Count$(R) = 0$ \tcc*{Initialize}
+MarginalValue$(R) = 0$ \tcc*{Initialize}
+}
+\ForEach {$t \in T$}{
+Let $R_S$ be the highest weight rule in $S$ that covers $t$
+
+\ForEach {$R \in C_n$ that covers $t$}{
+Count($R$) $++$ 
+
+MarginalValue($R$) $+=$ $W(R) - \text{min}(W(R), W(R_S))$
+}
+}
+$C = C \cup C_n$
+
+$C_o = C_n$
+
+$C_n = \phi$
+
+
+$H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
+}
+\Return $\textrm{argmax}_{r \in C} \text{MarginalValue}(r)$
+\caption{Find best marginal rule}
+\end{algorithm}
+
 
 In some cases, the dataset may still be too large for us to return a good rule set in
 a reasonable time; in such cases, we may want to run our algorithm on a sample of the table
@@ -136,69 +206,7 @@ For the second pass onwards, we are more selective about which rules to consider
 
 Note that the reader may be wondering why we did not simply count the score of each rule using a variant of the a-priori algorithm in one pass, and then pick the set of rules that maximizes score subsequently. This is because doing so will lead to a sub-optimal set of rules: by not accounting for the rules that have already been selected, we will not be able to ascertain the marginal benefit of adding an additional rule correctly.
 
-\begin{algorithm}\label{algo:best-rule-set}
-\KwIn{$k$ (Number of rules required), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
-\KwOut{$S$ (Solution set of rules)}
-$S = \phi$ 
 
-\For {$i$ from $1$ to $k$}{
-$R_m = \text{Find\_best\_marginal\_rule}(S, T, m_w, W)$ \tcc*{Calling Algorithm~\ref{algo:best-marginal-rule}}
-
-$S = S \cup \left\lbrace R_m \right\rbrace$
-}
-\Return $S$
-\caption{Greedy Algorithm for Problem~\ref{prob:optimal-rule-set}}
-\end{algorithm}
-
-
-\begin{algorithm}\label{algo:best-marginal-rule}
-\KwIn{$S$ (Current solution set), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
-\KwOut{$R_m$ (Rule which adds the highest marginal value among rules with weight $\leq m_w$)}
-$H = 0$ \tcc*{Threshold for deciding if to find count for a rule.}
-$C = C_o = C_n = \phi$ \tcc*{Set of all, old and new candidate rules respectively. }
-\For{$j$ from $1$ to number of columns in $T$}{
-\If {$j = 1$}{
-$C_n = \text{ all rules of size } 1$
-}
-\Else{ 
-$C_n = \text{all size-}i$ super-rules of rules from $C_o$
-}
-\ForEach {$R \in C_n$}{
-$M =\infty$ \tcc*{Upper bound on marginal value count of $R$}
-\ForEach {$R$-sub-rule $R^{\prime} \in C$}{  
-$M = \text{min}(M, \text{MarginalVal}(R^{\prime}) + \text{Count}(R^{\prime})(m_w - W(R^{\prime}))$
-}
-\If {$(M < H)$}{ 
-$C_n = C_n \setminus \left\lbrace R \right\rbrace$ \tcc{Delete $R$ if its max count is too small for $R$ to possibly be in the solution}
-}
-}
-\If {$C_n = \phi$}{
-break;
-}
-\ForEach {$R \in C_n$}{
-Count$(R) = 0$ \tcc*{Initialize}
-MarginalValue$(R) = 0$ \tcc*{Initialize}
-}
-\ForEach {$t \in T$}{
-Let $R_S$ be the highest weight rule in $S$ that covers $t$
-\ForEach {$R \in C_n$ that covers $t$}{
-Count($R$) $++$ 
-
-MarginalValue($R$) $+=$ $W(R) - \text{min}(W(R), W(R_S))$
-}
-}
-$C = C \cup C_n$
-
-$C_o = C_n$
-
-$C_n = \phi$
-
-
-$H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
-}
-\Return $\textrm{argmax}_{r \in C} \text{MarginalValue}(r)$
-\caption{Find best marginal rule}
-\end{algorithm}
 
 
 \subsection{Dynamic Sampling for Large Tables}\label{sec:sampling}
