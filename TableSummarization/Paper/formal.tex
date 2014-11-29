@@ -32,10 +32,10 @@ The value in each column of the rule can either be one of the values in the corr
 in identifying rules that cover many tuples. We next define the concept of subsumption that allow us to 
 relate the coverage of different rules to each other.
 
-We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. We also write $r_1 \geq r_2$ to denote that $r_1$ subsumes $r_2$, and $r_1 > r_2$ if $r_1$ subsumes but is not equal to $r_2$ i.e. there is at least one column $c$ such that $r_2$ has a non-$\star$ value in $c$ where $r_1$ does not. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
+We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus, if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. We also write $r_1 \geq r_2$ to denote that $r_1$ subsumes $r_2$, and $r_1 > r_2$ if $r_1$ subsumes but is not equal to $r_2$ i.e. there is at least one column $c$ such that $r_2$ has a non-$\star$ value in $c$ where $r_1$ does not. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
 
 \stitle{Rule Lists:}
-A {\em rule-list} is an ordered list of rules returned by our system on use of a smart drill-down operator. 
+A {\em rule-list} is an ordered list of rules returned by our system when a smart drill-down operation concludes. 
 When a user drills down on a rule $r$ to know more about the part of the table covered by $r$, we display a rule-list of sub-rules of $r$.
 For instance, the second, third and fourth rule from Table~\ref{table:introexample} form a rule-list, which is displayed when the user clicks on the first (trivial) rule. Similarly, the second, third and fourth rules in Table~\ref{table:introexample2} form a rule-list, as do the fifth, sixth and seventh rules. 
 
@@ -47,7 +47,7 @@ The first portion dictates how much the rule $r$ ``covers'' the tuples in $\calD
 the second portion dictates how ``good'' the rule $r$ is (independent of how many
 tuples it covers). 
 The reason why we separate the scoring into these two portions is
-that they allow us to separate the inherent goodness of a rule from
+that they allow us to separate the inherent ``goodness'' of a rule from
 how much it captures the data in $\calD$.
 
 We now describe the first portion:
@@ -70,7 +70,7 @@ We further describe our weighting functions in Section~\ref{sec:weighting}.
 
 Thus, the total score for our list of rules is given by 
 $$\text{Score}(R) = \sum_{r \in R} \underbrace{MCount(r, R)}_{\text{coverage of $r$ in $\calD$}} \times \underbrace{W(r)}_{\text{weight of $r$}}$$ 
-Overall, our goal is to choose the rule-list that maximizes the 
+Overall, our goal is to choose the rule-list maximizing 
 total score. 
 
 
@@ -82,32 +82,34 @@ For instance, if $a$ and $b$ were the most common values in columns $A$ and $B$,
 for some weighting functions $W$, 
 the summary may potentially consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$. 
 
-Our smart drill downs still display the Count of each rule rather than the $MCount$. This is because while $MCount$ is useful in the rule selection process, Count is easier for a user to interpret. In any case, it would be a simple extension to display MCount in another column.
+Our smart drill-downs still display the Count of each rule rather than the $MCount$. This is because while $MCount$ is useful in the rule selection process, Count is easier for a user to interpret. In any case, it would be a simple extension to display MCount in another column.
 
 \stitle{Formal Problem:} We now formally define our problem:
 \begin{problem}\label{prob:optimal-subrule-list}
 Given a table $T$, a monotonic weighting function $W$, and a number $k$, find the list $R$ of $k$ rules that maximizes 
 $$\sum_{r \in R} W(r) \times MCount(r,R)$$
 for one of the following smart drill-down operations:
-\begin{enumerate}
+\begin{denselist}
 \item $[$Rule Drill-Down$]$ If the user clicked on a rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$
 \item $[$Star Drill-Down$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
-\end{enumerate}
+\end{denselist}
 \end{problem}
-Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ in the `Extensions' section of the technical report~\cite{tr}.
+\noindent Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ 
+\techreporttext{in the `Extensions' section}
+\papertext{in the technical report~\cite{tr}}.
 
 \subsection{Weighting Rules}
 \label{sec:weighting}
 We now describe our weighting function $W$ that is used to score individual rules. 
 At a high level, we want our rules to be as descriptive of the table as possible, i.e. given the rules, it should be as easy as possible to reproduce the table. We consider a general family of weighting functions, that assigns for each rule $r$, a weight $W(r)$ depending on how expressive the rule is (i.e., how much information
 it conveys). Let us consider some canonical forms for the function $W(r)$ and their interpretation; later, we describe the full
-space of weighting functions our techniques can handle:
+family of weighting functions our techniques can handle:
 
 \stitle{Size Weighting Function:} 
 $W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
-Here we set weight equal to the number of non-starred values in the rule $r$; we define this quantity to be the {\em size} of the rule. Consider the examples in Table \ref{table:sizescoringexample}. The weight for rule ($a$, $b_1$) is $2$, while weight for ($a$, $\star$) is $1$. Thus the total score for the rule-list with these two rules would be $2 \times 100 + 1 \times 900 = 1100$. If we replaced the rule ($a$, $\star$) by two rules ($a$, $b_2$) and ($a$, $\star$), then the $MCount$ of rule ($a$, $\star$) would reduce to $600$, since $300$ of its tuples would be covered by the previous rule $(a, b_2)$. Thus our total score would be $2 \times 100 + 2 \times 300 + 1 \times 600 = 1400$. If we had instead replaced ($a$, $\star$) by ($a$, $b_3$) and ($a$, $\star$), then our score would have been $1500$ which is $> 1400$. Thus when we marginalize on one extra column ($B$ in this case) and include a rule where that column is instantiated, it is better to do so on the value which occurs more frequently (in this case, $b_3$ which occurred $400$ times, compared to the $300$ of $b_2$). 
+Here we set weight equal to the number of non-starred values in the rule $r$; we define this quantity to be the {\em size} of the rule. Consider the examples in Table \ref{table:sizescoringexample}. The weight for rule ($a$, $b_1$) is $2$, while weight for ($a$, $\star$) is $1$. Thus, the total score for the rule-list with these two rules would be $2 \times 100 + 1 \times 900 = 1100$. If we replaced the rule ($a$, $\star$) by two rules ($a$, $b_2$) and ($a$, $\star$), then the $MCount$ of rule ($a$, $\star$) would reduce to $600$, since $300$ of its tuples would be covered by the previous rule $(a, b_2)$. Thus, our total score would be $2 \times 100 + 2 \times 300 + 1 \times 600 = 1400$. If we had instead replaced ($a$, $\star$) by ($a$, $b_3$) and ($a$, $\star$), then our score would have been $1500$ which is $> 1400$. Thus, when we marginalize on one extra column ($B$ in this case) and include a rule where that column is instantiated, it is better to do so on the value which occurs more frequently (in this case, $b_3$ which occurred $400$ times, compared to the $300$ of $b_2$). 
 
-To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a $100$ of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those tuples. Thus $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.
+To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a hundred of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus, this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those tuples. Thus, $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus, this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.
 
 \stitle{Bits Weighting Function:}
 $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. Like the previous scoring function, this one adds some weight for every non-starred value in a rule. But instead of adding a weight of $1$ for every non-starred value, it varies the weight added depending on the inherent complexity of the column. The reason behind this variation is the following: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
@@ -119,7 +121,7 @@ Note that this scoring function is closely related to the Minimum Description Le
 \smallskip
 
 \stitle{Other Weighting Functions:}
-Even though we have given two example weighting functions here, our algorithms allow the user to leverage any weighting function $W$, subject to only two conditions:
+Even though we have given two example weighting functions here, our algorithms allow the user to leverage any weighting function $W$, subject to two conditions:
 \squishlist
 \item Non-negativity: For all rules $r$, $W(r) \geq 0$.
 \item Monotonicity: If $r_1 \geq r_2$, then $W(r_1) \leq W(r_2)$. Monotonicity means that a rule that is less descriptive than another must be assigned a lower weight.

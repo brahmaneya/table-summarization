@@ -55,6 +55,14 @@
 \newcommand{\calD}{\mathcal{D}\xspace}
 
 
+\newenvironment{denselist}{
+    \begin{list}{\small{$\bullet$}}%
+    {\setlength{\itemsep}{0ex} \setlength{\topsep}{0ex}
+    \setlength{\parsep}{0pt} \setlength{\itemindent}{0pt}
+    \setlength{\leftmargin}{1.5em}
+    \setlength{\partopsep}{0pt}}}%
+    {\end{list}}
+
 \makeatletter
 \def\@copyrightspace{\relax}
 \makeatother
