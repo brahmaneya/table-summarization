@@ -35,7 +35,7 @@ relate the coverage of different rules to each other.
 We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. We also write $r_1 \geq r_2$ to denote that $r_1$ subsumes $r_2$, and $r_1 > r_2$ if $r_1$ subsumes but is not equal to $r_2$ i.e. there is at least one column $c$ such that $r_2$ has a non-$\star$ value in $c$ where $r_1$ does not. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
 
 \stitle{Rule Lists:}
-A {\em rule-list} is an ordered list of rules returned by our system as a result of a smart drill-down by the user. 
+A {\em rule-list} is an ordered list of rules returned by our system on use of a smart drill-down operator. 
 When a user drills down on a rule $r$ to know more about the part of the table covered by $r$, we display a rule-list of sub-rules of $r$.
 For instance, the second, third and fourth rule from Table~\ref{table:introexample} form a rule-list, which is displayed when the user clicks on the first (trivial) rule. Similarly, the second, third and fourth rules in Table~\ref{table:introexample2} form a rule-list, as do the fifth, sixth and seventh rules. 
 
