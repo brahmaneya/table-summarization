@@ -1,10 +1,10 @@
 %!TEX root = TableSummarization.tex
 
 \section{Experiments}\label{sec:experiments}
+We have implemented a fully-functional interactive system instrumented with the smart drill-down operator.
+We now describe our experiments on this system with real datasets.
 
-\subsection{Datasets}
-The first dataset, denoted `Marketing', contains demographic information about potential customers. The source of the dataset is Impact Resources, Inc., Columbus, OH (1987). A total of $N=9409$ questionnaires containing $502$ questions were 
-filled out by shopping mall customers in the San Francisco Bay area. This dataset is an extract from this survey. Each tuple in the data table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, Gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and thus each column has upto $10$ distinct values. 
+\stitle{Datasets.} The first dataset, denoted `Marketing', contains demographic information about potential customers~\cite{dataset1}. A total of $N=9409$ questionnaires containing $502$ questions were filled out by shopping mall customers in the San Francisco Bay area. This dataset is the summarized result of this survey. Each tuple in the table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and each column has up to $10$ distinct values. 
 \begin{table*} 
 \centering 
 \scriptsize
@@ -21,7 +21,6 @@ filled out by shopping mall customers in the San Francisco Bay area. This datase
 \caption{Summary after clicking on the empty rule \label{table:uiexample1}} 
 \vspace{-10pt}
 \end{table*} 
-
 \begin{table*} 
 \centering 
 \scriptsize
@@ -39,11 +38,9 @@ filled out by shopping mall customers in the San Francisco Bay area. This datase
 \hline 
 \end{tabular} 
 \vspace{-10pt}
-\caption{Star expansion on 'Education' Column \label{table:uiexamplestar}} 
+\caption{Star expansion on `Education' Column \label{table:uiexamplestar}} 
 \vspace{-10pt}
 \end{table*} 
-
-
 \begin{table*} 
 \centering 
 \scriptsize
@@ -60,35 +57,34 @@ filled out by shopping mall customers in the San Francisco Bay area. This datase
 \hline 
 \end{tabular} 
 \vspace{-10pt}
-\caption{A Rule expansion \label{table:uiexamplerule}} 
+\caption{A rule expansion \label{table:uiexamplerule}} 
 \vspace{-10pt}
 \end{table*} 
-
-
 The columns (in order) are as follows:
-Annual Income of Household, Sex, Marital Status, Age, Education, Occupation, Time lived in Bay Area, Dual Incomes?, Persons in Household, Persons in Household under $18$, Householder Status, Type of Home, Ethnic Classification, Language most spoken in home.
+annual household income, gender, marital status, age, education, occupation, time lived in the Bay Area, dual incomes?, persons in household, persons in household under $18$, householder status, type of home, ethnic classification, language most spoken in home.
 
-The second dataset, denoted `Census', is a US 1990 Census dataset from the UCI Machine Learning repository~\cite{uciml}. It consists of about $2.5$ million tuples, with each tuple corresponding to a person. It has $68$ columns, including ancestry, age, and citizenship. Numerical columns, such as age, have been bucketized beforehand in the dataset. We use this dataset in the experiments in Section~\ref{sec:quantitative_study} in order to study the accuracy and performance of sampling on a large dataset.
+The second dataset, denoted `Census', is a US 1990 Census dataset from the UCI Machine Learning repository~\cite{uciml},
+consisting of about $2.5$ million tuples, with each tuple corresponding to a person. It has $68$ columns, including ancestry, age, and citizenship. Numerical columns, such as age, have been bucketized beforehand in the dataset. We use this dataset in Section~\ref{sec:quantitative_study} in order to study the accuracy and performance of sampling on a large dataset.
 
-Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit into the page. We use our current implementation of our algorithms, which directly outputs tables in latex format. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting function, and $20$ for the Bits weighting function. Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
+Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use our current implementation of our the smart drill-down operator, which can directly output tables in \LaTeX \ format. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
 \subsection{Qualitative Study}
-We first perform a qualitative study of our Smart Drill Down system. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out a few different weight functions to study their effects.
+We first perform a qualitative study of smart drill-down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out a few different weight functions to study their effects.
 \subsubsection{User interface testing}
 We now present the rule-based summaries displayed as a result of a few different user actions.
 
-To begin with, the user sees an empty rule with the total number of tuples as the count. After this, suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Are for $> 10$ years. Note that the latter two rules give very specific information which would require upto $3$ user clicks to find using Data Cube Drill-Downs, whereas our system displays that information to the user with a single click. 
+To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill-down, whereas smart drill-down displays that information to the user with a single click. 
 
-Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. So the user clicks on the $\star$ in the 'Education' column of the second rule. This opens up table~\ref{table:uiexamplestar}. It shows the number of females with different levels of education, for the $4$ most frequent levels of education among females.
+Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up table~\ref{table:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females.
 
-Instead of expanding the 'Education' column, if the user had simply expanded the third rule, it would have displayed table~\ref{table:uiexamplerule}. 
+Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed table~\ref{table:uiexamplerule}. 
 
 
 \subsubsection{Weighting functions}
-Our system can display optimal rule summaries using any monotonic weighting function. By default, we assign a rule weight equal to its size. In this section, we try out a couple of other weighting functions. 
+Our system can display optimal rule lists for any monotonic weighting function. By default, we assign a rule weight equal to its size. In this section, we consider other weighting functions. 
 
 We first try the weighting function given by:
-$$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ where $|c|$ refers to the number of distinct possible values in column $c$. This function gives higher weight to rules that have non-$\star$ values in columns that have many possible values. The rule summary for this weighting is in table~\ref{table:weigtingbitwise} (contrast with Table~\ref{table:uiexample1}). The weighting scheme gives low weight for non-$\star$ values in binary columns, like the gender column. Thus this summary instead gives us information about the Marital Status/Time in Bay Area/Occupation columns instead of the Gender column like in Table~\ref{table:uiexample1}.  
+$$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ where $|c|$ refers to the number of distinct possible values in column $c$. This function gives higher weight to rules that have non-$\star$ values in columns that have many possible values. The rule summary for this weighting is in table~\ref{table:weigtingbitwise} (contrast with Table~\ref{table:uiexample1}). The weighting scheme gives low weight for non-$\star$ values in binary columns, like the gender column. Thus, this summary instead gives us information about the Marital Status/Time in Bay Area/Occupation columns instead of the Gender column like in Table~\ref{table:uiexample1}.  
 
 The other weighting function we try is given by:
 $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
@@ -102,22 +98,22 @@ This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0
 % TODO: Add the experiment where you compare to vanilla a priori.
 
 \subsection{Quantitative Study}\label{sec:quantitative_study}
-The performance of our algorithm depends on various parameters, such as $m_w$ (the max weight) and $minSS$ (minimum required sample size). In this section, we study the effects of these parameters on the computation time and accuracy of our algorithm. We use both the Marketing and Census datasets. The Marketing dataset is relatively small with around $9000$ tuples, whereas the Census dataset is quite large, with $2.5$ million tuples. We observe that the accuracy and running time of our algorithm depends largely on the $m_w$ and $minSS$ parameters, rather than on the underlying database size.
+The performance of our algorithm depends on various parameters, such as $m_w$ (the max weight) and $minSS$ (minimum required sample size). In this section, we study the effects of these parameters on the computation time and accuracy of our algorithm. We use both the Marketing and Census datasets. The Marketing dataset is relatively small with around $9000$ tuples, whereas the Census dataset is quite large, with $2.5$ million tuples. We observe that the accuracy and running time of our algorithm depends largely on $m_w$ and $minSS$, rather than the underlying database size.
 
 \subsubsection{Effects of $m_w$}
-Our algorithm for finding the best marginal rule (Algorithm~\ref{algo:best-marginal-rule}) takes an input parameter called $m_w$. The algorithm is guaranteed to find the best marginal rule as long as its weight is $\leq m_w$, but runs faster for smaller values of $m_w$. In this section, we study the effect of varying $m_w$ on the speed of our algorithm. Our system is run on a Dell XPS L702X laptop with 6GB RAM and an Intel i5 2.30GHz processor.
+Our algorithm for finding the best marginal rule (Algorithm~\ref{algo:best-marginal-rule}) takes an input parameter called $m_w$. The algorithm is guaranteed to find the best marginal rule as long as its weight is $\leq m_w$, but runs faster for smaller values of $m_w$. We now study the effect of varying $m_w$ on the speed of our algorithm running on a Dell XPS L702X laptop with 6GB RAM and an Intel i5 2.30GHz processor.
 
-We consider a weighting function $W$, and a value of $m_w$. For that value of the $W$ and $m_w$ parameters, we find the time taken for expanding the empty rule. We repeat this procedure $10$ times and take the average value of the running times across the $10$ iterations. This time is plotted against $m_w$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:mw_speed}. The figure shows that running time seems to be approximately linear in $m_w$. 
+We fix a weighting function $W$, and a value of $m_w$. For that value of the $W$ and $m_w$ parameters, we find the time taken for expanding the empty rule. We repeat this procedure $10$ times and take the average value of the running times across the $10$ iterations. This time is plotted against $m_w$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:mw_speed}. The figure shows that running time seems to be approximately linear in $m_w$. 
 
 For the Census dataset, the running time is dominated by time spent in making a pass through the $2.5$ million tuples to create the first sample. The response time for the next user click should be quite small, as the sample created for the first expansion can usually be re-used for the next rule expansion.
 
-The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus for size scoring on the Marketing dataset, according to Table~\ref{table:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Table~\ref{table:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
+The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus, for size scoring on the Marketing dataset, according to Table~\ref{table:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Table~\ref{table:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
 
 \begin{figure}
-%\hspace{-15pt}
+\vspace{-5pt}
 \centering
   \includegraphics[scale=0.6]{graphs/mw_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
-\vspace{-5pt}
+\vspace{-10pt}
   \caption{Running time for different values of parameter $m_w$ \label{fig:mw_speed}}
 \vspace{-15pt}
 \end{figure}
