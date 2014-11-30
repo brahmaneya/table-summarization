@@ -21,8 +21,8 @@ We let $T$ denote the set of tuples in $\calD$, and $C$ denote
 the set of columns in $\calD$.
 
 Our objective (formally defined later) is to 
-enable smart drill-downs on this table or on portions of it:
-the result of our drill-downs are lists of {\em rules}. 
+enable smart drill downs on this table or on portions of it:
+the result of our drill downs are lists of {\em rules}. 
 A {\em rule} is a tuple with a value for each column of the table. 
 In addition, a rule has other attributes, such as count and weight 
 (which we define later) associated with it. 
@@ -35,7 +35,7 @@ relate the coverage of different rules to each other.
 We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus, if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. We also write $r_1 \geq r_2$ to denote that $r_1$ subsumes $r_2$, and $r_1 > r_2$ if $r_1$ subsumes but is not equal to $r_2$ i.e. there is at least one column $c$ such that $r_2$ has a non-$\star$ value in $c$ where $r_1$ does not. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
 
 \stitle{Rule Lists:}
-A {\em rule-list} is an ordered list of rules returned by our system when a smart drill-down operation concludes. 
+A {\em rule-list} is an ordered list of rules returned by our system when a smart drill down operation concludes. 
 When a user drills down on a rule $r$ to know more about the part of the table covered by $r$, we display a rule-list of sub-rules of $r$.
 For instance, the second, third and fourth rule from Table~\ref{table:introexample} form a rule-list, which is displayed when the user clicks on the first (trivial) rule. Similarly, the second, third and fourth rules in Table~\ref{table:introexample2} form a rule-list, as do the fifth, sixth and seventh rules. 
 
@@ -53,7 +53,7 @@ how much it captures the data in $\calD$.
 We now describe the first portion:
 we define {\em Count}($r$) as the total number of tuples $t \in T$ that are covered by $r$. 
 Further, we define {\em MCount}($r, R$) (which stands for `Marginal Count') as the number of tuples covered by $r$ but not by any rule before $r$ in the rule-list $R$. A high value of $MCount$ indicates that the rule not only covers a lot of tuples, but also covers parts of the table not covered by previous rules. We want to pick rules with a high value of $MCount$ to display to the user
-as part of the smart drill-down result, to increase the coverage of the rule-list. 
+as part of the smart drill down result, to increase the coverage of the rule-list. 
 
 Now, onto the second portion: we let $W$ denote a function that assigns a non-negative {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. 
 As we will see, the weighting function does not depend on the specific
@@ -82,16 +82,16 @@ For instance, if $a$ and $b$ were the most common values in columns $A$ and $B$,
 for some weighting functions $W$, 
 the summary may potentially consist of rules $(a, b, \star)$, $(a, \star, \star)$, and $(\star, b, \star)$, which tells us nothing about the part of the table with values other than $a$ and $b$. 
 
-Our smart drill-downs still display the Count of each rule rather than the $MCount$. This is because while $MCount$ is useful in the rule selection process, Count is easier for a user to interpret. In any case, it would be a simple extension to display MCount in another column.
+Our smart drill downs still display the Count of each rule rather than the $MCount$. This is because while $MCount$ is useful in the rule selection process, Count is easier for a user to interpret. In any case, it would be a simple extension to display MCount in another column.
 
 \stitle{Formal Problem:} We now formally define our problem:
 \begin{problem}\label{prob:optimal-subrule-list}
 Given a table $T$, a monotonic weighting function $W$, and a number $k$, find the list $R$ of $k$ rules that maximizes 
 $$\sum_{r \in R} W(r) \times MCount(r,R)$$
-for one of the following smart drill-down operations:
+for one of the following smart drill down operations:
 \begin{denselist}
-\item $[$Rule Drill-Down$]$ If the user clicked on a rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$
-\item $[$Star Drill-Down$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
+\item $[$Rule drill down$]$ If the user clicked on a rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$
+\item $[$Star drill down$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
 \end{denselist}
 \end{problem}
 \noindent Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ 
@@ -142,15 +142,15 @@ A weight function can be used in several ways, including expressing a higher pre
 \vspace{-15pt}
 \end{table}
 
-\subsection{Smart Drill-Down Operations}
+\subsection{Smart drill down Operations}
 \label{sec:interface}
 When the user starts using a system equipped with
-the smart drill-down operator, they first see a table with a single trivial rule as shown in table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill-down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user. As an example of this operation, clicking on the trivial rule of table~\ref{table:introexample0} would display table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display table~\ref{table:introexample2}. The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
+the smart drill down operator, they first see a table with a single trivial rule as shown in table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user. As an example of this operation, clicking on the trivial rule of table~\ref{table:introexample0} would display table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display table~\ref{table:introexample2}. The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
 
 Instead of clicking on a rule, the user can click on one of the $\star$s, say in column $c$ of rule $r$. This will also cause the rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise. 
 
 Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation, i.e. collapses it. For example, clicking on the walmart rule in table~\ref{table:introexample3} or table~\ref{table:introexample2} would take the user back to table~\ref{table:introexample}. This operation is equivalent to a traditional
-roll-up, but for smart drill-downs instead of traditional drill-downs.
+roll-up, but for smart drill downs instead of traditional drill downs.
 	
 \begin{table}
 \scriptsize

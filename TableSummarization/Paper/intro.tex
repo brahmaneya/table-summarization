@@ -3,40 +3,40 @@
 
 \section{Introduction}
 Analysts often use OLAP (Online Analytical Processing) operations
-such as drill-down (and roll-up)~\cite{export:69578} to explore
+such as drill down (and roll-up)~\cite{export:69578} to explore
 relational databases. 
 These operations are very useful for analytics and data exploration and have stood the test of time;
 all commercial OLAP systems 
 in existence support these operations. (Recent reports estimate the size of the OLAP market to be \$10+ Billion~\cite{gartner}.)
 
 
-However, there are cases where drill-down is ineffective; 
+However, there are cases where drill down is ineffective; 
 for example, when the number of distinct values
-in a column is large, vanilla drill-down 
+in a column is large, vanilla drill down 
 could easily overwhelm analysts by presenting them with too many 
 results (i.e., aggregates). 
-Further, drill-down only allows us to instantiate values
- one column at a time, instead of allowing simultaneous drill-downs
-on multiple columns---this simultaneous drill-down on multiple columns 
+Further, drill down only allows us to instantiate values
+ one column at a time, instead of allowing simultaneous drill downs
+on multiple columns---this simultaneous drill down on multiple columns 
 could once again suffer from the problem
 of having too many results, stemming from many distinct combinations of column values.
 
 In this paper, we present a new interaction operator 
 that is an extension to a traditional 
-drill-down operator, aimed at providing {\em complementary}
-functionality to drill-down in cases where drill-down is
-ineffective. We call our operator {\em smart drill-down}.
-At a high level, smart drill-down lets analysts zoom into
+drill down operator, aimed at providing {\em complementary}
+functionality to drill down in cases where drill down is
+ineffective. We call our operator {\em smart drill down}.
+At a high level, smart drill down lets analysts zoom into
 the more ``interesting'' parts of a table or a database,
 with fewer operations, and without having to examine as much
-data as traditional drill-down.
+data as traditional drill down.
 Note that our goal is {\em not} to replace traditional 
-drill-down functionality, which we believe is fundamental;
+drill down functionality, which we believe is fundamental;
 instead, our goal is to provide auxiliary functionality 
 which the analyst is free to use whenever they find 
-traditional drill-downs ineffective.
+traditional drill downs ineffective.
 
-In addition to presenting this new operator called smart drill-down, in this paper, 
+In addition to presenting this new operator called smart drill down, in this paper, 
 we also present novel sampling techniques to compute the results for this
 operator {\em in an interactive fashion} on increasingly larger databases. 
 Unlike the traditional OLAP setting, these computations 
@@ -45,16 +45,16 @@ within or on top of any relational database system.
 
 
 
-% drill-down (and roll up)~\cite{export:69578} are very useful tools for exploring
+% drill down (and roll up)~\cite{export:69578} are very useful tools for exploring
 % relational tables.
-% In this paper we study an extension of drill-down
+% In this paper we study an extension of drill down
 % that lets users zoom into the more ``interesting'' parts of a table,
 % with fewer operations and without having to examine as much data
-% as traditional drill-down.
-% We call our approach {\em smart drill-down};
-% it does not replace traditional drill-down but we will argue is a very
+% as traditional drill down.
+% We call our approach {\em smart drill down};
+% it does not replace traditional drill down but we will argue is a very
 % useful complement.
-The best way to explain smart drill-down is through a simple example.
+The best way to explain smart drill down is through a simple example.
 
 \begin{example}\label{ex:introexample}
 Consider a table with columns `Department Store', `Product', `Region'
@@ -62,7 +62,7 @@ and `Sales'. Suppose an analyst queries for tuples
 where Sales were higher than some threshold, in order
 to find the best selling products.
 If the resulting table has many tuples,
-the analyst can use traditional drill-down to explore it.
+the analyst can use traditional drill down to explore it.
 For instance, the system may initially tell the analyst there are
 6000 tuples in the answer, represented by the tuple ($\star$, $\star$, $\star$, $6000$, $0$),
 as shown in Table~\ref{table:introexample0}.
@@ -76,10 +76,10 @@ then the operator displays all tuples of the form ($X$, $\star$, $\star$, $C$, $
 where $X$ is a Store in the answer table, and $C$
 is the number of tuples for $X$ (or the aggregate sales for $X$).
 
-Instead, when the analyst uses smart drill-down on Table~\ref{table:introexample0},
+Instead, when the analyst uses smart drill down on Table~\ref{table:introexample0},
 he obtains Table~\ref{table:introexample}.
 The ($\star$, $\star$, $\star$, $6000$) tuple is expanded into $3$ tuples
-that display noteworthy or interesting drill-downs.
+that display noteworthy or interesting drill downs.
 The number $3$ is a user specified parameter, which we call $k$.
 
 For example, the tuple (Target, bicycles, $\star$, $200$, $2$)
@@ -120,7 +120,7 @@ $\triangleright$ $\star$ & comforters & MA-3 & $600$ & $2$ \\ \hline
 $\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
 \end{tabular}
 \vspace{-10pt}
-\caption{Result after first smart drill-down}\label{table:introexample}
+\caption{Result after first smart drill down}\label{table:introexample}
 \vspace{-10pt}
 \end{table}
 
@@ -140,7 +140,7 @@ $\triangleright$ $\triangleright$ Walmart & $\star$ & CA-1 & $150$ & $2$ \\ \cli
 $\triangleright$ $\triangleright$ Walmart & $\star$ & WA-5 & $130$ & $2$ \\ \hline
 \end{tabular}
 \vspace{-10pt}
-\caption{Result after second smart drill-down} \label{table:introexample2}
+\caption{Result after second smart drill down} \label{table:introexample2}
 \vspace{-10pt}
 \end{table}
 
@@ -157,9 +157,9 @@ In particular, one of the new rules shows that
 Walmart sells a lot of cookies; the others show it sells a lot of products in
 the regions CA-1 and WA-5.
 
-When the analyst clicks on a rule $r$, smart drill-down
+When the analyst clicks on a rule $r$, smart drill down
 expands $r$ into $k$ sub-rules that as a set are deemed to be ``interesting.''
-(We discuss other smart drill-down operations in Section~\ref{sec:interface}.)
+(We discuss other smart drill down operations in Section~\ref{sec:interface}.)
 There are three factors that make a rule set interesting.
 One is if it contains rules with high Count (or total sales) fields,
 since the larger the count, the more tuples are summarized.
@@ -179,40 +179,40 @@ Our score function can actually be tuned by the analyst
 (by specifying how weights are computed),
 providing significant flexibility in what is considered a good set of rules.
 We also present an efficient optimization procedure to maximize score, invoked
-by smart drill-down to select the set of $k$ rules to display.
+by smart drill down to select the set of $k$ rules to display.
 
 \end{example}
 
-Compared to traditional drill-down, our smart drill-down has two important advantages:
+Compared to traditional drill down, our smart drill down has two important advantages:
 \squishlist
 \item
-Smart drill-down limits the information displayed
+Smart drill down limits the information displayed
 to the most interesting $k$ facts (rules).
-With traditional drill-down, a column is expanded and {\em all}
+With traditional drill down, a column is expanded and {\em all}
 attribute values are displayed in arbitrary order.
-In our example, if we drill-down on say the store attribute,
+In our example, if we drill down on say the store attribute,
 we would see all stores listed, which may be a very large number.
 \item
-Smart drill-down explores several attributes to open up together,
+Smart drill down explores several attributes to open up together,
 and automatically selects combinations that are interesting.
 For example, in Table~\ref{table:introexample},
 the rule (Target, bicycles, $\star$, $200$, $2$)
-is obtained after a single drill-down;
-with a traditional approach, the analyst would first have to drill-down on
-Store, examine the results, drill-down on Product,
+is obtained after a single drill down;
+with a traditional approach, the analyst would first have to drill down on
+Store, examine the results, drill down on Product,
 look through all the displayed rules and then find the interesting rule
 (Target, bicycles, $\star$, $200$, $2$).
 \squishend
 
-Incidentally, note that in the example we only described one type of smart drill-down,
-where the analyst selects a {\em rule} to drill-down on
+Incidentally, note that in the example we only described one type of smart drill down,
+where the analyst selects a {\em rule} to drill down on
 (e.g., the Walmart rule going from Table~\ref{table:introexample} to
 Table~\ref{table:introexample2}.
 In Section~\ref{sec:interface} we describe another option
 where the analyst clicks on a $\star$ in a column to obtain
 rules that have non-$\star$ values in that column.
 
-Our work on smart drill-down is related
+Our work on smart drill down is related
 to table summarization and anomaly
 detection~\cite{Sarawagi:2001:UMA:767141.767148,
 Sarawagi00user-adaptiveexploration,
@@ -228,19 +228,19 @@ focuses on rules with high counts, covering as
 much of the table as possible.
 Furthermore, our summarization is couched in
 an interactive environment, where the analyst
-directs the drill-down and can tailor the optimization criteria.
+directs the drill down and can tailor the optimization criteria.
 Nevertheless, one can envision extending traditional
-and smart drill-down to provide an additional option of anomaly detection. We discuss related work in detail in  Section~\ref{sec:related}.
+and smart drill down to provide an additional option of anomaly detection. We discuss related work in detail in  Section~\ref{sec:related}.
 
-To reiterate, our chief contribution in this paper is the {\em smart drill-down} interaction operator,
-an extension of traditional drill-down, aimed at allowing analysts to zoom into the
+To reiterate, our chief contribution in this paper is the {\em smart drill down} interaction operator,
+an extension of traditional drill down, aimed at allowing analysts to zoom into the
 more ``interesting'' parts of a dataset. In addition to this operator,
 we develop techniques to support this operator on increasingly larger datasets:
 \squishlist
 \item {\em Basic Interaction:} We demonstrate that finding the optimal list of rules is {\sc NP-Hard},
-and we develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill-down operation. b
+and we develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill down operation. b
 \item {\em Dynamic Sample Maintenance:} To improve response time on large tables, we formalize the problem of dynamically
-maintaining samples in memory to support smart drill-down. 
+maintaining samples in memory to support smart drill down. 
 We show that optimal identification of samples is once again {\sc NP-Hard}, and 
 we develop an approximate scheme for dynamically maintaining and using multiple samples of the table in memory.
 % to improve response time on large tables.
@@ -249,16 +249,16 @@ we develop an approximate scheme for dynamically maintaining and using multiple 
 \stitle{Overview of paper:} 
 \squishlist 
 
-\item In Section~\ref{sec:formal}, we formally define smart drill-down. After that, we describe different schemes for weighting rules, and our interactive user interface.
+\item In Section~\ref{sec:formal}, we formally define smart drill down. After that, we describe different schemes for weighting rules, and our interactive user interface.
 
 \item In Section~\ref{sec:algorithms}, we present our algorithms for
 finding optimal sets of rules, as well as our dynamic sampling schemes
 for dealing with large tables.
 
-\item Based on our implemented smart drill-down,
+\item Based on our implemented smart drill down,
 in Section~\ref{sec:experiments} we experimentally evaluate
 performance on real datasets,
-and show additional examples of smart drill-down in action.
+and show additional examples of smart drill down in action.
 
 \item We describe related work in Section~\ref{sec:related}, and conclude in Section~\ref{sec:conclusion}.
 \squishend 

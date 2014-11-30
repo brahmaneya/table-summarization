@@ -1,7 +1,7 @@
 %!TEX root = TableSummarization.tex
 
 \section{Experiments}\label{sec:experiments}
-We have implemented a fully-functional interactive system instrumented with the smart drill-down operator.
+We have implemented a fully-functional interactive system instrumented with the smart drill down operator.
 We now describe our experiments on this system with real datasets.
 
 \stitle{Datasets.} The first dataset, denoted `Marketing', contains demographic information about potential customers~\cite{dataset1}. A total of $N=9409$ questionnaires containing $502$ questions were filled out by shopping mall customers in the San Francisco Bay area. This dataset is the summarized result of this survey. Each tuple in the table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and each column has up to $10$ distinct values. 
@@ -66,14 +66,14 @@ annual household income, gender, marital status, age, education, occupation, tim
 The second dataset, denoted `Census', is a US 1990 Census dataset from the UCI Machine Learning repository~\cite{uciml},
 consisting of about $2.5$ million tuples, with each tuple corresponding to a person. It has $68$ columns, including ancestry, age, and citizenship. Numerical columns, such as age, have been bucketized beforehand in the dataset. We use this dataset in Section~\ref{sec:quantitative_study} in order to study the accuracy and performance of sampling on a large dataset.
 
-Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use our current implementation of our the smart drill-down operator, which can directly output tables in \LaTeX \ format. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
+Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use our current implementation of our the smart drill down operator, which can directly output tables in \LaTeX \ format. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
 \subsection{Qualitative Study}
-We first perform a qualitative study of smart drill-down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out a few different weight functions to study their effects.
+We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out a few different weight functions to study their effects.
 \subsubsection{User interface testing}
 We now present the rule-based summaries displayed as a result of a few different user actions.
 
-To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill-down, whereas smart drill-down displays that information to the user with a single click. 
+To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click. 
 
 Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up table~\ref{table:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females.
 

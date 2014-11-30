@@ -1,9 +1,9 @@
 %!TEX root = TableSummarization.tex
 
 
-\section{Smart Drill-Down Algorithms} \label{sec:algorithms}
+\section{Smart drill down Algorithms} \label{sec:algorithms}
 We now describe online algorithms for implementing
-the smart drill-down operator. We assume in this section that all columns are categorical (so numerical columns have been bucketized beforehand). We further discuss bucketization of numerical attributes in the Extensions section in the technical report~\cite{tr}.
+the smart drill down operator. We assume in this section that all columns are categorical (so numerical columns have been bucketized beforehand). We further discuss bucketization of numerical attributes in the Extensions section in the technical report~\cite{tr}.
 
 
 \subsection{Problem Reduction and Important Property} \label{sec:reduction}
@@ -16,8 +16,8 @@ $$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r,R)$$
 
 \noindent Problem~\ref{prob:optimal-subrule-list} with parameters $(T, W, k)$ can be reduced to Problem~\ref{prob:optimal-rule-list} as follows:
 \begin{enumerate}
-\item $[$Rule Drill-Down$]$ If the user clicked on rule $r$ in Problem~\ref{prob:optimal-subrule-list}, then we can conceptually make one pass through the table $T$ to filter for tuples covered by rule $r$, and store them in a temporary table $T_r$. Then, we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W, k)$.
-\item $[$Star Drill-Down$]$ If the user clicked on a $\star$ in column $c$ of rule $r$, then we first filter table $T$ to get a smaller table $T_r$ consisting of tuples from $T$ that are covered by $r$. In addition, we change the weight function $W$ from Problem~\ref{prob:optimal-subrule-list} to a weight function $W^{\prime}$ such that : For any rule $r^{\prime}$, $W^{\prime}(r^{\prime}) = 0$ if $r^{\prime}$ has a $\star$ in column $c$, and $W^{\prime}(r^{\prime}) = W(r^{\prime})$ otherwise. Then, we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W^{\prime}, k)$.
+\item $[$Rule drill down$]$ If the user clicked on rule $r$ in Problem~\ref{prob:optimal-subrule-list}, then we can conceptually make one pass through the table $T$ to filter for tuples covered by rule $r$, and store them in a temporary table $T_r$. Then, we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W, k)$.
+\item $[$Star drill down$]$ If the user clicked on a $\star$ in column $c$ of rule $r$, then we first filter table $T$ to get a smaller table $T_r$ consisting of tuples from $T$ that are covered by $r$. In addition, we change the weight function $W$ from Problem~\ref{prob:optimal-subrule-list} to a weight function $W^{\prime}$ such that : For any rule $r^{\prime}$, $W^{\prime}(r^{\prime}) = 0$ if $r^{\prime}$ has a $\star$ in column $c$, and $W^{\prime}(r^{\prime}) = W(r^{\prime})$ otherwise. Then, we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W^{\prime}, k)$.
 \end{enumerate}
 
 
