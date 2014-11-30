@@ -9,8 +9,8 @@ But if we are willing to accept approximate counts rather than exact counts for 
 
 Thus, we use sampling to trade-off a small amount of accuracy for a faster response time. We now describe our sampling schemes for improving the running time of our algorithm on tables that are too large to fit in main memory. 
 
-\agp{revisit}
-First in Section~\ref{sec:sample-using}, we motivate the need for sampling. Then we describe a component of our system, called the {\em SampleHandler}, which is responsible for creating and maintaining samples of the table in memory, subject to user specified memory constraints. The SampleHandler maintains multiple samples corresponding to different parts of the table, which can be used depending on which rule the user decides to expand next. Then in Section~\ref{sec:sampling_algorithms}, we describe ways to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk. 
+We describe our technique to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk in Section~\ref{sec:sampling_algorithms}. 
+Then, in Section~\ref{sec:sample-handler}, we describe a component of our system, called the {\em SampleHandler}, which is responsible for creating and maintaining samples of the table in memory, subject to user specified memory constraints. The SampleHandler maintains multiple samples corresponding to different parts of the table, which can be used depending on which rule the user decides to expand next. 
 \papertext{In the technical report,}
 \techreporttext{Finally,}
 we mention some additional optimizations we can make, and
