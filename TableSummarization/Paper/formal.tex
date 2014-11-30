@@ -32,7 +32,7 @@ The value in each column of the rule can either be one of the values in the corr
 in identifying rules that cover many tuples. We next define the concept of subsumption that allow us to 
 relate the coverage of different rules to each other.
 
-We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus, if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. We also write $r_1 \geq r_2$ to denote that $r_1$ subsumes $r_2$, and $r_1 > r_2$ if $r_1$ subsumes but is not equal to $r_2$ i.e. there is at least one column $c$ such that $r_2$ has a non-$\star$ value in $c$ where $r_1$ does not. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
+We say that rule $r_1$ {\em subsumes} rule $r_2$ if and only if $r_1$ has no more stars than $r_2$ and their values match wherever they both have non-starred values. For example, rule ($a$, $\star$) subsumes rule ($a$, $b$). Thus, if $r_1$ subsumes $r_2$, then for all tuples $t$, $t \in r_2 \Rightarrow t \in r_1$. If $r_1$ subsumes $r_2$, we also say that $r_1$ is a {\em sub-rule} of $r_2$ and $r_2$ is a {\em super-rule} or $r_1$.
 
 \stitle{Rule Lists:}
 A {\em rule-list} is an ordered list of rules returned by our system when a smart drill down operation concludes. 
@@ -150,7 +150,7 @@ the smart drill down operator, they first see a table with a single trivial rule
 Instead of clicking on a rule, the user can click on one of the $\star$s, say in column $c$ of rule $r$. This will also cause the rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise. 
 
 Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation, i.e. collapses it. For example, clicking on the walmart rule in table~\ref{table:introexample3} or table~\ref{table:introexample2} would take the user back to table~\ref{table:introexample}. This operation is equivalent to a traditional
-roll-up, but for smart drill downs instead of traditional drill downs.
+roll up, but for smart drill downs instead of traditional drill downs.
 	
 \begin{table}
 \scriptsize

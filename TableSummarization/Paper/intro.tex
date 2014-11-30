@@ -3,7 +3,7 @@
 
 \section{Introduction}
 Analysts often use OLAP (Online Analytical Processing) operations
-such as drill down (and roll-up)~\cite{export:69578} to explore
+such as drill down (and roll up)~\cite{export:69578} to explore
 relational databases. 
 These operations are very useful for analytics and data exploration and have stood the test of time;
 all commercial OLAP systems 
@@ -33,7 +33,7 @@ data as traditional drill down.
 Note that our goal is {\em not} to replace traditional 
 drill down functionality, which we believe is fundamental;
 instead, our goal is to provide auxiliary functionality 
-which the analyst is free to use whenever they find 
+which analysts are free to use whenever they find 
 traditional drill downs ineffective.
 
 In addition to presenting this new operator called smart drill down, in this paper, 
@@ -238,12 +238,11 @@ more ``interesting'' parts of a dataset. In addition to this operator,
 we develop techniques to support this operator on increasingly larger datasets:
 \squishlist
 \item {\em Basic Interaction:} We demonstrate that finding the optimal list of rules is {\sc NP-Hard},
-and we develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill down operation. b
+and we develop an algorithm to find the approximately optimal list of rules to display when the user performs a smart drill down operation. 
 \item {\em Dynamic Sample Maintenance:} To improve response time on large tables, we formalize the problem of dynamically
 maintaining samples in memory to support smart drill down. 
 We show that optimal identification of samples is once again {\sc NP-Hard}, and 
 we develop an approximate scheme for dynamically maintaining and using multiple samples of the table in memory.
-% to improve response time on large tables.
 \squishend
 
 \stitle{Overview of paper:} 

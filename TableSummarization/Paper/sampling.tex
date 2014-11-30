@@ -74,18 +74,12 @@ Problem~\ref{prob:sample-sizes} is non-linear and non-convex because of the indi
 \begin{lemma}
 Problem~\ref{prob:sample-sizes} is NP-Hard.
 \end{lemma}
-\papertext{
 \begin{proof}(Sketch)
 Suppose we are given an instance of the knapsack problem with $m$ objects, with the $i^{th}$ object having weight $w_i$ and value $v_i$. We are also given a weight limit $W$, and our objective is to choose a set of objects that maximizes value and has total weight $< W$. We will reduce this to an instance of Problem~\ref{prob:sample-sizes}.
 
 We first scale the $w_i$s and $W$ such that all $w_i$s are $< 1$, without effectively changing the problem. For Problem~\ref{prob:sample-sizes}, we set $d$ (branching factor) equal to $2$. $capacity$ is set to $(m + W) \times minSS$. Tree $U$ has $m$ special nodes $r_1, r_2, ... r_m$, and each $r_i$ has two children $r_{i,1}, r_{i,2}$. These $2m$ children are all leaves, and all leaves other than these have expansion probability $0$. 
 The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace, j \in \left\lbrace 1, 2 \right\rbrace : (S(x, r_{i,j}) \neq 0 \Rightarrow x = r_{i,j} || x = r_i)$. In reality, the $S$ values cannot be exactly zero when the first argument is the trivial rule, but we can make it small enough such that any optimal solution will set $n_r = 0$ when $r$ is not a special node or its child. Thus each each leaf $r_{i,j}$ gets tuples either from its own sample, or the sample of its parent, and from nowhere else. In addition, $S(r_i, r_{i,1}) = 1$ (again, it cannot be exactly $1$, but can be brought arbitrarily close to $1$), and $S(r_i, r_{i,2}) = 1 - w_i$. Finally, for each i, $p_{r_{i,1}} = \frac{2}{2m+1}$ and $p_{r_{i,2}} = \frac{v_i}{(2m+1)\sum_{j=1}^{m}v_i}$. Thus each individual $p_{r_{i,1}}$ value is higher than all $p_{r_{i,2}}$ values combined, and $M$ is high enough to cover all $r_{i,1}$. Thus in any optimal solution, $ess(r_{i,1})$ must be $= minSS$, and we're left to decide which $i$'s should also have $ess(r_{i,2}) = minSS$. For all $i$, we must have either $n_{r_i} = n_{r_{i,2}} = 0 \land n_{r_{i,1}} = minSS$ (iff $ess(r_{i,2}) < minSS$) or $n_{r_i} = minSS \land n_{r_{i,1}} = 0 \land n_{r_{i,2}} = minSS (1 - S(r_i, r_{i,2})) = minSS \times w_i$ (iff $ess(r_{i,2}) = minSS$). The latter option consumes $w_i \times minSS$ and gives and extra $\frac{v_i}{(2m+1)(\sum_{j=1}^{m}v_j)}$ probability value. Thus having $ess(r_{i,2}) = minSS$ is equivalent to picking object $i$ from the knapsack problem (as it consumes additional memory $\propto w_i$ and gives additional probability value $\propto v_i$). Moreover the additional memory available (on top of the $m \times minSS$ required to cover all $r_{i,1}$s) is $W\times minSS$. Hence solving Problem~\ref{prob:sample-sizes} with the above $U$, $S$, $p$ and picking the set of $i$s for which $ess(r_{i,2}) = minSS$ gives a solution to the original knapsack problem. 
-\end{proof}}
-\techreporttext{
-\begin{proof}
-
 \end{proof}
-}
 
 However, with an additional simplifying assumption, we can make the problem approximately solvable. it to the knapsack-like problem, and use a PTAS (Polynomial Time Approximation Scheme) to find the approximately optimal solution. The simplification is: For each $r \in L$, we assume that it will get tuples only from samples obtained for itself (filter $= r$) and its immediate parent. That is, we set $S(r_1, r_2)$ to be zero if $r_1 \neq r_2$ and $r_2$ is not a child of $r_1$. $ess(r)$ is redefined according to the new value of $S$ as well. So $$ess(r^{\prime}) = n_{r^{\prime}} + n_rS(r, r^{\prime})$$ where $r$ is the parent of $r^{\prime}$.
 
