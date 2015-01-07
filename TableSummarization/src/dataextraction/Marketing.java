@@ -6,11 +6,24 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.Stack;
+
+import solvers.Rule;
+import solvers.Rule.sizeBitsScorer;
+import solvers.Rule.sizeSquareScorer;
+import solvers.NonStarCountSolvers;
+import solvers.RuleTree;
+import solvers.RuleTreeDisplay;
+import solvers.Scorer;
+import solvers.RuleTree.RuleNode;
+import utils.Experiments;
 
 public class Marketing {
 	final static String DATAFILELOCATION = "TestDatasets/Marketing/marketing.data.txt";
@@ -207,9 +220,53 @@ public class Marketing {
 		return table;
 	}
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public static void main(String[] args) throws IOException {
+		TableInfo fullTable = Marketing.parseData();
+		//out.println(System.currentTimeMillis() - timer);
+		List<Integer> columns = new ArrayList<Integer>();
+		final Integer firstNumColumns = 9;
+		for (int i = 1; i < firstNumColumns; i++) {
+			columns.add(i);
+		}
+		TableInfo table = fullTable.getSubTable(columns);
+		int minSampleSize = Integer.MAX_VALUE;
+		int capacity = Integer.MAX_VALUE;
+		SampleHandler sampleHandler = new SampleHandler(table, capacity, minSampleSize);
+		Integer ruleNums = Integer.parseInt(args[0]); 
+		Integer maxRuleScore = Integer.parseInt(args[1]); // program input
+		Scorer scorer; // program input
+		switch(args[2]) {
+			case "Size" :
+				scorer = new Rule.sizeScorer(); 
+				break;
+			case "Bits" :
+				scorer = new Rule.sizeBitsScorer();
+				break;
+			case "Square" :
+				scorer = new Rule.sizeSquareScorer();
+				break;
+			case "Min2" : 
+				scorer = new Rule.sizeMinusKScorer(1);
+				break;
+			default :
+				scorer = new Rule.sizeScorer();
+				break;
+		}
+		String ruleString = args[3];
+		ruleString = ruleString.substring(1, ruleString.length() - 1);
+		String[] vals = ruleString.split(",");
+		List<Integer> ruleVals = new ArrayList<Integer>();
+		for (int col : columns) {
+			for (int val = 0; val < table.dictionary.get(col).size(); val++) {
+				if (table.dictionary.get(col).get(val).equals(vals[val])) {
+					ruleVals.add(val);
+					break;
+				}
+			}			
+		}
+		Rule rule = new Rule(ruleVals);
+		String coloptsString = args[4];
+		Set<Rule> solutionSet = NonStarCountSolvers.getSolution (table, rule, ruleNums, maxRuleScore, scorer, -1, sampleHandler);
+		
 	}
-
 }
