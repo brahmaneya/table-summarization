@@ -300,6 +300,7 @@ public class NonStarCountSolvers {
 			for (int j = 0; j < table.dictionary.get(i).size(); j++) {
 				Map<Integer, Integer> valueMap = new HashMap<Integer, Integer>();
 				valueMap.put(i, j);
+				Rule rooh = new Rule (table, valueMap, length, 0, false, scorer);
 				colRules.add(new Rule (table, valueMap, length, 0, false, scorer));
 			}
 		}
@@ -834,18 +835,19 @@ public class NonStarCountSolvers {
 				}
 			}
 		}
-		
 		Set<Rule> latestSuperRules = ruleMap.keySet();
 		
 		for (int currentSize = 2; currentSize < 7; currentSize++) {
 			//out.println(bestMarginalRuleValue);
 			Set<Rule> nextSuperRules = new HashSet<Rule>();
 			for (Rule r : latestSuperRules) {
+				//out.println(r.toString());
 				Rule rule = ruleMap.get(r);
 				if (rule.maxMarginalValue + rule.count * (maxRuleScore - rule.score) >= bestMarginalRuleValue) {
 					nextSuperRules.addAll(rule.findSuperRules(table, currentSize));					
 				}
 			}
+			
 			//out.println("Generated " + nextSuperRules.size() + " candidate rules of size " + currentSize);
 			Iterator<Rule> ruleIter = nextSuperRules.iterator();
 			while (ruleIter.hasNext()) {

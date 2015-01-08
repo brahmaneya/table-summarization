@@ -119,7 +119,7 @@ public class Marketing {
 		
 		Map<String, String> personsInHouseHold = new HashMap<String, String>();
 		personsInHouseHold.put("column", "Persons in household");
-		for (Integer i = 1; i < 8; i++) {
+		for (Integer i = 1; i <= 8; i++) {
 			personsInHouseHold.put(i.toString(), i.toString());
 		}
 		personsInHouseHold.put("9", ">= 9");
@@ -229,12 +229,9 @@ public class Marketing {
 			columns.add(i);
 		}
 		TableInfo table = fullTable.getSubTable(columns);
-		int minSampleSize = Integer.MAX_VALUE;
-		int capacity = Integer.MAX_VALUE;
-		SampleHandler sampleHandler = new SampleHandler(table, capacity, minSampleSize);
 		Integer ruleNums = Integer.parseInt(args[0]); 
 		Integer maxRuleScore = Integer.parseInt(args[1]); // program input
-		Scorer scorer; // program input
+		final Scorer scorer; // program input
 		switch(args[2]) {
 			case "Size" :
 				scorer = new Rule.sizeScorer(); 
@@ -256,17 +253,87 @@ public class Marketing {
 		ruleString = ruleString.substring(1, ruleString.length() - 1);
 		String[] vals = ruleString.split(",");
 		List<Integer> ruleVals = new ArrayList<Integer>();
-		for (int col : columns) {
+		for (int col = 0; col < table.dictionary.size(); col++) {
+			final String valString = vals[col];
+			ruleVals.add(-1);
 			for (int val = 0; val < table.dictionary.get(col).size(); val++) {
-				if (table.dictionary.get(col).get(val).equals(vals[val])) {
-					ruleVals.add(val);
+				if (table.getName(col, val).equals(valString)) {
+					ruleVals.set(col, val);
 					break;
 				}
-			}			
+			}
 		}
 		Rule rule = new Rule(ruleVals);
-		String coloptsString = args[4];
-		Set<Rule> solutionSet = NonStarCountSolvers.getSolution (table, rule, ruleNums, maxRuleScore, scorer, -1, sampleHandler);
 		
+		final List<Integer> defaultCols = new ArrayList<Integer>();
+		final List<Integer> ignoreCols = new ArrayList<Integer>();
+		final List<Integer> forceCols = new ArrayList<Integer>();
+		String coloptsString = args[4];
+		coloptsString = coloptsString.substring(1, coloptsString.length() - 1);
+		String[] colopts = coloptsString.split(",");
+		for (String colopt : colopts) {
+			int colonLocation = colopt.lastIndexOf(":");
+			final String colName = colopt.substring(0, colonLocation);
+			final String status = colopt.substring(colonLocation + 1); 
+			int colNo = -1;
+			for (colNo = 0; colNo < table.dictionary.size(); colNo++) {
+				if(table.names.get(colNo).get("column").equals(colName)) {
+					break;
+				}
+			}
+			switch (status) {
+				case "Default" :
+					defaultCols.add(colNo);
+					break;
+				case "Ignore" :
+					ignoreCols.add(colNo);
+					break;
+				case "Force" :
+					forceCols.add(colNo);
+					break;
+			}
+		}
+		Scorer modifiedScorer = new Scorer () {
+			@Override
+			public void setScore(TableInfo table, Rule rule) {
+				for (Integer col : forceCols) {
+					if (rule.get(col) == -1) {
+						rule.score = 0;
+						return;
+					}
+				}
+				Rule tempRule = rule.deepValuesCopy();
+				for (Integer col : ignoreCols) {
+					tempRule.addVal(col, -1);
+				}
+				scorer.setScore(table, tempRule);
+				rule.score = tempRule.score;
+			}
+		};
+		int minSampleSize = Integer.MAX_VALUE;
+		int capacity = Integer.MAX_VALUE;
+		SampleHandler sampleHandler = new SampleHandler(table, capacity, minSampleSize);
+		Set<Rule> solutionSet = NonStarCountSolvers.getSolution (table, rule, ruleNums, maxRuleScore, modifiedScorer, -1, sampleHandler);
+		String solutionString = "[";
+		boolean start = true;
+		for (Rule solRule : solutionSet) {		
+			if(!start) {
+				solutionString = solutionString + ",";
+			} else {
+				start = false;				
+			}
+			solutionString = solutionString + "{\"vals\":[";
+			for (Integer col = 0; col < table.names.size(); col++) {
+				if (col > 0) {
+					solutionString = solutionString + ",";
+				}
+				solutionString = solutionString + "\"" + table.getName(col, solRule.get(col)) + "\"";
+			}
+			solutionString = solutionString + "," + solRule.count;
+			solutionString = solutionString + "," + solRule.score;
+			solutionString = solutionString + "]}";
+		}
+		solutionString = solutionString + "]";
+		out.println(solutionString);
 	}
 }

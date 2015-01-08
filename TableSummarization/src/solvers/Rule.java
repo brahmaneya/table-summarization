@@ -16,7 +16,7 @@ public class Rule implements Comparable<Rule> {
 	final List<Integer> values;
 	public Integer count;
 	Integer size; // Number of non-starred elements
-	Integer score;
+	public Integer score;
 	Integer minMarginalValue; // Minimum marginal value of adding rule to solution. 
 	Integer maxMarginalValue; // Maximum marginal value of adding rule to solution. 
 	Integer latestCountedMarginalValue; // Latest marginal value is fully reliable, i.e. has been counted by making a pass over the data.
@@ -205,7 +205,9 @@ public class Rule implements Comparable<Rule> {
 		this.valueMap = new HashMap<Integer, Integer>();
 		
 		for (int i = 0; i < length(); i++) {
-			valueMap.put(i, values.get(i));
+			if (values.get(i) != -1) {
+				valueMap.put(i, values.get(i));
+			}
 		}
 		
 		this.size = valueMap.size();
@@ -218,7 +220,9 @@ public class Rule implements Comparable<Rule> {
 		this.valueMap = new HashMap<Integer, Integer>();
 		
 		for (int i = 0; i < length(); i++) {
-			valueMap.put(i, values.get(i));
+			if (values.get(i) != -1) {
+				valueMap.put(i, values.get(i));
+			}
 		}
 		
 		setScore(table, scorer);

@@ -192,13 +192,13 @@ public class RuleTreeDisplay {
 	public static void main (String[] args) throws IOException {
 		List<Integer> columns = new ArrayList<Integer>();
 		Long timer;
-		final Integer firstNumColumns = 7;
+		final Integer firstNumColumns = 9;
 		for (int i = 1; i < firstNumColumns; i++) {
 			columns.add(i);
 		}
-		//TableInfo fullTable = Marketing.parseData();
+		TableInfo fullTable = Marketing.parseData();
 		timer = System.currentTimeMillis();
-		TableInfo fullTable = USCensus1990.parseData(0.04);
+		//TableInfo fullTable = USCensus1990.parseData(0.04);
 		//out.println(System.currentTimeMillis() - timer);
 		TableInfo table = fullTable.getSubTable(columns);
 		Integer ruleNums = 4;
@@ -228,10 +228,10 @@ public class RuleTreeDisplay {
 		final String minSS_bits_USCensus_error_outFile = "Data_Graphs/minSS_error_USCensus_bits";
 		//Experiments.minSSErrorTest(table, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_error_outFile);
 		//Experiments.minSSErrorTest(table, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_error_outFile);
-		Experiments.minSSUSCensusErrorTest(table, columns, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_USCensus_error_outFile);
-		Experiments.minSSUSCensusErrorTest(table, columns, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_USCensus_error_outFile);
+		//Experiments.minSSUSCensusErrorTest(table, columns, 8, 500, 8000, 500, ruleNums, new Rule.sizeScorer(), minSS_size_USCensus_error_outFile);
+		//Experiments.minSSUSCensusErrorTest(table, columns, 20, 500, 8000, 500, ruleNums, new Rule.sizeBitsScorer(), minSS_bits_USCensus_error_outFile);
 				
-		if(1!=2)return;
+		//if(1!=2)return;
 		int minSampleSize = Integer.MAX_VALUE;
 		int capacity = Integer.MAX_VALUE;
 		SampleHandler sampleHandler = new SampleHandler(table, capacity, minSampleSize);

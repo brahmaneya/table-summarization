@@ -17,6 +17,14 @@ public class TableInfo {
 	public List<Integer> numericalColumns; // List of indexes of numerical columns.
 	public List<List<Double>> numericalValues; // For each tuple, has list of actual numerical values, since contents itself has only bucket index.
 	
+	public String getName (int col, int val) {
+		if (val == -1) {
+			return "*";
+		} else {
+			return names.get(col).get(dictionary.get(col).get(val));
+		}
+	}
+	
 	TableInfo (int numColumns) {
 		dictionary = new ArrayList<List<String>>(numColumns);
 		reverseDictionary = new ArrayList<Map<String, Integer>>(numColumns);
