@@ -1,11 +1,38 @@
 %!TEX root = TableSummarization.tex
 
 \section{Experiments}\label{sec:experiments}
-We have implemented a fully-functional interactive system instrumented with the smart drill down operator.
+We have implemented a fully-functional interactive system instrumented with the smart drill down operator, with a web interface.
 We now describe our experiments on this system with real datasets.
 
-\stitle{Datasets.} The first dataset, denoted `Marketing', contains demographic information about potential customers~\cite{dataset1}. A total of $N=9409$ questionnaires containing $502$ questions were filled out by shopping mall customers in the San Francisco Bay area. This dataset is the summarized result of this survey. Each tuple in the table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and each column has up to $10$ distinct values. 
-\begin{table*} 
+\stitle{Datasets.} The first dataset, denoted `Marketing', contains demographic information about potential customers~\cite{dataset1}. A total of $N=9409$ questionnaires containing $502$ questions were filled out by shopping mall customers in the San Francisco Bay area. This dataset is the summarized result of this survey. Each tuple in the table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and each column has up to $10$ distinct values.
+
+\begin{figure}
+\vspace{-5pt}
+\centering
+\includegraphics[width=90mm]{graphs/screenshots6col/empty_expansion.jpg}
+\caption{Summary after clicking on the empty rule \label{fig:uiexample1}}
+\end{figure}
+
+\begin{figure}
+\vspace{-5pt}
+\centering
+\includegraphics[width=90mm]{graphs/screenshots6col/empty_expansion.jpg}
+\vspace{-10pt}
+\caption{Star expansion on `Education' Column \label{fig:uiexamplestar}}
+\vspace{-15pt}
+\end{figure}
+
+\begin{figure}
+\vspace{-5pt}
+\centering
+\includegraphics[width=90mm]{graphs/screenshots6col/empty_expansion.jpg}
+\vspace{-10pt}
+\caption{A rule expansion \label{fig:uiexamplerule}}
+\vspace{-15pt}
+\end{figure}
+
+\begin{comment}
+\begin{table*}
 \centering 
 \scriptsize
 \begin{tabular}{| p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | l | l |} 
@@ -60,35 +87,38 @@ We now describe our experiments on this system with real datasets.
 \caption{A rule expansion \label{table:uiexamplerule}} 
 \vspace{-10pt}
 \end{table*} 
+\end{comment}
+
 The columns (in order) are as follows:
 annual household income, gender, marital status, age, education, occupation, time lived in the Bay Area, dual incomes?, persons in household, persons in household under $18$, householder status, type of home, ethnic classification, language most spoken in home.
 
 The second dataset, denoted `Census', is a US 1990 Census dataset from the UCI Machine Learning repository~\cite{uciml},
 consisting of about $2.5$ million tuples, with each tuple corresponding to a person. It has $68$ columns, including ancestry, age, and citizenship. Numerical columns, such as age, have been bucketized beforehand in the dataset. We use this dataset in Section~\ref{sec:quantitative_study} in order to study the accuracy and performance of sampling on a large dataset.
 
-Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use our current implementation of our the smart drill down operator, which can directly output tables in \LaTeX \ format. We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
+Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use the current implementation of our the smart drill down operator, and insert cropped screenshots of its output in this paper. 
+We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
 \subsection{Qualitative Study}
 We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out a few different weight functions to study their effects.
 \subsubsection{User interface testing}
 We now present the rule-based summaries displayed as a result of a few different user actions.
 
-To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Table~\ref{table:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click. 
+To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Figure~\ref{fig:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click. 
 
-Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up table~\ref{table:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females.
+Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up Figure~\ref{fig:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females.
 
-Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed table~\ref{table:uiexamplerule}. 
+Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed Figure~\ref{fig:uiexamplerule}. 
 
-
+\vspace{-3pt}
 \subsubsection{Weighting functions}
 Our system can display optimal rule lists for any monotonic weighting function. By default, we assign a rule weight equal to its size. In this section, we consider other weighting functions. 
 
 We first try the weighting function given by:
-$$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ where $|c|$ refers to the number of distinct possible values in column $c$. This function gives higher weight to rules that have non-$\star$ values in columns that have many possible values. The rule summary for this weighting is in table~\ref{table:weigtingbitwise} (contrast with Table~\ref{table:uiexample1}). The weighting scheme gives low weight for non-$\star$ values in binary columns, like the gender column. Thus, this summary instead gives us information about the Marital Status/Time in Bay Area/Occupation columns instead of the Gender column like in Table~\ref{table:uiexample1}.  
+$$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ where $|c|$ refers to the number of distinct possible values in column $c$. This function gives higher weight to rules that have non-$\star$ values in columns that have many possible values. The rule summary for this weighting is in Figure~\ref{fig:weigtingbitwise} (contrast with Figure~\ref{fig:uiexample1}). The weighting scheme gives low weight for non-$\star$ values in binary columns, like the gender column. Thus, this summary instead gives us information about the Marital Status/Time in Bay Area/Occupation columns instead of the Gender column like in Figure~\ref{fig:uiexample1}.  
 
 The other weighting function we try is given by:
 $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
-This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Table~\ref{table:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
+This gives us Figure~\ref{fig:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Figure~\ref{fig:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
 
 %TODO: Give application examples for different weighting functions
 %TODO: Say somewhere, that we haev drop-down list of common weighting functions in the user interface, with column selects and unselects.
@@ -96,18 +126,18 @@ This gives us table~\ref{table:weightingsizeminusone}. This weighting gives a $0
 
 
 % TODO: Add the experiment where you compare to vanilla a priori.
-
+\vspace{-3pt}
 \subsection{Quantitative Study}\label{sec:quantitative_study}
 The performance of our algorithm depends on various parameters, such as $m_w$ (the max weight) and $minSS$ (minimum required sample size). In this section, we study the effects of these parameters on the computation time and accuracy of our algorithm. We use both the Marketing and Census datasets. The Marketing dataset is relatively small with around $9000$ tuples, whereas the Census dataset is quite large, with $2.5$ million tuples. We observe that the accuracy and running time of our algorithm depends largely on $m_w$ and $minSS$, rather than the underlying database size.
 
 \subsubsection{Effects of $m_w$}
-Our algorithm for finding the best marginal rule (Algorithm~\ref{algo:best-marginal-rule}) takes an input parameter called $m_w$. The algorithm is guaranteed to find the best marginal rule as long as its weight is $\leq m_w$, but runs faster for smaller values of $m_w$. We now study the effect of varying $m_w$ on the speed of our algorithm running on a Dell XPS L702X laptop with 6GB RAM and an Intel i5 2.30GHz processor.
+Our algorithm for finding the best marginal rule takes an input parameter called $m_w$. The algorithm is guaranteed to find the best marginal rule as long as its weight is $\leq m_w$, but runs faster for smaller values of $m_w$. We now study the effect of varying $m_w$ on the speed of our algorithm running on a Dell XPS L702X laptop with 6GB RAM and an Intel i5 2.30GHz processor.
 
 We fix a weighting function $W$, and a value of $m_w$. For that value of the $W$ and $m_w$ parameters, we find the time taken for expanding the empty rule. We repeat this procedure $10$ times and take the average value of the running times across the $10$ iterations. This time is plotted against $m_w$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:mw_speed}. The figure shows that running time seems to be approximately linear in $m_w$. 
 
 For the Census dataset, the running time is dominated by time spent in making a pass through the $2.5$ million tuples to create the first sample. The response time for the next user click should be quite small, as the sample created for the first expansion can usually be re-used for the next rule expansion.
 
-The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus, for size scoring on the Marketing dataset, according to Table~\ref{table:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Table~\ref{table:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
+The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus, for size scoring on the Marketing dataset, according to Figure~\ref{fig:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Figure~\ref{fig:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
 
 \begin{figure}
 \vspace{-5pt}
@@ -119,12 +149,30 @@ The value of $m_w$ required to ensure a correct answer is equal to the maximum w
 \end{figure}
 
 \subsubsection{Effects of $minSS$}
-We now study the effects of the sampling parameter $minSS$. This parameter tells the SampleHandler the minimum sample size on which we run Algorithm~\ref{algo:best-rule-set}.   Higher values of $minSS$ cause our system to use bigger samples, which increases the accuracy of count estimates for displayed rules, but also correspondingly increases computation time. 
+We now study the effects of the sampling parameter $minSS$. This parameter tells the SampleHandler the minimum sample size on which we run BRS. Higher values of $minSS$ cause our system to use bigger samples, which increases the accuracy of count estimates for displayed rules, but also correspondingly increases computation time. 
 
 We consider one value of $minSS$ and one weight function $W$ at a time. For those values of $minSS$ and $W$, we drill down on the empty rule and measure the time taken for this operation. We also measure the percent error in the estimated counts of the displayed rules. That is, for each displayed rule $r$, if the displayed (estimated) count if $c_1$ and the actual count (computed separately on the entire table) is $c_2$, then the percent error for rule $r$ is $\frac{100 \times |c_1-c_2|}{c_2}$. We consider the average of percent errors over all displayed rules. For each value of $minSS$ and $W$, we drill down on the empty rule and find the computation time and percent error $50$ times, and take the average value for time and error over those $50$ iterations. This average time is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}(a). The average percent error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error_percent}(b). 
 
-The computation time increases approximately linearly with parameter $minSS$. This is expected, because Algorithm~\ref{algo:best-rule-set} makes a constant number of passes over the entire sample, and each pass takes time linear in the size of the sample. The running time at very small values of $minSS$ is simply the time taken to read the table and create the sample. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.
+The computation time increases approximately linearly with parameter $minSS$. This is expected, because BRS makes a constant number of passes over the entire sample, and each pass takes time linear in the size of the sample. The running time at very small values of $minSS$ is simply the time taken to read the table and create the sample. This also increases linearly with table size, and is only about $2.5$ seconds for a table with $2.5$ million tuples. The running time when $minSS$ equals table size, is the time we would require without sampling. Figure~\ref{fig:minSS_speed}(a) shows that sampling gives us noticeable time savings. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.
 
+
+\begin{figure}
+\vspace{-5pt}
+\centering
+\includegraphics[width=90mm]{graphs/screenshots6col/bits_scoring.jpg}
+\caption{Bits scoring\label{fig:weigtingbitwise}}
+\end{figure}
+
+\begin{figure}
+\vspace{-5pt}
+\centering
+\includegraphics[width=90mm]{graphs/screenshots6col/min2_scoring.jpg}
+\vspace{-10pt}
+\caption{Size minus one weighting \label{fig:weightingsizeminusone}}
+\vspace{-15pt}
+\end{figure}
+
+\begin{comment}
 \begin{table*} 
 \scriptsize
 \centering 
@@ -158,7 +206,7 @@ The computation time increases approximately linearly with parameter $minSS$. Th
 \caption{Size minus one weighting \label{table:weightingsizeminusone}} 
 \vspace{-10pt}
 \end{table*}  
-
+\end{comment}
 
 
 In addition, we measure the number of incorrect rules per iteration. If the correct set of rules to display is $r_1, r_2, r_3$ and the displayed set is $r_1, r_3, r_4$ then that means there is one incorrect rule. We find the number of incorrect displayed rules across $50$ iterations, and display the average value in Figure~\ref{fig:minSS_error_rule}(c). This number for the Marketing dataset is almost always $0$ for the Size weighting function, and between $1$ and $2$ for the Bits weighting function. For the Census dataset, it is around $1$ for $minSS \leq 1000$ and falls to about $0.3$ for larger values of $minSS$. Note that even when we display an `incorrect' rule, it is usually the $5^{th}$ or $6^{th}$ best rule instead of one of the top $4$ rules, which still results in a reasonably good summary of the table.
@@ -172,16 +220,3 @@ In addition, we measure the number of incorrect rules per iteration. If the corr
 \caption{(a) Running time for different values of parameter $minSS$ (b) Error in Count for different values of parameter $minSS$ (c) Average number of incorrect rules for different values of parameter $minSS$ \label{fig:minSS_speed}\label{fig:minSS_error_percent} \label{fig:minSS_error_rule}}
 \vspace{-10pt}
 \end{figure*}
-
-\begin{comment}
-more experiment stuff
-vanilla a priori size scoring, first 7 columns (maybe we should include 13, to show suffering on english rule
-Female & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2940$ & $2$ \\
-$\star$ & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $5182$ & $1$ \\
-Female & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4918$ & $1$ \\
-Male & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2242$ & $2$ \\
-$\star$ & Married & $\star$ & $\star$ & $\star$ & > 10 years & $2053$ & $2$ \\
-Male & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4075$ & $1$ \\
-Female & Married & $\star$ & $\star$ & $\star$ & $\star$ & $1966$ & $2$ \\
-$\star$ & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $1964$ & $2$ \\
-\end{comment}

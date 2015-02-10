@@ -224,7 +224,7 @@ public class Marketing {
 		TableInfo fullTable = Marketing.parseData();
 		//out.println(System.currentTimeMillis() - timer);
 		List<Integer> columns = new ArrayList<Integer>();
-		final Integer firstNumColumns = 9;
+		final Integer firstNumColumns = 7;//9;
 		for (int i = 1; i < firstNumColumns; i++) {
 			columns.add(i);
 		}

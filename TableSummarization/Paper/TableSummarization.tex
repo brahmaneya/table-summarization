@@ -1,4 +1,4 @@
-\documentclass{vldb}
+\documentclass{sig-alternate}
 \usepackage{graphicx}
 \usepackage{balance}  % for  \balance command ON LAST PAGE  (only there!)
 \usepackage{enumitem}
@@ -35,9 +35,9 @@
 \newcounter{prob}
 \newtheorem{problem}[prob]{Problem}
 
-\newcommand{\agp}[1]{\textcolor{red}{Aditya: #1}}
-\newcommand{\mrj}[1]{\textcolor{green}{#1}}
-\newcommand{\agpdel}[1]{\textcolor{blue}{\bf ||Del: #1||}}
+\newcommand{\agp}[1]{\textcolor{green}{Aditya: #1}}
+\newcommand{\mrj}[1]{\textcolor{red}{#1}}
+\newcommand{\mrjdel}[1]{\textcolor{red}{\sout{#1}}}
 
 \newcommand{\squishlist}{
    \begin{list}{$\bullet$}
@@ -125,9 +125,9 @@ perform experiments on real datasets to demonstrate the usefulness of smart dril
 
 \input{related}
 
-\balance
 \input{conc}
 
+\balance
 {\small
 \bibliographystyle{abbrv}
 \bibliography{TableSummarization}  

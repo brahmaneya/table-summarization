@@ -1,9 +1,8 @@
 %!TEX root = TableSummarization.tex
 
-
 \section{Related Work}\label{sec:related}
-%TODO: Repeat what we said in intro about interactive, etc.
-There has been work on finding cubes to browse in OLAP systems~\cite{Sarawagi:2001:UMA:767141.767148, Sarawagi00user-adaptiveexploration, Sarawagi98discovery-drivenexploration}. This work, along with other existing work~\cite{Mampaey:2011:TMI:2020408.2020499} focuses on finding values that occur more often or less often that expected from a max-entropy distribution. The work does not guarantee good coverage of the table, since it rates infrequently occurring sets of values as highly as frequently occurring ones. 
+
+There has been work on finding cubes to browse in OLAP systems~\cite{Sarawagi:2001:UMA:767141.767148, Sarawagi00user-adaptiveexploration, Sarawagi98discovery-drivenexploration}. This work, along with other existing work~\cite{Mampaey:2011:TMI:2020408.2020499} focuses on finding values that occur more often or less often that expected from a max-entropy distribution. The work does not guarantee good coverage of the table, since it rates infrequently occurring sets of values as highly as frequently occurring ones. Some other data exploration work~\cite{sellam:meet} focuses on finding attribute values that divide the database in equal sized parts, while we focus on values that occur as frequently as possible.
 
 There is work on constructing `explanation tables', which are sets of rules that co-occur with a given binary attribute of the table~\cite{DBLP:journals/pvldb/GebalyAGKS14}. This work again focuses on displaying rules that will cause the resulting max entropy distribution to best approximate the actual distribution of values. 
 
@@ -15,17 +14,5 @@ Several existing papers also deal with the problem of frequent itemset mining~\c
 
 % All the existing works solve a fixed optimization problem, whereas  we focus on finding an optimal summary for a flexible user-specified weighting function.
 
-We use sampling to find approximate estimates of rule counts. Various other database systems~\cite{Acharya:1999:AAQ:304182.304581, Agarwal:2013:BQB:2465351.2465355} use samples to find approximate results to SQL aggregation queries. These systems create samples in advance and only update them when the database changes. In contrast, we keep updating our samples on the fly, as the user interacts with our system. 
-
-% Our algorithm uses ideas from the a priori algorithm~\cite{apriori}. 
-
-% Related Work summary : Is ours the only only that is flexible (due to weight function black box)?
-% Explanation tables takes lots of papers and talks about them in one go in related work. saying they optimize for different opbjective functions. We can say that as well. We have a unique idea of flexible weighting functions for managing the tradeoff between coverage and specificity. 
-% Succintly summarizing with itemsets-- Mampaey:2011:TMI:2020408.2020499 -- Also seemed to optimize according to max entropy criterion
-% Efficient and Effective... Tableaux -- Golab_efficientand -- Similar to conditional functional dep. paper.
-% Near Optimal Tableaux Conditional functional dep. -- Golab:2008:GNT:1453856.1453900 -- Finding a smallest sized tableau that provides some confidence and support for a conditional functional dependency.
-% MDL Summarization with holes -- Bu:2005:MSH:1083592.1083644 -- Min sized summary with a rectangle and exceptions (holes). 
-% Generalized MDL Approach -- Lakshmanan:2002:GMA:1287369.1287435 -- Similar to MDL Approach.
-% Overlapped Hyperrectangle -- Xiang_succinctsummarization -- Efficiently find the set of hyperrectangles that covers the data (sets of itemsets)
-% Tiling Databases Geerts04tilingdatabases Simlar to hyper-rectangles. Probabilistic interpretation of frequent itemsets. 
+We use sampling to find approximate estimates of rule counts. Various other database systems~\cite{Acharya:1999:AAQ:304182.304581, Agarwal:2013:BQB:2465351.2465355} use samples to find approximate results to SQL aggregation queries. These systems create samples in advance and only update them when the database changes. In contrast, we keep updating our samples on the fly, as the user interacts with our system. There is work on using weighted sampling~\cite{6691587} to create samples favouring data that is of interest to a user, based on the user's history. In contrast, we create samples at run time in response to the user's commands.
 
