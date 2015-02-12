@@ -16,6 +16,13 @@ We now describe our experiments on this system with real datasets.
 \begin{figure}
 \vspace{-5pt}
 \centering
+\includegraphics[width=90mm]{graphs/screenshots6col/age_drilldown.jpg}
+\caption{A regular drill down on Age\label{fig:drilldownexample}}
+\end{figure}
+
+\begin{figure}
+\vspace{-5pt}
+\centering
 \includegraphics[width=90mm]{graphs/screenshots6col/empty_expansion.jpg}
 \vspace{-10pt}
 \caption{Star expansion on `Education' Column \label{fig:uiexamplestar}}
@@ -99,15 +106,13 @@ Unless otherwise specified, in all our experiments, we restrict the tables to th
 We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
 \subsection{Qualitative Study}
-We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out a few different weight functions to study their effects.
+We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out different weight functions to study their effects.
 \subsubsection{User interface testing}
 We now present the rule-based summaries displayed as a result of a few different user actions.
 
 To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Figure~\ref{fig:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click. 
 
-Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up Figure~\ref{fig:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females.
-
-Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed Figure~\ref{fig:uiexamplerule}. 
+Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up Figure~\ref{fig:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females. Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed Figure~\ref{fig:uiexamplerule}. 
 
 \vspace{-3pt}
 \subsubsection{Weighting functions}
@@ -119,6 +124,8 @@ $$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ wher
 The other weighting function we try is given by:
 $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
 This gives us Figure~\ref{fig:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Figure~\ref{fig:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
+
+A regular drill down can be thought of as a special case of smart drill-down with the right weighting function and number of rules. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
 
 %TODO: Give application examples for different weighting functions
 %TODO: Say somewhere, that we haev drop-down list of common weighting functions in the user interface, with column selects and unselects.
