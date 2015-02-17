@@ -37,8 +37,8 @@ Suppose we are given an instance of the knapsack problem with $m$ objects, with 
 We first scale the $w_i$s and $W$ such that all $w_i$s are $< 1$. For Problem~\ref{prob:sample-sizes}, we set $M$ to $(m + W) \times minSS$. Tree $U$ has $m$ special nodes $r_1, r_2, ... r_m$, and each $r_i$ has two leaf children $r_{i,1}, r_{i,2}$. All other leaves have expansion probability $0$. 
 The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace, j \in \left\lbrace 1, 2 \right\rbrace : (S(x, r_{i,j}) \neq 0 \Rightarrow x = r_{i,j} || x = r_i)$. In reality, the $S$ values cannot be exactly zero, but can be made small enough for all practical purposes. Thus, $\forall 1 \leq i \leq m, j \in \left\lbrace 1,2 \right\rbrace : ess(r_{i,j}) = n_{r_{i,j}} + n_{r_i}S(r_i, r_{i,j})$. In addition, $S(r_i, r_{i,1}) = 1$, and $S(r_i, r_{i,2}) = 1 - w_i$. Finally, $\forall i : p_{r_{i,1}} = \frac{2}{2m+1}$ and $p_{r_{i,2}} = \frac{v_i}{(2m+1)\sum_{j=1}^{m}v_i}$. So in any optimal solution, $\forall i : ess(r_{i,1}) = minSS$, and we've to decide which $i$'s also have $ess(r_{i,2}) = minSS$. Having $ess(r_{i,2}) = minSS$ requires consuming $w_i \times minSS$ extra memory and gives an extra $\frac{v_i}{(2m+1)(\sum_{j=1}^{m}v_j)}$ probability value. Thus, having $ess(r_{i,2}) = minSS$ is equivalent to picking object $i$ from the knapsack problem. Solving Problem~\ref{prob:sample-sizes} with the above $U$, $S$, $p$ and picking the set of $i$'s for which $ess(r_{i,2}) = minSS$ gives a solution to the instance of the knapsack problem. 
 \end{proof}
-A more detailed proof sketch is given in the technical report.
-}
+\vspace{-10pt}
+\noindent A more detailed proof sketch is given in the technical report.}
 
 \techreporttext{
 Our greedy algorithm needs to make multiple passes over the entire table in order to find counts of rules. These passes can be expensive if the table is large and the table does not fit in main memory. If we want exact counts for rules, we have no choice but to read the entire table. 

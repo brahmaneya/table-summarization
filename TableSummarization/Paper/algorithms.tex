@@ -42,15 +42,14 @@ As a first step towards solving Problem~\ref{prob:optimal-rule-list}, we show th
 
 \begin{lemma}\label{lemma:rule-ordering}
 Let $R$ be a rule-list. Let $R^{\prime}$ be the rule-list having the same rules as $R$, but ordered in descending order by weight. Then
-$$\text{Score}(R^{\prime}) \geq \text{Score}(R)$$
+$\text{Score}(R^{\prime}) \geq \text{Score}(R)$.
 \end{lemma}
 \papertext{The proof of this lemma, as well as other proofs, can be found in the appendix of the technical report~\cite{tr}}\techreporttext{The proof of this lemma, as well as other proofs, can be found in the appendix}. 
-
-\noindent Thus, it is sufficient to restrict our attention to rule-lists that have rules sorted in decreasing order by weight. Or equivalently, we can define Score for a \emph{set} of rules as follows:
+Thus, it is sufficient to restrict our attention to rule-lists that have rules sorted in decreasing order by weight. Or equivalently, we can define Score for a \emph{set} of rules as follows:
 
 \begin{definition}\label{def:set-score}
 Let $R$ be a set of rules. Then the Score of $R$ is
-$$\text{Score}(R) = \text{Score}(R^{\prime})$$
+$\text{Score}(R) = \text{Score}(R^{\prime})$
 where $R^{\prime}$ is the list of rules obtained by ordering the rules in the set $R$ in decreasing order by weight.
 \end{definition}
 
@@ -160,6 +159,7 @@ Intuitively, this means that the marginal value of adding an element to a set $S
 For a given table $T$, the Score function over sets $S$ of rules, defined by the following is submodular:
 $$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
 \end{lemma}
+\vspace{-10pt}
 
 \stitle{High-Level Procedure:} Now, based on the submodularity property, the greedy procedure,
 as listed below, has desirable approximation guarantees:
