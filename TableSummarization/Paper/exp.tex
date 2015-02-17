@@ -11,6 +11,7 @@ We now describe our experiments on this system with real datasets.
 \centering
 \includegraphics[width=90mm]{graphs/screenshots6col/empty_expansion.jpg}
 \caption{Summary after clicking on the empty rule \label{fig:uiexample1}}
+\vspace{-15pt}
 \end{figure}
 
 \begin{figure}
@@ -105,7 +106,7 @@ consisting of about $2.5$ million tuples, with each tuple corresponding to a per
 Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use the current implementation of our the smart drill down operator, and insert cropped screenshots of its output in this paper. 
 We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
-\subsection{Qualitative Study}
+\subsection{Qualitative Study}\label{sec:exp_qualitative}
 We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out different weight functions to study their effects.
 \subsubsection{User interface testing}
 We now present the rule-based summaries displayed as a result of a few different user actions.
@@ -135,7 +136,7 @@ A regular drill down can be thought of as a special case of smart drill-down wit
 % TODO: Add the experiment where you compare to vanilla a priori.
 \vspace{-3pt}
 \subsection{Quantitative Study}\label{sec:quantitative_study}
-The performance of our algorithm depends on various parameters, such as $m_w$ (the max weight) and $minSS$ (minimum required sample size). In this section, we study the effects of these parameters on the computation time and accuracy of our algorithm. We use both the Marketing and Census datasets. The Marketing dataset is relatively small with around $9000$ tuples, whereas the Census dataset is quite large, with $2.5$ million tuples. We observe that the accuracy and running time of our algorithm depends largely on $m_w$ and $minSS$, rather than the underlying database size.
+The performance of our algorithm depends on various parameters, such as $m_w$ (the max weight) and $minSS$ (minimum required sample size). In this section, we study the effects of these parameters on the computation time and accuracy of our algorithm. We use both the Marketing and Census datasets. The Marketing dataset is relatively small with around $9000$ tuples, whereas the Census dataset is quite large, with $2.5$ million tuples. The accuracy of our algorithm depends on $m_w$ and $minSS$, rather than the underlying database size. The worst case running time for large datasets is close to the time taken for making one pass on the dataset. When we expand a rule using an existing sample in memory, the running time is small and only depends on $minSS$ rather than on the dataset size.
 
 \subsubsection{Effects of $m_w$}
 Our algorithm for finding the best marginal rule takes an input parameter called $m_w$. The algorithm is guaranteed to find the best marginal rule as long as its weight is $\leq m_w$, but runs faster for smaller values of $m_w$. We now study the effect of varying $m_w$ on the speed of our algorithm running on a Dell XPS L702X laptop with 6GB RAM and an Intel i5 2.30GHz processor.
