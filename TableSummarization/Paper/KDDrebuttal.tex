@@ -1,0 +1,32 @@
+\documentclass{article}
+\date{\today}
+
+
+
+\begin{document}
+
+\title{Smart Drill-Down (KDD Rebuttal)}
+\author{Manas Joglekar, Hector Garcia-Molina, Aditya Parameswaran}
+\maketitle
+To the editors,
+
+We would like to thank the reviewers for their insightful comments. The primary comment made by every reviewer was that we had missed several papers related to our work. We are outsiders to the KDD community, and were not very familiar with previous work in the pattern mining area. We went through several of the papers pointed out by the reviewers, and will mention the differences between these papers and our work below. We will also do a more thorough literature review and significantly augment the related work section for the camera ready submission. 
+
+There are four primary ways in which existing work on pattern mining differs from our work:
+\begin{enumerate}
+\item {\bf Interactiveness}: user guided. fast (making approximation necessary). 
+
+\item {\bf Relational Data}: gives meaning to interestingness measures based on columns, such as `Bits'. 
+
+\item {\bf Tunability}: The primary attribute of our work is that we allow the user to specify the kind of rules/patterns he is interested in by providing any monotone weighting function. While this allows for a very wide variety of interestingness measures, the scoring function is restricted enough that it is submodular on the rule-set, allowing us to obtain an approximate optimality guarantee. This is in contrast to several of the related papers, where the authors use a heuristic algorithm such as beam search, or a restricted top down search, with no theoretical optimality guarantees. 
+% mention paper names/authors above
+
+\item {\bf Theoretical Guarantees}:
+\end{enumerate}
+
+% address other reviewer comments, especially 4th reviewers.
+
+
+
+\end{document}
+
