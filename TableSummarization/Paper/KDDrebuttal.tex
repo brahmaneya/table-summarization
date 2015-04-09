@@ -12,21 +12,20 @@ To the editors,
 
 We would like to thank the reviewers for their insightful comments. The primary comment made by every reviewer was that we had missed several papers related to our work. We are outsiders to the KDD community, and were not very familiar with previous work in the pattern mining area. We went through several of the papers pointed out by the reviewers, and will mention the differences between these papers and our work below. We will also do a more thorough literature review and significantly augment the related work section for the camera ready submission. 
 
-There are four primary ways in which existing work on pattern mining differs from our work:
+There are three primary ways in which existing work on pattern mining differs from our work:
 \begin{enumerate}
-\item {\bf Interactiveness}: user guided. fast (making approximation necessary). 
+\item {\bf Interactiveness}: Smart drill-down allows the user to direct the data exploration according to his interests. This means that in each step, the number of rules displayed to the user should be small enough to be readable in a short amount of time, and the next set of rules to be displayed should depend on what part of the table the user expresses interest in. In addition, the response time of the system needs to be small ($< 10$ seconds) in order to prevent the user's flow of thought from being broken. In contrast, many of the mentioned related works (e.g. `The Chosen few', `Constraint based Pattern Mining') display {\em all} output patterns in one go, which would take a lot of processing time and potentially display unneeded information to the user. Some, such as `Krimp', `Summarizing Itemset Patterns: A Profile-Based Approach' display a smaller number of patterns, but are still not interactive. 
 
-\item {\bf Relational Data}: gives meaning to interestingness measures based on columns, such as `Bits'. 
+\item {\bf Relational Data}: Smart drill-down is used for summarizing data from a relational table, as opposed to a set of transactions. Different columns in a table can be of differing importance to a user, and smart drill-down allows a user to focus on expanding certain columns, or to ignore certain columns. In a transaction based database, it is much harder to express extra interest in certain `types' of items.  
 
-\item {\bf Tunability}: The primary attribute of our work is that we allow the user to specify the kind of rules/patterns he is interested in by providing any monotone weighting function. While this allows for a very wide variety of interestingness measures, the scoring function is restricted enough that it is submodular on the rule-set, allowing us to obtain an approximate optimality guarantee. This is in contrast to several of the related papers, where the authors use a heuristic algorithm such as beam search, or a restricted top down search, with no theoretical optimality guarantees. 
-% mention paper names/authors above
-
-\item {\bf Theoretical Guarantees}:
+\item {\bf Tunability}: An important attribute of our work is that we allow the user to specify the kind of rules he is interested in by specifying any monotone weighting function. While this allows for a very wide variety of interestingness measures, the scoring function is restricted enough that it is submodular on the rule-set, allowing us to obtain an {\em approximate optimality guarantee}. Thus we attempt to strike a fine balance between tunability and optimizability. This is in contrast to several of the related papers with a fully general scoring function (`Diverse subgroup set discovery', ), forcing the authors use an algorithm that is either heuristic with no optimality guarantees, or very time consuming. Some other papers (`MIME', `One click mining') are not tunable enough, and only provide a fixed set of interestingess parameters. 
 \end{enumerate}
 
-% address other reviewer comments, especially 4th reviewers.
+In addition, the paper on Intelligent roll-ups by Sunita Sarawagi is about roll-ups as opposed to drill down. So it assumes that the user is already at a detailed level of the table, has found an anomaly, and wants to `zoom out' to the highest level where the anomaly still exists. `Formalizing Complex Prior Information to Quantify Subjective Interestingness of Frequent Pattern Sets' uses a max entropy based approach, instead of maximizing total coverage of the table. 
 
+Based on Reviewer 1's suggestion, we will add a more detailed comparison between our contributions and existing work in Section 1 itself. Reviewers 1 and 2 also pointed out that some of the concepts and ideas introduced are simple. This is because we had moved a lot of the technical material, especially the sampling related work, to the technical report. 
 
+Reviewer 4 correctly points out that its the processing requirements of the priori algorithm than make the sampling procedure necessary, for the 2.5 million tuple dataset. The rule finding algorithm makes several passes over the dataset/sample, and would be very slow if it had to make many passes over a 2.5 million tuples. In this case, the sampling helps with speed, but can be done away with otherwise. On the other hand, users might want to explore even bigger datasets, containing billions of tuples, where the dataset doesn't fit in main memory at all, in which case the sampling scheme becomes even more essential. 
 
 \end{document}
 
