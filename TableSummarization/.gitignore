@@ -1,1 +1,5 @@
 /bin
+/Paper/*.aux
+/Paper/*.log
+/Paper/*.synctex.gz
+/Paper/*.pdf
