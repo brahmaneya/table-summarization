@@ -883,7 +883,7 @@ public class NonStarCountSolvers {
 			if (currentSize == 2) { // Update marginal counts here and below.
 				updateCountsAndMarginalValuesSizeTwo (table, ruleMap, solution);
 			} else {
-				updateCountsAndMarginalValuesSingleHash (table, ruleMap, solution);	
+				updateCountsAndMarginalValuesSingleHash (table, ruleMap, solution);
 			}
 			//out.println(System.currentTimeMillis() - initial);
 			
@@ -893,7 +893,7 @@ public class NonStarCountSolvers {
 				if (rule.minMarginalValue > bestMarginalRuleValue) {
 					bestMarginalRuleValue = rule.minMarginalValue;
 					bestRule = rule;
-				}
+				} 
 			}
 		}	
 		
@@ -1262,148 +1262,5 @@ public class NonStarCountSolvers {
 			solutionSet.add(expandedRule);
 		}
 		return solutionSet;
-	}
-	
-	public static void main (String[] args) throws IOException {
-		TableInfo table = Marketing.parseData();
-		List<Integer> cols = new ArrayList<Integer>();
-		final Integer firstNumColumns = 7;
-		for (int i = 1; i < firstNumColumns; i++) {
-			cols.add(i);
-		}
-		TableInfo subTable = table.getSubTable(cols);
-		List<Rule> topKRules = getTopKRules (subTable, 5, new Rule.sizeScorer(), 8);
-		for (Rule r : topKRules) {
-			out.println(r.fullRuleStringTex(subTable));
-		}
-		if (1!=2) return;
-		Integer maxRuleScore = 5; // We will only consider rules scoring upto this. This parameter is important as it determines out threshold for which smaller rules to drop.
-		Map<Rule, Rule> ruleMap = new HashMap<Rule, Rule>();
-		
-		/* //delstart
-		Map<List<Integer>, Rule> ml = new HashMap<List<Integer>, Rule>();
-		Map<Rule, Rule> mr = new HashMap<Rule, Rule>();
-		for (int i = 0; i < 1000; i++) {			
-			List<Integer> l = new ArrayList<Integer>();
-			Map<Integer, Integer> m = new HashMap<Integer, Integer>();
-			for (int j = 0; j < 15; j++) {
-				if (Math.random() < 0.2) {
-					final int val = (int) (10 * Math.random());
-					l.add(val);
-					m.put(j, val);
-				} else {
-					l.add(-1);
-				}
-			}
-			Rule r = new Rule(l);
-			ml.put(l, r);
-			mr.put(r, r);
-		}
-		long init;
-		init = System.currentTimeMillis();
-		for(int i=0; i < table.contents.size(); i++) {
-			int iter = 0;
-			for (Rule rule : mr.keySet()) {
-				//if (!mr.get(rule).counted) {
-				//	mr.get(rule).count++;
-				//}
-				iter++;
-				if (iter > 1000) break;
-				mr.get(rule);
-			}
-		}
-		out.println(System.currentTimeMillis() - init);
-		init = System.currentTimeMillis();
-		for(int i=0 ; i < table.contents.size(); i++) {
-			int iter = 0;
-			for (List<Integer> rule : ml.keySet()) {
-				//if (!ml.get(rule).counted) {
-					//ml.get(rule).count++;
-				//}
-				iter++;
-				if (iter > 1000) break;
-				ml.get(rule);
-			}
-		}
-		out.println(System.currentTimeMillis() - init );
-		System.exit(1);
-		//delend */
-		
-		Map<Integer, Integer> bigRuleMap = new HashMap<Integer, Integer>();
-		bigRuleMap.put(9, 0);
-		bigRuleMap.put(12, 0);
-		bigRuleMap.put(13, 1);
-		Scorer scorer = new Rule.sizeScorer();
-		Rule bigRule = new Rule(table, bigRuleMap, table.dictionary.size(), 0, false, scorer);
-		
-		Integer ruleNums = 5;
-		//getSolution (table, ruleNums, maxRuleScore);
-		Integer requiredColumn = -1;
-		int minSampleSize = Integer.MAX_VALUE;
-		int capacity = Integer.MAX_VALUE;
-		SampleHandler sampleHandler = new SampleHandler(table, capacity, minSampleSize);
-		Set<Rule> solutionSet = getSolution (table, bigRule, ruleNums, maxRuleScore, scorer, requiredColumn, sampleHandler);
-		out.println(solutionSet.toString());
-		if(1!=2)return;
-		List<Rule> rules = new ArrayList<Rule>();
-		//getBestRule(table, ruleMap, superRules, maxRuleScore);
-		getBestMarginalRule(table, maxRuleScore, new HashSet<Rule>(), scorer, requiredColumn);
-		//getCandidateRules(table, ruleNums, rules, ruleMap, superRules, maxRuleScore);
-		if (1!=2) return;
-		
-		Map<Rule, Integer> marginalCounts = new HashMap<Rule, Integer>();
-		/*
-		 * Filtering
-		 
-		Set<Integer> filterColumns = new HashSet<Integer>();
-		filterColumns.add(1);		
-		filterColumns.add(2);		
-		List<Integer> filterColumnsList = new ArrayList<Integer>(filterColumns);
-		out.println(filterColumnsList.toString());
-		List<Rule> drillDown = filterByColumn(rules, filterColumns);
-		Collections.sort(drillDown, Rule.sortComparator(table, marginalCounts, filterColumnsList));
-		for (Rule rule : drillDown) {
-			out.println(rule.fullRuleStringTex(table, filterColumnsList, marginalCounts));
-		}
-		if (1!=2) return;
-		*/
-		List<Rule> solutionList = getSolution(table, ruleNums, rules, ruleMap);
-		Set<Rule> solution = new HashSet<Rule>(solutionList);
-		marginalCounts = getMarginalCounts(solution, table);
-		
-		Integer totalCount = 0;
-		Integer totalScore = 0;
-		
-		List<Integer> columns = new ArrayList<Integer>();
-		columns.add(1);
-		columns.add(2);
-		columns.add(3);
-		columns.add(4);
-		
-		List<Integer> sortColumns = new ArrayList<Integer>();
-		sortColumns.add(1);
-		sortColumns.add(table.dictionary.size() + 2);
-		Collections.sort(solutionList, Rule.sortComparator(table, marginalCounts, sortColumns));
-		
-		/*Collections.sort(solutionList, new Comparator<Rule>(){
-			@Override
-			public int compare(Rule arg0, Rule arg1) {
-				int index = 1;
-				Integer val0 = arg0.rule.get(index);
-				Integer val1 = arg1.rule.get(index);
-				if (val0 != val1) {
-					return Integer.compare(val0,  val1);
-				}
-				return Integer.compare(arg0.size, arg1.size);
-			}
-		});*/
-		
-		for(Rule rule : solutionList) {
-			totalCount += marginalCounts.get(rule);
-			totalScore += rule.score * marginalCounts.get(rule);
-			out.println(rule.fullRuleStringTex(table, columns, marginalCounts));
-		}
-		out.println(totalCount);
-		out.println(totalScore);
 	}
 }

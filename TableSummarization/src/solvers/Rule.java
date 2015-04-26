@@ -172,6 +172,7 @@ public class Rule implements Comparable<Rule> {
 		
 		this.size = valueMap.size();
 		this.counted = false;
+		minMarginalValue = maxMarginalValue = latestCountedMarginalValue = 0;
 	}
 
 	/**
@@ -212,6 +213,7 @@ public class Rule implements Comparable<Rule> {
 		
 		this.size = valueMap.size();
 		this.counted = false;
+		minMarginalValue = maxMarginalValue = latestCountedMarginalValue = 0;
 	}
 
 	public Rule(TableInfo table, List<Integer> values, Scorer scorer) {
@@ -259,7 +261,7 @@ public class Rule implements Comparable<Rule> {
 			return 0;
 		}
 		if (maxMarginalValue != r2.maxMarginalValue) {
-			return maxMarginalValue.compareTo(r2.maxMarginalValue);			
+			return maxMarginalValue.compareTo(r2.maxMarginalValue);
 		} else if (minMarginalValue != r2.minMarginalValue) {
 			return minMarginalValue.compareTo(r2.minMarginalValue);			
 		} else {
