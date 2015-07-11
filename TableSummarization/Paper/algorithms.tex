@@ -20,7 +20,6 @@ $$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r,R)$$
 \item $[$Star drill down$]$ If the user clicked on a $\star$ in column $c$ of rule $r$, then we first filter table $T$ to get a smaller table $T_r$ consisting of tuples from $T$ that are covered by $r$. In addition, we change the weight function $W$ from Problem~\ref{prob:optimal-subrule-list} to a weight function $W^{\prime}$ such that : For any rule $r^{\prime}$, $W^{\prime}(r^{\prime}) = 0$ if $r^{\prime}$ has a $\star$ in column $c$, and $W^{\prime}(r^{\prime}) = W(r^{\prime})$ otherwise. Then, we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W^{\prime}, k)$.
 \end{enumerate}
 
-\techreporttext{
 \begin{algorithm}
 \scriptsize
 \KwIn{$k$ (Number of rules required), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
@@ -35,8 +34,6 @@ $S = S \cup \left\lbrace R_m \right\rbrace$
 \Return $S$
 \caption{Greedy Algorithm for Problem~\ref{prob:optimal-rule-set}\label{algo:best-rule-set}}
 \end{algorithm}
-}
-
 
 As a first step towards solving Problem~\ref{prob:optimal-rule-list}, we show that the rules in the optimal list must effectively be ordered in decreasing order by weight. Note that the weight of a rule is independent of its $MCount$. The $MCount$ of a rule is the number of tuples that have been `assigned' to it, and each tuple assigned to rule $r$ contributes $W(r)$ to the total score. Thus, if the rules are not in decreasing order by weight in a rule list $R$, then switching the order of rules in $R$ transfers some tuples from a lower weight rule to a higher weight rule, which can increase total score.
 
@@ -89,7 +86,6 @@ we start with an empty rule set $R$, and then at each step, we add the next best
 \item In order to find the rule $r$ to add in each step, we need to measure the impact on Score for each $r$. This is done in several passes over the table, using ideas from the a-priori algorithm~\cite{apriori} for frequent item-set mining. 
 \squishend
 
-\techreporttext{
 \begin{algorithm}
 \scriptsize
 \KwIn{$S$ (Current solution set), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
@@ -140,7 +136,6 @@ $H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
 \Return $\textrm{argmax}_{r \in C} \text{MarginalValue}(r)$
 \caption{Find best marginal rule\label{algo:best-marginal-rule}}
 \end{algorithm}
-}
 
 In some cases, the dataset may still be too large for us to return a good rule set in
 a reasonable time; in such cases, we may want to run our algorithm on a sample of the table
@@ -187,7 +182,7 @@ Instead of using the procedure described above directly, we instead develop a ``
 that will admit further approximation (depending on the parameter) in order to reduce computation further. We describe
 this algorithm next.
 
-\stitle{Parametrized Algorithm:} \techreporttext{Our algorithm pseudo-code is given in the box labelled Algorithm~\ref{algo:best-rule-set}.} \papertext{We describe our algorithm in detail below. The pseudo-code for our algorithm is in the technical report~\cite{tr}.} We call our algorithm {\em BRS} (for \textbf{B}est \textbf{R}ule \textbf{S}et). BRS takes four parameters as input: the table $T$, the number $k$ of rules required in the final solution list, a parameter $m_w$ (which we describe in the next paragraph), and the weight function $W$. 
+\stitle{Parametrized Algorithm:} Our algorithm pseudo-code is given in the box labelled Algorithm~\ref{algo:best-rule-set}. We call our algorithm {\em BRS} (for \textbf{B}est \textbf{R}ule \textbf{S}et). BRS takes four parameters as input: the table $T$, the number $k$ of rules required in the final solution list, a parameter $m_w$ (which we describe in the next paragraph), and the weight function $W$. 
 
 The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, BRS is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by BRS does not contain $r$. BRS runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, its Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus, rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small.
 
@@ -201,9 +196,9 @@ In order to avoid counting too many rules, we leverage a technique inspired by t
 
 We compute the best marginal rule over multiple passes on the dataset, with the maximum number of passes equal to the maximum size of a rule. In the $j^{th}$ pass, we compute counts and marginal values for rules of size $j$. To give an example, suppose we had three columns $c_1$, $c_2$, and $c_3$. In the first pass, we would compute the counts and marginal values of all rules of size $1$. In the second pass, instead of finding marginal values for all size $2$ rules, we can use our knowledge of counts from the first pass to upper bound the potential counts and marginal values of size $2$ rules, and be more selective about which rules to count in the second pass. For instance, suppose we know that the rule $(a, \star, \star)$ has a count of $1000$, while $(\star, b, \star)$ has a count of $100$. Then for any value $c$ in column $c_3$ we would know that the count of $(\star, b, c)$ is at most $100$ because it cannot exceed that of $(\star, b, \star)$. This implies that the maximum marginal value of any super-rule of $(\star, b, c)$ having weight $\leq m_w$ is at most $100m_w$. If the rule $(a, \star, \star)$ has a marginal value of $800$, then the marginal value of any super-rule of $(\star, b, \star)$ cannot possibly exceed that of $(a, \star, \star)$. Since our aim is to only find the highest marginal value rule, we can skip counting for all super-rules of $(\star, b, \star)$ for future passes.
 
-We now describe the function to find the best marginal rule. \techreporttext{The pseudo-code for the function is in the box titled Algorithm~\ref{algo:best-marginal-rule}.} \papertext{The pseudo-code for the function is in the technical report.} The function maintains a threshold $H$, which is the highest marginal value that has been found for any rule so far. The function makes several iterations \techreporttext{(Step $3$)}, counting marginal values for size $j$ rules in the $j^{th}$ iteration. We maintain three sets of rules. $C$ is the set of all rules whose marginal values have been counted in all previous iterations. $C_n$ is the set of rules whose marginal values are going to be counted in the current pass. And $C_o$ is the set of rules whose marginal values were counted in the previous iteration. For the first pass, we set $C_n$ to be all rules of size $1$. Then we compute marginal values for those rules, and set $C = C_o = C_n$.
+We now describe the function to find the best marginal rule. The pseudo-code for the function is in the box titled Algorithm~\ref{algo:best-marginal-rule}. The function maintains a threshold $H$, which is the highest marginal value that has been found for any rule so far. The function makes several iterations (Step $3$), counting marginal values for size $j$ rules in the $j^{th}$ iteration. We maintain three sets of rules. $C$ is the set of all rules whose marginal values have been counted in all previous iterations. $C_n$ is the set of rules whose marginal values are going to be counted in the current pass. And $C_o$ is the set of rules whose marginal values were counted in the previous iteration. For the first pass, we set $C_n$ to be all rules of size $1$. Then we compute marginal values for those rules, and set $C = C_o = C_n$.
 
-For the second pass onwards, we are more selective about which rules to consider for marginal value evaluation. We first set $C_n$ to be the set of rules of size $j$ which are super-rules of rules from $C_o$. Then for each rule $r$ from $C_n$, we consider the known marginal values of its sub-rules from $C$, and use them to upper-bound the marginal value of all super-rules of $r$\techreporttext{, as shown in Step 3.3.2}. Then we delete from $C_n$ the rules whose marginal value upper bound is less than the currently known best marginal value, since they have no chance of being returned as the best marginal rule. Then we make as actual pass through the table to compute the marginal value of the rules in $C_n$\techreporttext{, as shown in Step 3.5}. If in any round, the $C_n$ obtained after deleting rules is empty, then we terminate the algorithm and return the highest value rule. 
+For the second pass onwards, we are more selective about which rules to consider for marginal value evaluation. We first set $C_n$ to be the set of rules of size $j$ which are super-rules of rules from $C_o$. Then for each rule $r$ from $C_n$, we consider the known marginal values of its sub-rules from $C$, and use them to upper-bound the marginal value of all super-rules of $r$, as shown in Step 3.3.2. Then we delete from $C_n$ the rules whose marginal value upper bound is less than the currently known best marginal value, since they have no chance of being returned as the best marginal rule. Then we make as actual pass through the table to compute the marginal value of the rules in $C_n$, as shown in Step 3.5. If in any round, the $C_n$ obtained after deleting rules is empty, then we terminate the algorithm and return the highest value rule. 
 
 The reader may be wondering why we did not simply count the score of each rule using a variant of the a-priori algorithm in one pass, and then pick the set of rules that maximizes score subsequently. This is because doing so will lead to a sub-optimal set of rules: by not accounting for the rules that have already been selected, we will not be able to ascertain the marginal benefit of adding an additional rule correctly.
 

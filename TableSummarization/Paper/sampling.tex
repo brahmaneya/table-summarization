@@ -2,45 +2,6 @@
 
 \subsection{Dynamic Sampling for Large Tables}\label{sec:sampling}
 
-\papertext{
-BRS makes multiple passes over the table in order to determine the best set of rules to display. This can be slow when the table is too large to fit in main memory. We can reduce the response time of smart drill down by running BRS on a sample of the table instead, trading off accuracy of our rules for performance. If we had obtained a sample $s$ by selecting each table tuple with probability $p$, and run BRS on $s$, then we multiply the count of each rule found by BRS, by $\frac{1}{p}$ to estimate its count over the full table.
-
-In Section~\ref{sec:sampling_algorithms}, we describe the problem of optimally allocating memory to different samples. We show that the problem is NP-Hard, and describe an approximate solution. In Section~\ref{sec:sample-handler}, we describe a component of the system called the {\em SampleHandler}, which is responsible for creating and maintaining multiple samples of different parts of the table in memory, and creating temporary samples for BRS to process. Detailed descriptions of the sampling problem and the SampleHandler are in the technical report. The technical report also contains some additional optimizations, and ways to set the minimum sample size.
-
-\subsubsection{Deciding what to sample}\label{sec:sampling_algorithms}
-We are given a memory capacity $M$, and a minimum sample size $minSS$, both specified by the user. $minSS$ is the minimum number of tuples on which we are allowed to run BRS, without accessing the hard disk. A higher value of $minSS$ increases both accuracy and computation cost of our system.
-
-At any point, we have a tree $U$ of rules displayed to the user. Initially, the tree consists of a single node corresponding to the empty rule. When the user drills down on a rule $r$, the sub-rules of $r$ obtained by running BRS are added as children of node $r$. 
-Our system maintains multiple samples in memory, with one sample per rule in $U$. Specifically, for each rule $r \in U$, we choose an integer $n_r$, and create a sample $s_r$ consisting of $n_r$ uniformly randomly chosen tuples covered by $r$ from the table. Because of the memory constraint, we must have $\sum_{r\in U} n_r \leq M$. 
-
-When a user attempts to drill down on $r$, the SampleHandler takes all $n_r$ tuples from $s_r$, and also tuples covered by $r$ from samples $s_{r'}$ for all $r' \in U$ that are sub-rules of $r$. If the total number of such tuples is $\geq minSS$, then we run BRS on that set of tuples to perform the drill down. Note that this set of tuples forms a uniformly random sample of tuples covered by $r$. If not, then we need to access the hard disk to obtain more tuples covered by $r$.
-
-Leaves of tree $U$ correspond to rules that may be drilled down on next. We assume there is a probability distribution over leaves, which assigns a probability that each leaf may be drilled down on next. This can be a uniform distribution, or a machine learned distribution using past user data. We aim to set sample sizes $n_r$ so as to maximize the probability that the next drill down can be performed without accessing the hard disk. 
-
-If $r'$ is a sub-rule of $r$, and covers $x$ times as many rules as $r$, then it means that when drilling down on $r$, $s_{r'}$ can contribute around $\frac{n_{r'}}{x}$ tuples to the sample for $r$. We denote the ratio of selectivities $x$ by $S(r',r)$. $S(r',r)$ is defined to be $0$ if $r'$ is not a sub-rule of $r$. If $r$ is to be drilled down on next, the total number of sample tuples we will have for $r$ from all existing samples is given by $ess(r) = \sum_{r'\in U} S(r', r)n_{r'}$. We can drill down on $r$ without accessing hard disk, if $ess(r) \geq minSS$. We now formally define our problem: 
-\begin{problem}\label{prob:sample-sizes}
-Given a tree of rules $U$ with leaves $L$, a probability distribution $p$ over $L$, an integer $M$, and selectivity ratio $S(r_1, r_2)$ for each $r_1, r_2 \in U$, 
-choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximize}$ :
-$$\sum_{r^{\prime} \in L} p_{r^{\prime}}I_{[ess(r^{\prime}) \geq minSS]}$$
-where the $I$'s are indicator variables, subject to :
-$\sum_{r \in U} n_r \leq M$
-\end{problem}
-Problem~\ref{prob:sample-sizes} is non-linear and non-convex because of the indicator variables. 
-%If the tree $U$ is not too big, then it might be feasible to use an exponential algorithm to solve the problem. 
-We can show that Problem~\ref{prob:sample-sizes} is {\sc NP-Hard} using a reduction from the knapsack problem. 
-\begin{lemma}\label{lemma:sampling-hardness}
-Problem~\ref{prob:sample-sizes} is {\sc NP-Hard}.
-\end{lemma}
-\begin{proof}(Sketch)
-Suppose we are given an instance of the knapsack problem with $m$ objects, with the $i^{th}$ object having weight $w_i$ and value $v_i$. We are also given a weight limit $W$, and our objective is to choose a set of objects that maximizes value and has total weight $< W$. We will reduce this instance to an instance of Problem~\ref{prob:sample-sizes}.
-
-We first scale the $w_i$s and $W$ such that all $w_i$s are $< 1$. For Problem~\ref{prob:sample-sizes}, we set $M$ to $(m + W) \times minSS$. Tree $U$ has $m$ special nodes $r_1, r_2, ... r_m$, and each $r_i$ has two leaf children $r_{i,1}, r_{i,2}$. All other leaves have expansion probability $0$. 
-The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace, j \in \left\lbrace 1, 2 \right\rbrace : (S(x, r_{i,j}) \neq 0 \Rightarrow x = r_{i,j} || x = r_i)$. In reality, the $S$ values cannot be exactly zero, but can be made small enough for all practical purposes. Thus, $\forall 1 \leq i \leq m, j \in \left\lbrace 1,2 \right\rbrace : ess(r_{i,j}) = n_{r_{i,j}} + n_{r_i}S(r_i, r_{i,j})$. In addition, $S(r_i, r_{i,1}) = 1$, and $S(r_i, r_{i,2}) = 1 - w_i$. Finally, $\forall i : p_{r_{i,1}} = \frac{2}{2m+1}$ and $p_{r_{i,2}} = \frac{v_i}{(2m+1)\sum_{j=1}^{m}v_i}$. So in any optimal solution, $\forall i : ess(r_{i,1}) = minSS$, and we've to decide which $i$'s also have $ess(r_{i,2}) = minSS$. Having $ess(r_{i,2}) = minSS$ requires consuming $w_i \times minSS$ extra memory and gives an extra $\frac{v_i}{(2m+1)(\sum_{j=1}^{m}v_j)}$ probability value. Thus, having $ess(r_{i,2}) = minSS$ is equivalent to picking object $i$ from the knapsack problem. Solving Problem~\ref{prob:sample-sizes} with the above $U$, $S$, $p$ and picking the set of $i$'s for which $ess(r_{i,2}) = minSS$ gives a solution to the instance of the knapsack problem. 
-\end{proof}
-\vspace{-10pt}
-\noindent A more detailed proof sketch is given in the technical report.}
-
-\techreporttext{
 Our greedy algorithm needs to make multiple passes over the entire table in order to find counts of rules. These passes can be expensive if the table is large and the table does not fit in main memory. If we want exact counts for rules, we have no choice but to read the entire table. 
 
 But if we are willing to accept approximate counts rather than exact counts, we can speed up our algorithm by loading a sample of the table into main memory, finding rule counts on the sample, and scaling up the count. Thankfully since our goal is to find a representative coverage of the table, if we miss out on a few rare tuples, it does not hurt us. If we had obtained the sample by sampling each tuple with probability $p$, then we must scale up the sample count of each rule by $\frac{1}{p}$ to get an estimate of its count over the full table. 
@@ -60,7 +21,6 @@ instead of having to resort to the entire table stored
 on hard disk. 
 This parameter determines how accurate our count estimates will be, and also
 how quickly we can return results to the user. 
-\papertext{We describe how to set $minSS$ in the technical report.}
 
 We now consider the following problem: say we currently have no
 samples in memory (we describe the scenario where there are already 
@@ -148,18 +108,20 @@ Suppose we are given an instance of the knapsack problem with $m$ objects, with 
 We first scale the $w_i$s and $W$ such that all $w_i$s are $< 1$, without effectively changing the problem. For Problem~\ref{prob:sample-sizes}, we set $M$ to $(m + W) \times minSS$. Tree $U$ has $m$ special nodes $r_1, r_2, ... r_m$, and each $r_i$ has two children $r_{i,1}, r_{i,2}$. These $2m$ children are all leaves, and all leaves other than these have expansion probability $0$. 
 The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace, j \in \left\lbrace 1, 2 \right\rbrace : (S(x, r_{i,j}) \neq 0 \Rightarrow x = r_{i,j} || x = r_i)$. In reality, the $S$ values cannot be exactly zero when the first argument is the trivial rule, but we can make it small enough such that any optimal solution will set $n_r = 0$ when $r$ is not a special node or its child. Therefore, each leaf $r_{i,j}$ gets tuples either from its own sample, or the sample of its parent, and from nowhere else. Thus, $ess(r_{i,j}) = n_{r_{i,j}} + n_{r_i}S(r_i, r_{i,j}) \forall 1 \leq i \leq m, j \in \left\lbrace 1,2 \right\rbrace$. In addition, $S(r_i, r_{i,1}) = 1$ (again, it cannot be exactly $1$, but can be brought arbitrarily close to $1$), and $S(r_i, r_{i,2}) = 1 - w_i$. Finally, for each i, $p_{r_{i,1}} = \frac{2}{2m+1}$ and $p_{r_{i,2}} = \frac{v_i}{(2m+1)\sum_{j=1}^{m}v_i}$. Thus, each individual $p_{r_{i,1}}$ value is higher than all $p_{r_{i,2}}$ values combined, and $M$ is high enough to cover all $r_{i,1}$. As a result, in any optimal solution, $ess(r_{i,1})$ must be equal to $minSS$ for all $i$, and we're left to decide which $i$'s should also have $ess(r_{i,2}) = minSS$. For all $i$, we must have either $n_{r_i} = n_{r_{i,2}} = 0 \land n_{r_{i,1}} = minSS$ (iff $ess(r_{i,2}) < minSS$) or $n_{r_i} = minSS \land n_{r_{i,1}} = 0 \land n_{r_{i,2}} = minSS (1 - S(r_i, r_{i,2})) = minSS \times w_i$ (iff $ess(r_{i,2}) = minSS$). The latter option consumes $w_i \times minSS$ extra memory and gives an extra $\frac{v_i}{(2m+1)(\sum_{j=1}^{m}v_j)}$ probability value. Thus, having $ess(r_{i,2}) = minSS$ is equivalent to picking object $i$ from the knapsack problem (as it consumes additional memory $\propto w_i$ and gives additional probability value $\propto v_i$). Moreover, the additional memory available (on top of the $m \times minSS$ required to cover all $r_{i,1}$s) is $W\times minSS$. Hence, solving Problem~\ref{prob:sample-sizes} with the above $U$, $S$, $p$ and picking the set of $i$'s for which $ess(r_{i,2}) = minSS$ gives a solution to the instance of the knapsack problem. 
 \end{proof}
-}
+
 
 \stitle{Approximate DP Solution.} Even though the problem as stated is {\sc NP-Hard}, with an additional simplifying assumption, we can make the problem approximately solvable using a Dynamic Programming algorithm. The assumption is: for each $r \in L$, we assume that its $ess$ can get sample tuples only from samples obtained for itself and its immediate parent. That is, we set $S(r_1, r_2)$ to be zero if $r_1 \neq r_2$ and $r_2$ is not a child of $r_1$. This is similar to what we had for tree $U$ in our proof of Lemma~\ref{lemma:sampling-hardness}. $ess(r)$ now becomes $ess(r^{\prime}) = n_{r^{\prime}} + n_rS(r, r^{\prime})$ where $r$ is the parent of $r^{\prime}$.
 
+\begin{comment}
 \papertext{We present the idea behind the approximate solution below. A more detailed description can be found in the technical report. The solution consists of two main steps:
 \squishlist
 \item \textbf{Locally Optimal Solutions :} For each rule $r_0 \in U \setminus L$, let $M_{r_0}$ be the set consisting of $r_0$ and its leaf children. We consider the number of tuples assigned to members of $M_{r_0}$. Each such assignment of numbers has a `cost' equal to total number of tuples assigned, and `value' equal to sum of probabilities of $M_{r_0}$ members with $ess > minSS$. We consider all `locally optimal' assignments, where probability value cannot be increased without increasing the cost.
 \item \textbf{Combining Solutions :} Then, we use dynamic programming to pick one optimal solution per $r_0$ so as to get maximum probability value with the given cost constraint. We discretize costs, say to have granularity $100$. Let $M_{0}, M_{1}, ... M_{D}$ be the sets for which we have found locally optimal solutions. We make $D$ iterations in all, where in the $i^{th}$ iteration, we try different locally optimal solutions for $M_i$ and use it to update the maximum attainable value for each cost. 
 \squishend
 }
+\end{comment}
 
-\techreporttext{Now consider a rule in $r_0 \in U \setminus L$ along with all its children. Let $M_{r_0}$ denote the set containing $r_0$ and all its leaf children. Then, by our simplification, the number of tuples $n_{r^{\prime}}$ for any rule in $r^{\prime} \in M_{r_0}$ only affects the $ess$ value of rules in $M_{r_0}$. This allows us to effectively split the problem into multiple subproblems,  with one subproblem per $M_{r_0}$. Thus, for each non-leaf rule $r_0$ and all its children, we compute all `locally optimal' assignments of $n_r \mid r \in M_{r_0}$. Locally optimal means that we cannot get a higher value of `probability value' $\sum_{r \in M_{r_0}} p_rI_{ess(r) \geq minSS}$ for the same `sampling cost' $\sum_{r\in M_{r_0}} n_r$. Then, we can use dynamic programming to combine the locally optimal solutions of different $M_{r_0}$s. We describe both these steps in detail below:
+Now consider a rule in $r_0 \in U \setminus L$ along with all its children. Let $M_{r_0}$ denote the set containing $r_0$ and all its leaf children. Then, by our simplification, the number of tuples $n_{r^{\prime}}$ for any rule in $r^{\prime} \in M_{r_0}$ only affects the $ess$ value of rules in $M_{r_0}$. This allows us to effectively split the problem into multiple subproblems,  with one subproblem per $M_{r_0}$. Thus, for each non-leaf rule $r_0$ and all its children, we compute all `locally optimal' assignments of $n_r \mid r \in M_{r_0}$. Locally optimal means that we cannot get a higher value of `probability value' $\sum_{r \in M_{r_0}} p_rI_{ess(r) \geq minSS}$ for the same `sampling cost' $\sum_{r\in M_{r_0}} n_r$. Then, we can use dynamic programming to combine the locally optimal solutions of different $M_{r_0}$s. We describe both these steps in detail below:
 
 Let $r_0 \in U \setminus L$. Let $d$ be the number of leaf children of $r_0$. Let the children be $r_1, r_2, ... r_d$. For any child $r_i$, $n_{r_i}$ only contributes to its own $ess$, whereas $n_{r_0}$ contributes to the $ess$ of all children $r_1, ... r_d$. Given a value of $n_{r_0}$, in a locally optimal solution, each child $r_i$ must satisfy:
 \squishlist
@@ -175,7 +137,7 @@ Thus, there are at most $3^d$ locally optimal solutions; $d$ is usually small (i
 Then next step is to combine the solutions using dynamic programming. Let the $M$ sets be called $M_0, M_1, ... M_D$. Let our possible sample sizes range from $0$ to $\mathcal{S}$. The number of sample sizes can be pretty large ($\mathcal{S}$), but we can make it smaller by discretizing the sample sizes, say to have granularity $100$. Then we create a $D \times \mathcal{S}$ array $A$. The value $A\left[i\right]\left[j\right]$ contains the best probability score we can get from $M_0, M_1, ... M_i$ with total sample size at most $j$. We can populate $A\left[0\right]\left[j\right] \forall j$ using the locally optimal solutions for $M_0$. Let $E_{i+1}$ denote the set of locally optimal solutions for $M_{i+1}$. Then we have,
 $$A\left[i+1\right] \left[j \right] = \textrm{max} (A\left[i\right]\left[j\right], \textrm{max}_{e \in E_{i+1}}(A\left[i\right]\left[j-S(e)\right] + P(e)))$$
 This can be solved using dynamic programming, in $O(D\mathcal{S}3^d)$ time. 
-}
+
 
 \techreporttext{
 \subsubsection{Alternative Convex-Optimization based solution}
@@ -214,6 +176,7 @@ The highest scoring rule can have weight at most $|C|$ (the total number of colu
 
 
 \subsubsection{Design of the SampleHandler}\label{sec:sample-handler}
+\begin{comment}
 \papertext{
 We now briefly describe the design of the {\em SampleHandler}, which given
 a certain memory capacity $M$, and a minimum sample size $minSS$,
@@ -232,8 +195,9 @@ Whenever the user drills down on a rule $r$, our system calls the SampleHandler 
 \item \textbf{Create:} If \textbf{Combine} doesn't work either, then the SampleHandler needs to create a new sample $s$ with $f_s = r$ by making a pass through the table.  Since accessing the hard disk is expensive, it also creates samples for rules other than $r$ and augments existing samples in the same pass. It first deletes all existing samples, then uses the algorithm from Section~\ref{sec:sampling_algorithms} to determine how many tuples to sample for each rule, and uses reservoir sampling~\cite{maibdr1983,Vitter:1985:RSR:3147.3165} to create a uniformly random sample of a given size for each rule.
 \squishend
 }
+\end{comment}
 
-\techreporttext{
+%\techreporttext{
 We now describe the design of the {\em SampleHandler}, which given
 a certain memory capacity $M$, and a minimum sample size $minSS$,
 creates, maintains, retrieves, and removes samples, all in
@@ -261,6 +225,7 @@ Note that the \textbf{Combine} procedure doesn't really require additional memor
 When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to access the hard disk to make a pass through the entire table. Since accessing the hard disk and making a pass through the entire table is usually a bottleneck, it can also do things like creating samples for rules other than $r$, and augmenting existing samples, in the same pass. Hence, we assume that in a \textbf{Create} phase, the SampleHandler not only creates one new sample for $r$, but also uses the algorithm from Section~\ref{sec:sampling_algorithms} to determine the new optimal allocation of memory $n_r$ for each displayed rule $r$. Then in a single pass, it creates a sample of size $n_r$ for each displayed $r$. 
 \squishend
 
+\techreporttext{
 \smallskip
 \noindent \textbf{Pre-fetching:} When the user clicks on rule $r$ (on the rule itself or on a $\star$ in the rule), we need to get a sample, run the BRS, and display a rule-list to the user. If we use \textbf{Find} or \textbf{Combine}, then we can display the rule-list much faster because we don't have to read the entire table. But after expanding $r$, there is a high chance that the user goes further and drills down on one of the sub-rules $r^{\prime}$ of $r$. We may not be able to use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ with the existing samples. So while the user is busy reading the current rule-list obtained from drilling down on $r$, we can start running the algorithm from Section~\ref{sec:sampling_algorithms} in the background, and then making a pass through the table to create a new samples. That way, when the user expands the next rule $r^{\prime}$, there will be a high chance of a sample being pre-fetched for $r^{\prime}$, increasing the chance that we can use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ and reducing our response time.
 In addition, while we are making the pass in the background, we can find the exact counts for currently displayed rules (which only have estimated counts shown), and update them when our pass is complete.
