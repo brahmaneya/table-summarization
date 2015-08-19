@@ -12,10 +12,12 @@ import java.util.Map;
 
 public class Donations {
 	
+	final static String CONTRIBSBIGFILELOCATION = "TestDatasets/contribs_big/contributions.fec.2014.csv";
+	final static String CONTRIBSDENVERFILELOCATION = "TestDatasets/contribs_denver/contributions.csv";
 	final static String ALLWEBKFILELOCATION = "TestDatasets/donations_data/all_webk_2016.csv";
 	final static String CANDIDATESFILELOCATION = "TestDatasets/donations_data/candidates_2016.csv";
 	final static String SUPERPACFILELOCATION = "TestDatasets/donations_data/superpac_contribs_2016.csv";
-	final static String DATAFILELOCATION = SUPERPACFILELOCATION;
+	final static String DATAFILELOCATION = CONTRIBSBIGFILELOCATION;
 	
 	public static void addNames (TableInfo table) {
 	}
@@ -38,6 +40,10 @@ public class Donations {
 	
 		line = br.readLine(); // ignore first line since its column names.
 		do {
+			//out.println(line);
+			if (Math.random() > 0.1) {
+				continue;
+			}
 			boolean inQuote = false;
 			for (int i = 0; i < line.length(); i++) {
 				if (line.charAt(i) == '\"') {
@@ -49,6 +55,9 @@ public class Donations {
 				}
 			}
 			String[] vals = line.split(",");
+			if (vals.length > dictionary.size()) {
+				continue;
+			}
 			List<Integer> tuple = new ArrayList<Integer>(vals.length);
 			for (int i = 0; i < vals.length; i++) {
 				final String value = vals[i];
