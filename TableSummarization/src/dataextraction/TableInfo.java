@@ -1,5 +1,6 @@
 package dataextraction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class TableInfo {
+public class TableInfo implements Serializable{
 	public List<List<String>> dictionary;
 	public List<Map<String, Integer>> reverseDictionary;
 	public List<List<Integer>> contents;
