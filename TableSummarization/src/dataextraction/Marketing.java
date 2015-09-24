@@ -3,8 +3,12 @@ package dataextraction;
 import static java.lang.System.out;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +30,11 @@ import solvers.RuleTree.RuleNode;
 import utils.Experiments;
 
 public class Marketing {
-	final static String DATAFILELOCATION = "TestDatasets/Marketing/marketing.data.txt";
+	public final static String DATAFILELOCATION = "TestDatasets/Marketing/marketing.data.txt";
+	
+	public static String name () {
+		return "Manas";
+	}
 	
 	public static void addNames (TableInfo table) {
 		List<Map<String, String>> names = new ArrayList<Map<String, String>>();
@@ -220,8 +228,21 @@ public class Marketing {
 		return table;
 	}
 	
-	public static void main(String[] args) throws IOException {
-		TableInfo fullTable = Marketing.parseData();
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
+		boolean createTable = true;
+		TableInfo fullTable = null;
+		String tableFile = "TestDatasets/Marketing/marketing.data.ser";
+		if (createTable) {
+			fullTable = Marketing.parseData();
+			ObjectOutputStream oo = new ObjectOutputStream(new FileOutputStream(tableFile));
+			oo.writeObject(fullTable);
+			oo.close();
+		} else {
+			ObjectInputStream oi = new ObjectInputStream(new FileInputStream(tableFile));
+			fullTable = (TableInfo) oi.readObject();
+			oi.close();
+		}
+		if(1!=2) return;
 		//out.println(System.currentTimeMillis() - timer);
 		List<Integer> columns = new ArrayList<Integer>();
 		final Integer firstNumColumns = 7;//9;

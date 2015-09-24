@@ -1,81 +1,17 @@
-%!TEX root = TableSummarization.tex
+%!TEX root = smartDrillDownICDE.tex
 
 \section{Experiments}\label{sec:experiments}
 We have implemented a fully-functional interactive tool instrumented with the smart drill down operator, having a web interface.
 We now describe our experiments on this tool with real datasets.
 
 \begin{figure}
-\vspace{-5pt}
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
-\vspace{-5pt}
 \caption{Summary after clicking on the empty rule \label{fig:uiexample1}}
-\vspace{-5pt}
+\vspace{-10pt}
 \end{figure}
 
 \stitle{Datasets.} The first dataset, denoted `Marketing', contains demographic information about potential customers~\cite{dataset1}. A total of $N=9409$ questionnaires containing $502$ questions were filled out by shopping mall customers in the San Francisco Bay area. This dataset is the summarized result of this survey. Each tuple in the table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and each column has up to $10$ distinct values.
-
-
-
-
-
-\begin{comment}
-\begin{table*}
-\centering 
-\scriptsize
-\begin{tabular}{| p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | l | l |} 
-\hline Gender & Marital Status & Age & Education & Occupation & Time in Bay Area & Count & Weight \\ \hline 
-\cline{1-8} $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $8993$ & $0$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4918$ & $1$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4075$ & $1$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2940$ & $2$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $980$ & $3$ \\
-\hline 
-\end{tabular} 
-\vspace{-10pt}
-\caption{Summary after clicking on the empty rule \label{table:uiexample1}} 
-\vspace{-10pt}
-\end{table*} 
-\begin{table*} 
-\centering 
-\scriptsize
-\begin{tabular}{| p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | l | l |} 
-\hline Gender & Marital Status & Age & Education & Occupation & Time in Bay Area & Count & Weight \\ \hline 
-\cline{1-8} $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $8993$ & $0$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4918$ & $1$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Female & $\star$ & $\star$ & High school & $\star$ & $\star$ & $1149$ & $2$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Female & $\star$ & $\star$ & Grades 9-11 & $\star$ & $\star$ & $605$ & $2$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Female & $\star$ & $\star$ & College graduate & $\star$ & $\star$ & $771$ & $2$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Female & $\star$ & $\star$ & 1-3 years college & $\star$ & $\star$ & $1712$ & $2$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4075$ & $1$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2940$ & $2$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $980$ & $3$ \\
-\hline 
-\end{tabular} 
-\vspace{-10pt}
-\caption{Star expansion on `Education' Column \label{table:uiexamplestar}} 
-\vspace{-10pt}
-\end{table*} 
-\begin{table*} 
-\centering 
-\scriptsize
-\begin{tabular}{| p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | l | l |} 
-\hline Gender & Marital Status & Age & Education & Occupation & Time in Bay Area & Count & Weight \\ \hline 
-\cline{1-8} $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $8993$ & $0$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4918$ & $1$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $4075$ & $1$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Male & Never married & $\star$ & $\star$ & $\star$ & $\star$ & $1897$ & $2$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Male & Married & $\star$ & $\star$ & $\star$ & $\star$ & $1368$ & $2$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Male & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $980$ & $3$ \\
-\cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\triangleright$ Male & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2242$ & $2$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2940$ & $2$ \\
-\hline 
-\end{tabular} 
-\vspace{-10pt}
-\caption{A rule expansion \label{table:uiexamplerule}} 
-\vspace{-10pt}
-\end{table*} 
-\end{comment}
 
 The columns (in order) are as follows:
 annual household income, gender, marital status, age, education, occupation, time lived in the Bay Area, dual incomes?, persons in household, persons in household under $18$, householder status, type of home, ethnic classification, language most spoken in home.
@@ -87,29 +23,25 @@ Unless otherwise specified, in all our experiments, we restrict the tables to th
 We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
 \begin{figure}
-\vspace{-5pt}
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/age_drilldown.jpg}
-\vspace{-5pt}
 \caption{A regular drill down on Age\label{fig:drilldownexample}}
-\vspace{-5pt}
+\vspace{-10pt}
 \end{figure}
 
 
 \subsection{Qualitative Study}\label{sec:exp_qualitative}
 We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out different weight functions to study their effects.
-\subsubsection{User interface testing}
+\subsubsection{Testing the User Interface}
 We now present the rule-based summaries displayed as a result of a few different user actions.
 
 To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Figure~\ref{fig:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click. 
 
 \begin{figure}
-\vspace{-5pt}
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
-\vspace{-5pt}
 \caption{Star expansion on `Education' Column \label{fig:uiexamplestar}}
-\vspace{-5pt}
+\vspace{-10pt}
 \end{figure}
 
 Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up Figure~\ref{fig:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females. Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed Figure~\ref{fig:uiexamplerule}. 
@@ -131,12 +63,10 @@ A regular drill down can be thought of as a special case of smart drill-down wit
 
 
 \begin{figure}
-\vspace{-5pt}
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
-\vspace{-5pt}
 \caption{A rule expansion \label{fig:uiexamplerule}}
-\vspace{-5pt}
+\vspace{-10pt}
 \end{figure}
 
 
@@ -155,12 +85,10 @@ For the Census dataset, the running time is dominated by time spent in making a 
 The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus, for size scoring on the Marketing dataset, according to Figure~\ref{fig:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Figure~\ref{fig:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
 
 \begin{figure}
-\vspace{-5pt}
 \centering
   \includegraphics[scale=0.46]{graphs/mw_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
-\vspace{-5pt}
   \caption{Running time for different values of parameter $m_w$ \label{fig:mw_speed}}
-\vspace{-5pt}
+\vspace{-10pt}
 \end{figure}
 
 \subsubsection{Effects of $minSS$}
@@ -168,62 +96,21 @@ We now study the effects of the sampling parameter $minSS$. This parameter tells
 
 We consider one value of $minSS$ and one weight function $W$ at a time. For those values of $minSS$ and $W$, we drill down on the empty rule and measure the time taken for this operation. We also measure the percent error in the estimated counts of the displayed rules. That is, for each displayed rule $r$, if the displayed (estimated) count if $c_1$ and the actual count (computed separately on the entire table) is $c_2$, then the percent error for rule $r$ is $\frac{100 \times |c_1-c_2|}{c_2}$. We consider the average of percent errors over all displayed rules. For each value of $minSS$ and $W$, we drill down on the empty rule and find the computation time and percent error $50$ times, and take the average value for time and error over those $50$ iterations. This average time is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}(a). The average percent error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error_percent}(b). 
 
-The computation time increases approximately linearly with parameter $minSS$. This is expected, because BRS makes a constant number of passes over the entire sample, and each pass takes time linear in the size of the sample. The running time at very small values of $minSS$ is simply the time taken to read the table and create the sample. This also increases linearly with table size, and is only about $2.5$ seconds for a table with $2.5$ million tuples. The running time when $minSS$ equals table size, is the time we would require without sampling. Figure~\ref{fig:minSS_speed}(a) shows that sampling gives us noticeable time savings. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.
-
-
 \begin{figure}
-\vspace{-5pt}
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/bits_scoring.jpg}
-\vspace{-10pt}
 \caption{Bits scoring\label{fig:weigtingbitwise}}
+\vspace{-10pt}
 \end{figure}
 
 \begin{figure}
-\vspace{-5pt}
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/min2_scoring.jpg}
-\vspace{-5pt}
 \caption{Size minus one weighting \label{fig:weightingsizeminusone}}
-\vspace{-5pt}
+\vspace{-10pt}
 \end{figure}
 
-\begin{comment}
-\begin{table*} 
-\scriptsize
-\centering 
-\begin{tabular}{| p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | l | l |} 
-\hline Gender & Marital Status & Age & Education & Occupation & Time in Bay Area & Count & Weight \\ \hline 
-\cline{1-8} $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $8993$ & $0$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $5182$ & $3$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\star$ & $\star$ & $\star$ & $\star$ & Professional / Managerial & $\star$ & $2820$ & $4$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\star$ & Never married & $\star$ & $\star$ & Student & > 10 years & $742$ & $10$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ $\star$ & Married & $\star$ & $\star$ & Professional / Managerial & > 10 years & $825$ & $10$ \\
-\hline 
-\end{tabular} 
-\vspace{-10pt}
-\caption{Bits scoring\label{table:weigtingbitwise}} 
-\vspace{-10pt}
-\end{table*} 
-
-\begin{table*} 
-\scriptsize
-\centering 
-\begin{tabular}{| p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | p{1.5cm} | l | l |} 
-\hline Gender & Marital Status & Age & Education & Occupation & Time in Bay Area & Count & Weight \\ \hline 
-\cline{1-8} $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $\star$ & $8993$ & $0$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & $\star$ & $\star$ & $\star$ & $\star$ & > 10 years & $2940$ & $1$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & Never married & $\star$ & $\star$ & $\star$ & > 10 years & $980$ & $2$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Female & Married & $\star$ & $\star$ & $\star$ & > 10 years & $1230$ & $2$ \\
-\cline{1-1} \cline{2-2} \cline{3-3} \cline{4-4} \cline{5-5} \cline{6-6} \cline{7-8} $\triangleright$ Male & Married & $\star$ & $\star$ & $\star$ & > 10 years & $823$ & $2$ \\
-\hline 
-\end{tabular}
-\vspace{-10pt}
-\caption{Size minus one weighting \label{table:weightingsizeminusone}} 
-\vspace{-10pt}
-\end{table*}  
-\end{comment}
-
+Figure~\ref{fig:minSS_speed}(a) shows that sampling gives us noticeable time savings. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.
 
 In addition, we measure the number of incorrect rules per iteration. If the correct set of rules to display is $r_1, r_2, r_3$ and the displayed set is $r_1, r_3, r_4$ then that means there is one incorrect rule. We find the number of incorrect displayed rules across $50$ iterations, and display the average value in Figure~\ref{fig:minSS_error_rule}(c). This number for the Marketing dataset is almost always $0$ for the Size weighting function, and between $1$ and $2$ for the Bits weighting function. For the Census dataset, it is around $1$ for $minSS \leq 1000$ and falls to about $0.3$ for larger values of $minSS$. Note that even when we display an `incorrect' rule, it is usually the $5^{th}$ or $6^{th}$ best rule instead of one of the top $4$ rules, which still results in a reasonably good summary of the table.
 
@@ -232,7 +119,11 @@ In addition, we measure the number of incorrect rules per iteration. If the corr
 \includegraphics[scale=0.46]{graphs/minSS_speed.pdf}
 \includegraphics[scale=0.46]{graphs/minSS_error_percent.pdf}
 \includegraphics[scale=0.46]{graphs/minSS_error_rule.pdf}
-\vspace{-15pt}
 \caption{(a) Running time for different values of parameter $minSS$ (b) Error in Count for different values of parameter $minSS$ (c) Average number of incorrect rules for different values of parameter $minSS$ \label{fig:minSS_speed}\label{fig:minSS_error_percent} \label{fig:minSS_error_rule}}
 \vspace{-10pt}
 \end{figure*}
+
+\subsubsection{Scaling properties of our algorithms}
+The computation time for a smart drill-down is linear in both the table size $|T|$ and in parameter $minSS$. That is, the runtime can be written as $a \times |T| + b \times minSS$ where $a$ and $b$ are constants. In the worst-case wherer we cannot form a sample from main memory and need to re-create a sample, $a$ stands for the time taken to read data from hard disk. That is, $a \times |T|$ is the time taken to make a single pass over the table on hard disk. The constant $b$ is bigger than $a$, because BRS makes multiple passes over the sample, while creating a sample only requires a single pass over the table. 
+
+When the $|T|$ is small, the runtme is dominated by the $b \times minSS$ term, as seen for the Marketing Dataset in Figure~\ref{fig:minSS_speed}(a). When $|T|$ is large relative to $minSS$, like for the Census Dataset, the runtime is dominated by the $a \times |T|$ term (this is when we need to create a fresh sample from hard disk). When we have a few million tuples, we only require a few seconds. But if the dataset consisted of billions of tuples, the process of reading the table to create a sample could itself take a very long time. To counteract this, we could preprocess the dataset by down-sampling it to only a million tuples, and perform the summarization on the million tuple sample (which also effectively summarizes the billion tuple table).

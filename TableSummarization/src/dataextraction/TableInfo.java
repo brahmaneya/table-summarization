@@ -26,7 +26,7 @@ public class TableInfo implements Serializable{
 		}
 	}
 	
-	TableInfo (int numColumns) {
+	public TableInfo (int numColumns) {
 		dictionary = new ArrayList<List<String>>(numColumns);
 		reverseDictionary = new ArrayList<Map<String, Integer>>(numColumns);
 		for (int i = 0; i < numColumns; i++) {
@@ -37,13 +37,13 @@ public class TableInfo implements Serializable{
 		bucketizeNumericalColumns(new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<String>());
 	}
 	
-	TableInfo () {
+	public TableInfo () {
 		dictionary = new ArrayList<List<String>>();
 		reverseDictionary = new ArrayList<Map<String, Integer>>();
 		contents = new ArrayList<List<Integer>>();
 	}
 	
-	TableInfo (List<List<String>> dictionary, List<Map<String, Integer>> reverseDictionary, List<List<Integer>> contents) {
+	public TableInfo (List<List<String>> dictionary, List<Map<String, Integer>> reverseDictionary, List<List<Integer>> contents) {
 		this.dictionary = dictionary;
 		this.reverseDictionary = reverseDictionary;
 		this.contents = contents;
