@@ -14,13 +14,13 @@ describe how we can set the minimum sample size required from the SampleHandler.
 
 \subsubsection{Algorithms for deciding what to sample}\label{sec:sampling_algorithms}
 
-We are given a memory capacity or budget $M$, and a minimum sample size $minSS$ (both specified by the user). \agp{$M$ can simply be set to the actual available memory, while $minSS$ can easily be computed as a function of the desired estimation error.}
+We are given a memory capacity or budget $M$, and a minimum sample size $minSS$ (both specified by the user). \mrj{$M$ can simply be set to the actual available memory, while $minSS$ can easily be computed as a function of the desired estimation error.}
 The parameter $minSS$ is the minimum number of sample tuples needed
 such that we can use the sample in memory 
 instead of having to resort to the entire table stored
 on hard disk. 
 This parameter determines how accurate our count estimates will be, and also
-how quickly we can return results to the user. \agp{The count estimate error is proportional to $\sqrt{\frac{1}{minSS}}$ while runtime is proportional to $minSS$.}
+how quickly we can return results to the user. \mrj{The count estimate error is proportional to $\sqrt{\frac{1}{minSS}}$ while runtime is proportional to $minSS$.}
 
 We now consider the following problem: say we currently have no
 samples in memory (we describe the scenario where there are already 
