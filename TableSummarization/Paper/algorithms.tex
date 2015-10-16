@@ -3,7 +3,7 @@
 
 \section{Smart drill down Algorithms} \label{sec:algorithms}
 We now describe online algorithms for implementing
-the smart drill down operator. We assume in this section that all columns are categorical (so numerical columns have been bucketized beforehand). \papertext{We further discuss bucketization of numerical attributes in the Extensions section in the technical report~\cite{tr}}\techreporttext{We further discuss bucketization of numerical attributes in Section~\ref{sec:extensions}}.
+the smart drill down operator. We assume that all columns are categorical (so numerical columns have been bucketized beforehand). \papertext{We further discuss bucketization of numerical attributes in the Extensions section in the technical report~\cite{tr}}\techreporttext{We further discuss bucketization of numerical attributes in Section~\ref{sec:extensions}}.
 
 
 \subsection{Problem Reduction and Important Property} \label{sec:reduction}
@@ -157,22 +157,7 @@ $$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
 \vspace{-10pt}
 
 \stitle{High-Level Procedure:} Now, based on the submodularity property, the greedy procedure,
-as listed below, has desirable approximation guarantees:
-\vspace{-5pt}
-\begin{framed}
-\vspace{-5pt}
-\begin{denselist}
-\item Set $S = \phi$
-\item For $i$ from $1$ to $k$
-\begin{denselist}
-\item Find the rule $r$ for which Score($S \cup \left\lbrace r \right\rbrace$) is the highest.
-\item $S = S \cup \left\lbrace r \right\rbrace$
-\end{denselist}
-\end{denselist}
-\vspace{-5pt}
-\end{framed}
-\vspace{-5pt}
-Since Score is a submodular function of the set $S$, 
+shown in Algorithm~\ref{algo:best-rule-set}, has desirable approximation guarantees. Since Score is a submodular function of the set $S$, 
 this greedy procedure is guaranteed to give us a score within a $1 - \frac{1}{e}$ factor of the optimum. 
 
 The expensive step in the above procedure is the step where the Score is computed for every
@@ -184,7 +169,7 @@ this algorithm next.
 
 \stitle{Parametrized Algorithm:} Our algorithm pseudo-code is given in the box labeled Algorithm~\ref{algo:best-rule-set}. We call our algorithm {\em BRS} (for \textbf{B}est \textbf{R}ule \textbf{S}et). BRS takes four parameters as input: the table $T$, the number $k$ of rules required in the final solution list, a parameter $m_w$ (which we describe in the next paragraph), and the weight function $W$. 
 
-The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, BRS is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by BRS does not contain $r$. BRS runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, its Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus, rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small. \mrj{We later describe a strategy for setting $m_w$.}
+The parameter $m_w$ stands for \textit{Max Weight}. The parameter $m_w$ tells the algorithm to assume that all rules that get selected in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, BRS is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by BRS does not contain $r$. BRS runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, its Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as $W(r) = \text{Size}(r)$). Thus, rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small. \papertext{In the technical report, we describe strategies for setting $m_w$ as well as other parameters.} \techreporttext{Later in this section, we describe strategies for setting $m_w$ as well as other parameters.}
 
 % TODO: scheme/heuristic for finding good m_w values, since it seems arbitrary. Later, experiments testing effect of m_w on running time, and experiments to test finding heuristic, and show that values are in fact small.
 
@@ -202,13 +187,15 @@ For the second pass onwards, we are more selective about which rules to consider
 
 The reader may be wondering why we did not simply count the score of each rule using a variant of the a-priori algorithm in one pass, and then pick the set of rules that maximizes score subsequently. This is because doing so will lead to a sub-optimal set of rules: by not accounting for the rules that have already been selected, we will not be able to ascertain the marginal benefit of adding an additional rule correctly.
 
+\techreporttext{
 \stitle{Setting parameters $W$, $k$, $m_w$:} \mrj{Our system allows the user to tune the smart drill-down by adjusting a number of parameters. Having a lot of tunable parameters can increase the difficulty of using a system by increasing the decision-making burden on the user. To counteract this, we now provide ways to guide the user while selecting appropriate parameter values.}
 
 \mrj{Parameter $k$ is the number of new rules to display upon each smart drill-down. Large values of $k$ increase the run-time quadratically, and can also overwhelm the user with too much information. On the other hand, small values of $k$ may display too little information about the table. Fortunately, the BRS algorithm is incremental in nature. That is, in order to find the best rule list of size $k+1$, it first finds the best rule-list of size $k$, and then finds another rule to add to get a rule-list of size $k+1$. Thus instead of running the algorithm with a fixed value of $k$, it can start with an empty rule-list and keep adding rules to it, displaying new rules as they are found. This search for additional rules can stop when the user issues a new smart drill-down command to the system, or manually stops the search. Alternatively, we can set a time limit (of say $5$ seconds) and display as many rules as we can find within that time limit.}
 
-\mrj{$W$ is the weight function that determines which rules are interesting. This is a function specified by the user as a black box. Specifying an arbitrary function can be hard, so instead we hardcode some common Weight functions and allow the user to choose one from a drop-down menu. In addition, the user can express interest or disinterest in certain columns by telling the system of favor or ignore those columns, via a simple graphical user interface. The system internally adjusts the weight function by increasing or decreasing the weight given to rules instantiating that column.}
+\mrj{$W$ is the weight function that determines which rules are interesting. This is a function specified by the user as a black box. Specifying an arbitrary function can be hard, so instead we hardcode some common Weight functions and allow the user to choose one from a drop-down menu. In addition, the user can express interest or disinterest in certain columns by telling the system to favor or ignore those columns, via the user interface. The system internally adjusts the weight function by increasing or decreasing the weight given to rules instantiating that column.}
 
-\mrj{The $m_w$ parameter lets the user trade off between the accuracy of the optimal rule-list, and running time. Ideally we want $m_w$ to equal the actual maximum weight of a rule in the optimal rule-list; this way we get full accuracy while also optimizing run-time. We cannot know the ideal value of $m_w$ in advance, but we can easily estimate it using sampling. We create a small random sample of tuples from the table, and run the BRS algorithm on it. Then the maximum weight $x$ of the output on the sample is likely to equal the maximum weight of the actual output. To account for sampling error, we can set $m_w$ to $2x$. 
+\mrj{The $m_w$ parameter lets the user trade off the accuracy of the optimal rule-list and the running time. Ideally we want $m_w$ to equal the actual maximum weight of a rule in the optimal rule-list; this way we get full accuracy while also optimizing run-time. We cannot know the ideal value of $m_w$ in advance, but we can easily estimate it using sampling. We create a small random sample of tuples from the table, and run the BRS algorithm on it. Then the maximum weight $x$ of the output on the sample is likely to equal the maximum weight of the actual output. To account for sampling error, we can set $m_w$ to $2x$, which works well in practice.
+}
 }
 
 
