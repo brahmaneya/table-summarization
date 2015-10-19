@@ -15,14 +15,14 @@ Our system maintains multiple samples in memory, with one sample per rule in $U$
 
 When a user attempts to drill down on $r$, the SampleHandler takes all $n_r$ tuples from $s_r$, and also tuples covered by $r$ from samples $s_{r'}$ for all $r' \in U$ that are sub-rules of $r$. If the total number of such tuples is $\geq minSS$, then we run BRS on that set of tuples to perform the drill down. Note that this set of tuples forms a uniformly random sample of tuples covered by $r$. If not, then we need to access the hard disk to obtain more tuples covered by $r$.
 
-Leaves of tree $U$ correspond to rules that may be drilled down on next. We assume there is a probability distribution over leaves, which assigns a probability that each leaf may be drilled down on next. This can be a uniform distribution, or a machine learned distribution using past user data. We aim to set sample sizes $n_r$ so as to maximize the probability that the next drill down can be performed without accessing the hard disk. 
+Leaves of tree $U$ correspond to rules that may be drilled down on next. We assume there is a probability distribution over leaves, which assigns a probability that each leaf may be drilled down on next. This can be a uniform distribution, or a machine learned distribution using past user data. We aim to set sample sizes $n_r$ so as to maximize the probability that the next drill down can be performed without accessing disk. 
 
 If $r'$ is a sub-rule of $r$, and covers $x$ times as many rules as $r$, then it means that when drilling down on $r$, $s_{r'}$ can contribute around $\frac{n_{r'}}{x}$ tuples to the sample for $r$. We denote the ratio of selectivities $x$ by $S(r',r)$. $S(r',r)$ is defined to be $0$ if $r'$ is not a sub-rule of $r$. If $r$ is to be drilled down on next, the total number of sample tuples we will have for $r$ from all existing samples is given by $ess(r) = \sum_{r'\in U} S(r', r)n_{r'}$. We can drill down on $r$ without accessing hard disk, if $ess(r) \geq minSS$. We now formally define our problem: 
 \begin{problem}\label{prob:sample-sizes}
 Given a tree of rules $U$ with leaves $L$, a probability distribution $p$ over $L$, an integer $M$, and selectivity ratio $S(r_1, r_2)$ for each $r_1, r_2 \in U$, 
 choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximize}$ :
 $$\sum_{r^{\prime} \in L} p_{r^{\prime}}I_{[ess(r^{\prime}) \geq minSS]}$$
-where the $I$'s are indicator variables, subject to :
+where the $I$'s are indicator variables, with :
 $\sum_{r \in U} n_r \leq M$
 \end{problem}
 Problem~\ref{prob:sample-sizes} is non-linear and non-convex because of the indicator variables. 
@@ -31,14 +31,15 @@ We can show that Problem~\ref{prob:sample-sizes} is {\sc NP-Hard} using a reduct
 \begin{lemma}\label{lemma:sampling-hardness}
 Problem~\ref{prob:sample-sizes} is {\sc NP-Hard}.
 \end{lemma}
-\begin{proof}(Sketch)
+\begin{proof}(Sketch; details in~\cite{DBLP:journals/pvldb/JoglekarGP15})
 Suppose we are given an instance of the knapsack problem with $m$ objects, with the $i^{th}$ object having weight $w_i$ and value $v_i$. We are also given a weight limit $W$, and our objective is to choose a set of objects that maximizes value and has total weight $< W$. We will reduce this instance to an instance of Problem~\ref{prob:sample-sizes}.
 
 We first scale the $w_i$s and $W$ such that all $w_i$s are $< 1$. For Problem~\ref{prob:sample-sizes}, we set $M$ to $(m + W) \times minSS$. Tree $U$ has $m$ special nodes $r_1, r_2, ... r_m$, and each $r_i$ has two leaf children $r_{i,1}, r_{i,2}$. All other leaves have expansion probability $0$. 
 The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace, j \in \left\lbrace 1, 2 \right\rbrace : (S(x, r_{i,j}) \neq 0 \Rightarrow x = r_{i,j} || x = r_i)$. In reality, the $S$ values cannot be exactly zero, but can be made small enough for all practical purposes. Thus, $\forall 1 \leq i \leq m, j \in \left\lbrace 1,2 \right\rbrace : ess(r_{i,j}) = n_{r_{i,j}} + n_{r_i}S(r_i, r_{i,j})$. In addition, $S(r_i, r_{i,1}) = 1$, and $S(r_i, r_{i,2}) = 1 - w_i$. Finally, $\forall i : p_{r_{i,1}} = \frac{2}{2m+1}$ and $p_{r_{i,2}} = \frac{v_i}{(2m+1)\sum_{j=1}^{m}v_i}$. So in any optimal solution, $\forall i : ess(r_{i,1}) = minSS$, and we've to decide which $i$'s also have $ess(r_{i,2}) = minSS$. Having $ess(r_{i,2}) = minSS$ requires consuming $w_i \times minSS$ extra memory and gives an extra $\frac{v_i}{(2m+1)(\sum_{j=1}^{m}v_j)}$ probability value. Thus, having $ess(r_{i,2}) = minSS$ is equivalent to picking object $i$ from the knapsack problem. Solving Problem~\ref{prob:sample-sizes} with the above $U$, $S$, $p$ and picking the set of $i$'s for which $ess(r_{i,2}) = minSS$ gives a solution to the instance of the knapsack problem. 
 \end{proof}
-\vspace{-10pt}
-\noindent A more detailed proof sketch is given in the technical report.}
+%\vspace{-5pt}
+%\noindent A more detailed proof sketch is given in the technical report.
+}
 
 \techreporttext{
 Our greedy algorithm needs to make multiple passes over the entire table in order to find counts of rules. These passes can be expensive if the table is large and the table does not fit in main memory. If we want exact counts for rules, we have no choice but to read the entire table. 
@@ -132,7 +133,7 @@ We wish to set the sample size $n_r$ of each rule so as to maximize the probabil
 Given a tree of rules $U$ with leaves $L$, a probability distribution $p$ over $L$, an integer $M$, and selectivity ratio $S(r_1, r_2)$ for each $r_1, r_2 \in U$, 
 choose an integer $n_r \geq 0$ for each $r \in U$ so as to $\textrm{maximize}$ :
 $$\sum_{r^{\prime} \in L} p_{r^{\prime}}I_{[ess(r^{\prime}) \geq minSS]}$$
-where the $I$'s are indicator variables, subject to :
+where the $I$'s are indicator variables, subject to
 $\sum_{r \in U} n_r \leq M$
 \end{problem}
 Problem~\ref{prob:sample-sizes} is non-linear and non-convex because of the indicator variables. 
@@ -218,9 +219,9 @@ The highest scoring rule can have weight at most $|C|$ (the total number of colu
 We now briefly describe the design of the {\em SampleHandler}, which given
 a certain memory capacity $M$, and a minimum sample size $minSS$,
 creates, maintains, retrieves, and removes samples, all in
-response to user interactions on the table. A detailed description, with some potential optimizations, can be found in the technical report.  
+response to user interactions on the table. A detailed description, with some potential optimizations, can be found in~\cite{DBLP:journals/pvldb/JoglekarGP15}.  
 
-At all points, the SampleHandler maintains a set of samples in memory. Each sample $s$ is represented as a triple: (a) A `filter' rule $f_s$, (b) a scaling factor $N_s$ and (c) a set $T_s$ of tuples from the table. The set $T_s$ consists of a $\frac{1}{N_s}$ uniformly sampled fraction of tuples covered by $f_s$. The scaling factor $N_s$ is used to translate the count of a rule on the sample into an estimate of the count over the entire table. The sum of $|T_s|$ over all samples $s$ is not allowed to exceed capacity $M$ at any point. 
+At all points, the SampleHandler maintains a set of samples in memory. Each sample $s$ is represented as a triple: (a) A `filter' rule $f_s$, (b) a scaling factor $N_s$ (c) a set $T_s$ of tuples from the table. The set $T_s$ consists of a $\frac{1}{N_s}$ uniformly sampled fraction of tuples covered by $f_s$. The scaling factor $N_s$ is used to translate the count of a rule on the sample into an estimate of the count over the entire table. The sum of $|T_s|$ over all samples $s$ is not allowed to exceed capacity $M$ at any time. 
 
 Whenever the user drills down on a rule $r$, our system calls the SampleHandler with argument $r$, which returns a sample $s$ whose filter value is given by $f_s = r$ and has $|T_s| \geq minSS$. The $T_s$ of the returned sample consists of a uniformly random set of tuples covered by $r$. The SampleHandler also computes $N_s$ when a sample is created. Then we run BRS on sample $s$ to obtain the list of rules to display. The SampleHandler uses one of the mechanisms below to obtain such a sample $s$:
 

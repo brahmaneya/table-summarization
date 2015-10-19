@@ -53,7 +53,7 @@ within or on top of any relational database system.
 % We call our approach {\em smart drill down};
 % it does not replace traditional drill down but we will argue is a very
 % useful complement.
-The best way to explain smart drill down is through a simple example.
+We now explain smart drill-down via a simple example.
 
 \begin{example}\label{ex:introexample}
 Consider a table with columns `Department Store', `Product', `Region'
@@ -76,7 +76,7 @@ where $X$ is a Store in the answer table, and $C$
 is the number of tuples for $X$ (or the aggregate sales for $X$).
 
 Instead, when the analyst uses smart drill down on Table~\ref{table:introexample0},
-he obtains Table~\ref{table:introexample}.
+she obtains Table~\ref{table:introexample}.
 The ($\star$, $\star$, $\star$, $6000$) tuple is expanded into $3$ tuples
 that display noteworthy or interesting drill downs.
 The number $3$ is a user specified parameter, which we call $k$.
@@ -94,6 +94,20 @@ Each rule summarizes the set of tuples that are described by it.
 Again, instead of Count, the operator can display a Sum aggregate, such as
 the total Sales.
 
+
+Say that after seeing the results of Table~\ref{table:introexample},
+the analyst wishes to dig deeper into the Walmart tuples
+represented by the last rule.
+For instance, the analyst may want to know
+which states Walmart has more sales in, or which products they sell
+the most. In this case, the analyst clicks on the Walmart rule,
+obtaining the expanded summary in Table~\ref{table:introexample2}.
+The three new rules in this table provide additional information
+about the $1000$ Walmart tuples.
+In particular, one of the new rules shows that
+Walmart sells a lot of cookies; the others show it sells a lot of products in
+the regions CA-1 and WA-5.
+
 \begin{table}
 \scriptsize
 \centering
@@ -103,6 +117,7 @@ the total Sales.
 $\star$ & $\star$ & $\star$ & $6000$ & $0$ \\ \hline
 \end{tabular}
 \caption{Initial summary}\label{table:introexample0}
+\vspace{-10pt}
 \end{table}
 
 \begin{table}
@@ -117,9 +132,14 @@ $\triangleright$ $\star$ & comforters & MA-3 & $600$ & $2$ \\ \hline
 $\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
 \end{tabular}
 \caption{Result after first smart drill down}\label{table:introexample}
+\vspace{-20pt}
 \end{table}
 
+
+
+
 \begin{table}
+\vspace{-10pt}
 \scriptsize
 \centering
 \begin{tabular}{| l | l | l | l | l |}
@@ -134,20 +154,8 @@ $\triangleright$ $\triangleright$ Walmart & $\star$ & CA-1 & $150$ & $2$ \\ \cli
 $\triangleright$ $\triangleright$ Walmart & $\star$ & WA-5 & $130$ & $2$ \\ \hline
 \end{tabular}
 \caption{Result after second smart drill down} \label{table:introexample2}
+\vspace{-10pt}
 \end{table}
-
-Say that after seeing the results of Table~\ref{table:introexample},
-the analyst wishes to dig deeper into the Walmart tuples
-represented by the last rule.
-For instance, the analyst may want to know
-which states Walmart has more sales in, or which products they sell
-the most. In this case, the analyst clicks on the Walmart rule,
-obtaining the expanded summary in Table~\ref{table:introexample2}.
-The three new rules in this table provide additional information
-about the $1000$ Walmart tuples.
-In particular, one of the new rules shows that
-Walmart sells a lot of cookies; the others show it sells a lot of products in
-the regions CA-1 and WA-5.
 
 When the analyst clicks on a rule $r$, smart drill down
 expands $r$ into $k$ sub-rules that as a set are deemed to be ``interesting.''
@@ -175,7 +183,7 @@ by smart drill down to select the set of $k$ rules to display.
 
 \end{example}
 
-Compared to traditional drill down, our smart drill down has two important advantages:
+\noindent {\bf Relationship to Other Work.} Compared to traditional drill down, our smart drill down has two important advantages:
 \squishlist
 \item
 Smart drill down limits the information displayed
@@ -226,7 +234,7 @@ and smart drill down to provide an additional option of anomaly detection.
 
 Our work is also related to pattern mining. Several pattern mining papers~\cite{Vreeken:2011:KMI:1969593.1969615,Bringmann:2007:ICDM,Yan:2005:SIP:1081870.1081907} focus on providing one shot summaries of data, but do not propose interactive mechanisms. Moreover, to the best of our knowledge, other pattern mining work is either not flexible enough~\cite{Goethals:2011:MFI:2020408.2020529,Tatti:2014:FRI:2676651.2656261,DeBie:2010:FMI:1816112.1816117}, restricting the amount of tuning the user can perform, or so general~\cite{Leeuwen:2012:DSS:2347179.2347243} as to preclude efficient optimization. Our work also merges `interesting pattern mining' into the OLAP framework. We discuss related work in detail in Section~\ref{sec:related}.
 
-To reiterate, our chief contribution in this paper is the {\em smart drill down} interaction operator,
+\noindent {\bf Contributions.} Our chief contribution in this paper is the {\em smart drill down} interaction operator,
 an extension of traditional drill down, aimed at allowing analysts to zoom into the
 more ``interesting'' parts of a dataset. In addition to this operator,
 we develop techniques to support this operator on increasingly larger datasets:
@@ -238,10 +246,13 @@ maintaining samples in memory to support smart drill down.
 We show that optimal identification of samples is once again {\sc NP-Hard}, and 
 we develop an approximate scheme for dynamically maintaining and using multiple samples of the table in memory.
 \squishend
-We have developed a {\em fully functional and usable prototype tool} that supports the smart drill-down operator. From this point on, when we provide result snippets, these will be screenshots from our prototype tool. Our prototype tool also supports traditional drill-down: smart drill-down 
+We have developed a {\em fully functional and usable prototype tool} that supports the smart drill-down operator that was demonstrated at VLDB this year~\cite{DBLP:journals/pvldb/JoglekarGP15}. From this point on, when we provide result snippets, these will be screenshots from our prototype tool. Our prototype tool also supports traditional drill-down: smart drill-down 
 can be viewed as a generalization of traditional drill-down (with the weighting function set appropriately). In Section~\ref{sec:exp_qualitative}, we compare smart drill-down with traditional drill-down and show that smart drill-down returns considerably better results.
 
-\stitle{Overview of paper:} 
+Our tool and techniques are also part of a larger effort for
+building {\sc DataSpread}~\cite{dataspread}, a data analytics system with a spreadsheet-based front-end, and a database-based back-end, combining the benefits of spreadsheets and databases.
+
+\noindent {\bf Overview of paper:} 
 \squishlist 
 
 \item In Section~\ref{sec:formal}, we formally define smart drill down. After that, we describe different schemes for weighting rules, and our interactive user interface.

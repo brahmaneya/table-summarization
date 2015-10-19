@@ -40,14 +40,14 @@ When a user drills down on a rule $r$ to know more about the part of the table c
 For instance, the second, third and fourth rule from Table~\ref{table:introexample} form a rule-list, which is displayed when the user clicks on the first (trivial) rule. Similarly, the second, third and fourth rules in Table~\ref{table:introexample2} form a rule-list, as do the fifth, sixth and seventh rules. 
 
 \stitle{Scoring:} We now define some additional properties of rules; these properties
-help us ``score'' individual rules as part of a rule-list. 
+help us score individual rules in a rule-list. 
 
 There are two portions that constitute our scores for a rule as part of a rule list. 
 The first portion dictates how much the rule $r$ ``covers'' the tuples in $\calD$;
 the second portion dictates how ``good'' the rule $r$ is (independent of how many
 tuples it covers). 
 The reason why we separate the scoring into these two portions is
-that they allow us to separate the inherent ``goodness'' of a rule from
+that they allow us to separate the inherent goodness of a rule from
 how much it captures the data in $\calD$.
 
 We now describe the first portion:
@@ -70,7 +70,7 @@ We further describe our weighting functions in Section~\ref{sec:weighting}.
 
 Thus, the total score for our list of rules is given by 
 $$\text{Score}(R) = \sum_{r \in R} \underbrace{MCount(r, R)}_{\text{coverage of $r$ in $\calD$}} \times \underbrace{W(r)}_{\text{weight of $r$}}$$ 
-Overall, our goal is to choose the rule-list maximizing 
+Our goal is to choose the rule-list maximizing 
 total score. 
 
 
@@ -95,8 +95,8 @@ for one of the following smart drill down operations:
 \end{denselist}
 \end{problem}
 \noindent Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ 
+\papertext{in our technical report~\cite{tr}}.
 \techreporttext{in the `Extensions' section}
-\papertext{in the technical report~\cite{tr}}.
 
 \subsection{Weighting Rules}
 \label{sec:weighting}
