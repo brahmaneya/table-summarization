@@ -4,13 +4,6 @@
 We have implemented a fully-functional interactive tool instrumented with the smart drill down operator, having a web interface.
 We now describe our experiments on this tool with real datasets.
 
-\begin{figure}
-\centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
-\caption{Summary after clicking on the empty rule \label{fig:uiexample1}}
-\vspace{-10pt}
-\end{figure}
-
 \stitle{Datasets.} The first dataset, denoted `Marketing', contains demographic information about potential customers~\cite{dataset1}. A total of $N=9409$ questionnaires containing $502$ questions were filled out by shopping mall customers in the San Francisco Bay area. This dataset is the summarized result of this survey. Each tuple in the table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and each column has up to $10$ distinct values.
 
 The columns (in order) are as follows:
@@ -22,19 +15,19 @@ consisting of about $2.5$ million tuples, with each tuple corresponding to a per
 Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use the current implementation of our the smart drill down operator, and insert cropped screenshots of its output in this paper. 
 We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
-\begin{figure}
-\centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/age_drilldown.jpg}
-\caption{A regular drill down on Age\label{fig:drilldownexample}}
-\vspace{-10pt}
-\end{figure}
-
 
 \subsection{Qualitative Study}\label{sec:exp_qualitative}
 We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out different weight functions to study their effects.
 \subsubsection{Testing the User Interface}
 We now present the rule-based summaries displayed as a result of a few different user actions.
-To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Figure~\ref{fig:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click. 
+To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Figure~\ref{fig:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click.
+
+\begin{figure}
+\centering
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
+\caption{Summary after clicking on the empty rule \label{fig:uiexample1}}
+\vspace{-10pt}
+\end{figure} 
 
 \begin{figure}
 \centering
@@ -55,7 +48,7 @@ The other weighting function we try is given by:
 $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
 This gives us Figure~\ref{fig:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Figure~\ref{fig:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
 
-A regular drill down can be thought of as a special case of smart drill-down with the right weighting function and number of rules. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
+A regular drill down can be thought of as a special case of smart drill-down with the right weighting function and number of rules\papertext{ (see technical report for details)}\techreporttext{. Specifically, if we want to perform a regular drill down on a column $C$ that has $n$ distinct values, then we set the number of rules to be displayed ($k$) to $n$. The weighting function $W$ is set such that $W(r) = 1$ if rule $r$ has $C$ instantiated, and $0$ otherwise. This ensures that all displayed rules have $C$ instantiated (with no other column $C'$ instantiated unless there is a functional dependency from $C$ to $C'$), and that each displayed rule has a distinct value of $C$. This effectively gives us a regular drill-down on $C$}. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
 
 %TODO: Give application examples for different weighting functions
 %TODO: Say somewhere, that we haev drop-down list of common weighting functions in the user interface, with column selects and unselects.
@@ -66,6 +59,13 @@ A regular drill down can be thought of as a special case of smart drill-down wit
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
 \caption{A rule expansion \label{fig:uiexamplerule}}
+\vspace{-10pt}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/age_drilldown.jpg}
+\caption{A regular drill down on Age\label{fig:drilldownexample}}
 \vspace{-10pt}
 \end{figure}
 
@@ -111,7 +111,7 @@ We consider one value of $minSS$ and one weight function $W$ at a time. For thos
 \vspace{-10pt}
 \end{figure}
 
-\mrj{Figure~\ref{fig:minSS_speed}(a) shows that sampling gives us noticeable time savings. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.}
+Figure~\ref{fig:minSS_speed}(a) shows that sampling gives us noticeable time savings. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.
 
 In addition, we measure the number of incorrect rules per iteration. If the correct set of rules to display is $r_1, r_2, r_3$ and the displayed set is $r_1, r_3, r_4$ then that means there is one incorrect rule. We find the number of incorrect displayed rules across $50$ iterations, and display the average value in Figure~\ref{fig:minSS_error_rule}(c). This number for the Marketing dataset is almost always $0$ for the Size weighting function, and between $1$ and $2$ for the Bits weighting function. For the Census dataset, it is around $1$ for $minSS \leq 1000$ and falls to about $0.3$ for larger values of $minSS$. Note that even when we display an `incorrect' rule, it is usually the $5^{th}$ or $6^{th}$ best rule instead of one of the top $4$ rules, which still results in a reasonably good summary of the table.
 
@@ -125,8 +125,6 @@ In addition, we measure the number of incorrect rules per iteration. If the corr
 \end{figure*}
 
 \subsubsection{Scaling properties of our algorithms}
-\mrj{
-The computation time for a smart drill-down is linear in both the table size $|T|$ and in parameter $minSS$. That is, the runtime can be written as $a \times |T| + b \times minSS$ where $a$ and $b$ are constants. In the worst-case where we cannot form a sample from main memory and need to re-create a sample, $a$ stands for the time taken to read data from hard disk. That is, $a \times |T|$ is the time taken to make a single sequential scan over the table on disk. The constant $b$ is bigger than $a$, because BRS makes multiple passes over the sample, while creating a sample only requires a single pass over the table.}
+The computation time for a smart drill-down is linear in both the table size $|T|$ and in parameter $minSS$. That is, the runtime can be written as $a \times |T| + b \times minSS$ where $a$ and $b$ are constants. In the worst-case where we cannot form a sample from main memory and need to re-create a sample, $a$ stands for the time taken to read data from hard disk. That is, $a \times |T|$ is the time taken to make a single sequential scan over the table on disk. The constant $b$ is bigger than $a$, because BRS makes multiple passes over the sample, while creating a sample only requires a single pass over the table.
 
-\mrj{When the $|T|$ is small, the runtme is dominated by the $b \times minSS$ term, as seen for the Marketing Dataset in Figure~\ref{fig:minSS_speed}(a). When $|T|$ is large relative to $minSS$, like for the Census Dataset, the runtime is dominated by the $a \times |T|$ term (this is when we need to create a fresh sample from hard disk). When we have a few million tuples, our total runtime is only a few seconds. But if the dataset consisted of billions of tuples, the process of reading the table to create a sample could itself take a very long time. To counteract this, we could preprocess the dataset by down-sampling it to only a million tuples, and perform the summarization on the million tuple sample (which also effectively summarizes the billion tuple table).
-}
+When the $|T|$ is small, the runtme is dominated by the $b \times minSS$ term, as seen for the Marketing Dataset in Figure~\ref{fig:minSS_speed}(a). When $|T|$ is large relative to $minSS$, like for the Census Dataset, the runtime is dominated by the $a \times |T|$ term (this is when we need to create a fresh sample from hard disk). When we have a few million tuples, our total runtime is only a few seconds. But if the dataset consisted of billions of tuples, the process of reading the table to create a sample could itself take a very long time. To counteract this, we could preprocess the dataset by down-sampling it to only a million tuples, and perform the summarization on the million tuple sample (which also effectively summarizes the billion tuple table).

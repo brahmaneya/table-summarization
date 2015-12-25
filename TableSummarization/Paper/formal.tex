@@ -57,7 +57,7 @@ as part of the smart drill down result, to increase the coverage of the rule-lis
 
 Now, onto the second portion: we let $W$ denote a function that assigns a non-negative {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. 
 As we will see, the weighting function does not depend on the specific
-tuples in $\calD$, but could, as we will see later, 
+tuples in $\calD$, but could 
 depend on the number of $\star$s in $r$,
 the schema of $\calD$, 
 as well as the number of distinct values in each column of $\calD$.
@@ -70,7 +70,7 @@ We further describe our weighting functions in Section~\ref{sec:weighting}.
 
 Thus, the total score for our list of rules is given by 
 $$\text{Score}(R) = \sum_{r \in R} \underbrace{MCount(r, R)}_{\text{coverage of $r$ in $\calD$}} \times \underbrace{W(r)}_{\text{weight of $r$}}$$ 
-Our goal is to choose the rule-list maximizing 
+Our goal is to choose the rule-list of a given length that maximizes 
 total score. 
 
 
@@ -96,7 +96,7 @@ for one of the following smart drill down operations:
 \end{problem}
 \noindent Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ 
 \papertext{in our technical report~\cite{tr}}.
-\techreporttext{in the `Extensions' section}
+\techreporttext{in the `Extensions' section.}
 
 \subsection{Weighting Rules}
 \label{sec:weighting}
@@ -139,18 +139,16 @@ A weight function can be used in several ways, including expressing a higher pre
   ($a$, $b_1$)-$100$, ($a$, $b_2$)-$300$, ($a$, $\star$)-$600$ & $1400$  \\
   ($a$, $b_1$)-$100$, ($a$, $b_3$)-$400$, ($a$, $\star$)-$500$ & $1500$ \\ \hline
 \end{tabular}
-\vspace{-10pt}
 \caption{Example of Rule-based scoring with score equal to rule size \label{table:sizescoringexample}}
-\vspace{-15pt}
 \end{table}
 }
 
 \subsection{Smart drill down Operations}
 \label{sec:interface}
 When the user starts using a system equipped with
-the smart drill down operator, they first see a table with a single trivial rule as shown in Table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user. As an example of this operation, clicking on the trivial rule of Table~\ref{table:introexample0} would display Table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display Table~\ref{table:introexample2}. The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
+the smart drill down operator, they first see a table with a single trivial rule as shown in Table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user.\techreporttext{ As an example, clicking on the trivial rule of Table~\ref{table:introexample0} would display Table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display Table~\ref{table:introexample2}.} The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
 
-Instead of clicking on a rule, the user can click on a $\star$, say in column $c$ of rule $r$. This will also cause rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. \techreporttext{ For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see Table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product.} This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise. Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation, i.e. collapses it. \techreporttext{ For example, clicking on the walmart rule in Table~\ref{table:introexample2} would take the user back to Table~\ref{table:introexample}. This operation is equivalent to a traditional
+Instead of clicking on a rule, the user can click on a $\star$, say in column $c$ of rule $r$. This will also cause rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. \techreporttext{ For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see Table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise.} Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation, i.e. collapses it. \techreporttext{ For example, clicking on the walmart rule in Table~\ref{table:introexample2} would take the user back to Table~\ref{table:introexample}. This operation is equivalent to a traditional
 roll up, but for smart drill downs instead of traditional drill downs.}
 
 \techreporttext{
@@ -168,8 +166,6 @@ $\triangleright$ $\triangleright$ walmart & cookies & California & $80$ & $2$ \\
 $\triangleright$ $\triangleright$ walmart & cookies & $\star$ & $200$ & $2$ \\ \cline{2-5}
 $\triangleright$ $\triangleright$ walmart & bicycles & $\star$ & $150$ & $2$ \\  \hline
 \end{tabular}
-\vspace{-10pt}
 \caption{Result of clicking on a $\star$ \label{table:introexample3}}
-\vspace{-10pt}
 \end{table}
 }

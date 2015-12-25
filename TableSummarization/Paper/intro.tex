@@ -36,7 +36,7 @@ instead, our goal is to provide auxiliary functionality
 which analysts are free to use whenever they find 
 traditional drill downs ineffective.
 
-In addition to presenting this new operator called smart drill down, we also present novel sampling techniques to compute the results for this
+In addition to presenting the new smart drill down operator, we present novel sampling techniques to compute the results for this
 operator {\em in an interactive fashion} on increasingly larger databases. 
 Unlike the traditional OLAP setting, these computations 
 require no pre-materialization, and can be implemented 
@@ -135,9 +135,6 @@ $\triangleright$ Walmart & $\star$ & $\star$ & $1000$ & $1$ \\ \hline
 \vspace{-20pt}
 \end{table}
 
-
-
-
 \begin{table}
 \vspace{-10pt}
 \scriptsize
@@ -172,6 +169,7 @@ For example, if we already have the rule (Walmart, $\star$, $\star$, $1000$, $1$
 in our set, we would rather have the rule (Target, bicycles, $\star$, $200$, $2$)
 than (Walmart, bicycles, $\star$, $200$, $2$) since the former rule
 describes tuples that are not described by the first rule.
+\end{example}
 
 In this paper we describe how to combine or blend these three factors
 in order to obtain a single desirability score for a set of rules.
@@ -181,7 +179,6 @@ providing significant flexibility in what is considered a good set of rules.
 We also present an efficient optimization procedure to maximize score, invoked
 by smart drill down to select the set of $k$ rules to display.
 
-\end{example}
 
 \noindent {\bf Relationship to Other Work.} Compared to traditional drill down, our smart drill down has two important advantages:
 \squishlist
@@ -225,12 +222,10 @@ resulting maximum entropy distribution and the actual value distribution. For in
 values occur together in an unexpectedly small number of tuples, that
 set of values may be displayed to the user. In contrast, our algorithm
 focuses on rules with high counts, covering as
-much of the table as possible.
+much of the table as possible. Thus our work can be thought of as complementary to anomaly detection.
 Furthermore, our summarization is couched in
 an interactive environment, where the analyst
 directs the drill down and can tailor the optimization criteria.
-Nevertheless, one can envision extending traditional
-and smart drill down to provide an additional option of anomaly detection. 
 
 Our work is also related to pattern mining. Several pattern mining papers~\cite{Vreeken:2011:KMI:1969593.1969615,Bringmann:2007:ICDM,Yan:2005:SIP:1081870.1081907} focus on providing one shot summaries of data, but do not propose interactive mechanisms. Moreover, to the best of our knowledge, other pattern mining work is either not flexible enough~\cite{Goethals:2011:MFI:2020408.2020529,Tatti:2014:FRI:2676651.2656261,DeBie:2010:FMI:1816112.1816117}, restricting the amount of tuning the user can perform, or so general~\cite{Leeuwen:2012:DSS:2347179.2347243} as to preclude efficient optimization. Our work also merges `interesting pattern mining' into the OLAP framework. We discuss related work in detail in Section~\ref{sec:related}.
 
@@ -246,7 +241,7 @@ maintaining samples in memory to support smart drill down.
 We show that optimal identification of samples is once again {\sc NP-Hard}, and 
 we develop an approximate scheme for dynamically maintaining and using multiple samples of the table in memory.
 \squishend
-We have developed a {\em fully functional and usable prototype tool} that supports the smart drill-down operator that was demonstrated at VLDB this year~\cite{DBLP:journals/pvldb/JoglekarGP15}. From this point on, when we provide result snippets, these will be screenshots from our prototype tool. Our prototype tool also supports traditional drill-down: smart drill-down 
+We have developed a {\em fully functional and usable prototype tool} that supports the smart drill-down operator that was demonstrated at VLDB 2015~\cite{DBLP:journals/pvldb/JoglekarGP15}. From this point on, when we provide result snippets, these will be screenshots from our prototype tool. Our prototype tool also supports traditional drill-down: smart drill-down 
 can be viewed as a generalization of traditional drill-down (with the weighting function set appropriately). In Section~\ref{sec:exp_qualitative}, we compare smart drill-down with traditional drill-down and show that smart drill-down returns considerably better results.
 
 Our tool and techniques are also part of a larger effort for
