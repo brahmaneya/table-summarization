@@ -1,0 +1,209 @@
+\begin{thebibliography}{10}
+
+\bibitem{dataset1}
+http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/marketing.info.txt.
+
+\bibitem{Acharya:1999:AAQ:304182.304581}
+S.~Acharya, P.~B. Gibbons, V.~Poosala, and S.~Ramaswamy.
+\newblock The aqua approximate query answering system.
+\newblock In {\em SIGMOD'99}, pages 574--576, 1999.
+
+\bibitem{Agarwal:2013:BQB:2465351.2465355}
+S.~Agarwal, B.~Mozafari, A.~Panda, H.~Milner, S.~Madden, and I.~Stoica.
+\newblock Blinkdb: Queries with bounded errors and bounded response times on
+  very large data.
+\newblock In {\em EuroSys}, pages 29--42, 2013.
+
+\bibitem{apriori}
+R.~Agrawal and R.~Srikant.
+\newblock Fast algorithms for mining association rules in large databases.
+\newblock In {\em VLDB}, pages 487--499, 1994.
+
+\bibitem{uciml}
+K.~Bache and M.~Lichman.
+\newblock {UCI} machine learning repository, 2013.
+
+\bibitem{dataspread}
+M.~Bendre, B.~Sun, X.~Zhou, D.~Zhang, S.-Y. Lin, K.~Chang, and A.~Parameswaran.
+\newblock Data-spread: Unifying databases and spreadsheets (demo).
+\newblock In {\em VLDB}, 2015.
+
+\bibitem{export:69578}
+A.~Bosworth, J.~Gray, A.~Layman, and H.~Pirahesh.
+\newblock Data cube: A relational aggregation operator generalizing group-by,
+  cross-tab, and sub-totals.
+\newblock Technical report, Microsoft Research, 1995.
+
+\bibitem{Bringmann:2007:ICDM}
+B.~Bringmann, L.~Katholieke, and A.~Zimmermann.
+\newblock The chosen few: On identifying valuable patterns.
+\newblock In {\em ICDM}, 2007.
+
+\bibitem{Bu:2005:MSH:1083592.1083644}
+S.~Bu, L.~V.~S. Lakshmanan, and R.~T. Ng.
+\newblock Mdl summarization with holes.
+\newblock In {\em VLDB}, pages 433--444, 2005.
+
+\bibitem{DBLP:conf/edbt/CandanCQS09}
+K.~S. Candan, H.~Cao, Y.~Qi, and M.~L. Sapino.
+\newblock Alphasum: size-constrained table summarization using value lattices.
+\newblock In {\em EDBT}, pages 96--107, 2009.
+
+\bibitem{cetintemel2013query}
+U.~Cetintemel, M.~Cherniack, J.~DeBrabant, Y.~Diao, K.~Dimitriadou, A.~Kalinin,
+  O.~Papaemmanouil, and S.~B. Zdonik.
+\newblock Query steering for interactive data exploration.
+\newblock In {\em CIDR}, 2013.
+
+\bibitem{DeBie:2010:FMI:1816112.1816117}
+T.~De~Bie, K.-N. Kontonasios, and E.~Spyropoulou.
+\newblock A framework for mining interesting pattern sets.
+\newblock In {\em Proceedings of the ACM SIGKDD Workshop on Useful Patterns},
+  UP '10, 2010.
+
+\bibitem{DBLP:journals/pvldb/GebalyAGKS14}
+K.~E. Gebaly, P.~Agrawal, L.~Golab, F.~Korn, and D.~Srivastava.
+\newblock Interpretable and informative explanations of outcomes.
+\newblock {\em {PVLDB}}, pages 61--72, 2014.
+
+\bibitem{Geerts04tilingdatabases}
+F.~Geerts, B.~Goethals, and T.~Mielikäinen.
+\newblock Tiling databases.
+\newblock In {\em Discovery Science}, pages 278--289, 2004.
+
+\bibitem{Goethals:2011:MFI:2020408.2020529}
+B.~Goethals, S.~Moens, and J.~Vreeken.
+\newblock Mime: A framework for interactive visual pattern mining.
+\newblock In {\em Proceedings of the 17th ACM SIGKDD International Conference
+  on Knowledge Discovery and Data Mining}, KDD '11, 2011.
+
+\bibitem{Golab:2008:GNT:1453856.1453900}
+L.~Golab, H.~Karloff, F.~Korn, D.~Srivastava, and B.~Yu.
+\newblock On generating near-optimal tableaux for conditional functional
+  dependencies.
+\newblock {\em Proc. VLDB Endow.}, pages 376--390, 2008.
+
+\bibitem{DBLP:journals/debu/GolabKS11}
+L.~Golab, F.~Korn, and D.~Srivastava.
+\newblock Efficient and effective analysis of data quality using pattern
+  tableaux.
+\newblock {\em {IEEE} Data Eng. Bull.}, 34(3):26--33, 2011.
+
+\bibitem{Han:2000:MFP:342009.335372}
+J.~Han, J.~Pei, and Y.~Yin.
+\newblock Mining frequent patterns without candidate generation.
+\newblock In {\em SIGMOD}, pages 1--12, 2000.
+
+\bibitem{tr}
+M.~Joglekar, H.~Garcia-Molina, and A.~Parameswaran.
+\newblock http://arxiv.org/pdf/1412.0364.
+
+\bibitem{DBLP:journals/pvldb/JoglekarGP15}
+M.~Joglekar, H.~Garcia{-}Molina, and A.~G. Parameswaran.
+\newblock Smart drill-down: {A} new data exploration operator.
+\newblock {\em {PVLDB}}, 8(12):1928--1939, 2015.
+
+\bibitem{gartner}
+R.~Kalakota.
+\newblock Gartner: Bi and analytics a \$12.2 billion market, july 2013
+  (retrieved october 30, 2014).
+
+\bibitem{data-deluge}
+M.~L. Kersten, S.~Idreos, S.~Manegold, and E.~Liarou.
+\newblock The researcher's guide to the data deluge: Querying a scientific
+  database in just a few seconds.
+\newblock In {\em VLDB'11}, 2011.
+
+\bibitem{Lakshmanan:2002:GMA:1287369.1287435}
+L.~V.~S. Lakshmanan, R.~T. Ng, C.~X. Wang, X.~Zhou, and T.~J. Johnson.
+\newblock The generalized mdl approach for summarization.
+\newblock In {\em VLDB}, pages 766--777, 2002.
+
+\bibitem{Leeuwen:2012:DSS:2347179.2347243}
+M.~Leeuwen and A.~Knobbe.
+\newblock Diverse subgroup set discovery.
+\newblock {\em Data Min. Knowl. Discov.}, 25, 2012.
+
+\bibitem{Mampaey:2011:TMI:2020408.2020499}
+M.~Mampaey, N.~Tatti, and J.~Vreeken.
+\newblock Tell me what i need to know: Succinctly summarizing data with
+  itemsets.
+\newblock In {\em KDD}, pages 573--581, 2011.
+
+\bibitem{maibdr1983}
+A.~I. McLeod and D.~R. Bellhouse.
+\newblock A convenient algorithm for drawing a simple random sample.
+\newblock {\em Journal of the Royal Statistical Society. Series C (Applied
+  Statistics)}, pages pp. 182--184, 1983.
+
+\bibitem{Miller:1997:ARO:253260.253361}
+R.~J. Miller and Y.~Yang.
+\newblock Association rules over interval data.
+\newblock In {\em SIGMOD}, pages 452--461, 1997.
+
+\bibitem{Sarawagi00user-adaptiveexploration}
+S.~Sarawagi.
+\newblock User-adaptive exploration of multidimensional data.
+\newblock In {\em VLDB}, pages 307--316, 2000.
+
+\bibitem{Sarawagi:2001:UMA:767141.767148}
+S.~Sarawagi.
+\newblock User-cognizant multidimensional analysis.
+\newblock {\em The VLDB Journal}, pages 224--239, 2001.
+
+\bibitem{Sarawagi98discovery-drivenexploration}
+S.~Sarawagi, R.~Agrawal, and N.~Megiddo.
+\newblock Discovery-driven exploration of olap data cubes.
+\newblock In {\em EDBT}, pages 168--182, 1998.
+
+\bibitem{sellam:meet}
+T.~Sellam and M.~L. Kersten.
+\newblock Meet charles, big data query advisor.
+\newblock In {\em CIDR'13}, pages --1--1, 2013.
+
+\bibitem{6691587}
+L.~Sidirourgos, M.~Kersten, and P.~Boncz.
+\newblock Scientific discovery through weighted sampling.
+\newblock In {\em Big Data, 2013 IEEE International Conference on}, pages
+  300--306, 2013.
+
+\bibitem{Srikant:1996:MQA:233269.233311}
+R.~Srikant and R.~Agrawal.
+\newblock Mining quantitative association rules in large relational tables.
+\newblock In {\em SIGMOD}, pages 1--12, 1996.
+
+\bibitem{Tatti:2014:FRI:2676651.2656261}
+N.~Tatti, F.~Moerchen, and T.~Calders.
+\newblock Finding robust itemsets under subsampling.
+\newblock {\em ACM Trans. Database Syst.}, 39, 2014.
+
+\bibitem{Vitter:1985:RSR:3147.3165}
+J.~S. Vitter.
+\newblock Random sampling with a reservoir.
+\newblock {\em ACM Trans. Math. Softw.}, pages 37--57, 1985.
+
+\bibitem{Vreeken:2011:KMI:1969593.1969615}
+J.~Vreeken, M.~Leeuwen, and A.~Siebes.
+\newblock Krimp: Mining itemsets that compress.
+\newblock {\em Data Min. Knowl. Discov.}, 2011.
+
+\bibitem{1411744}
+J.~Wang, J.~Han, Y.~Lu, and P.~Tzvetkov.
+\newblock Tfp: an efficient algorithm for mining top-k frequent closed
+  itemsets.
+\newblock {\em Knowledge and Data Engineering, IEEE Transactions on}, pages
+  652--663, 2005.
+
+\bibitem{DBLP:conf:kdd:XiangJFD08}
+Y.~Xiang, R.~Jin, D.~Fuhry, and F.~F. Dragan.
+\newblock Succinct summarization of transactional databases: an overlapped
+  hyperrectangle scheme.
+\newblock In {\em KDD}, pages 758--766, 2008.
+
+\bibitem{Yan:2005:SIP:1081870.1081907}
+X.~Yan, H.~Cheng, J.~Han, and D.~Xin.
+\newblock Summarizing itemset patterns: A profile-based approach.
+\newblock In {\em Proceedings of the Eleventh ACM SIGKDD International
+  Conference on Knowledge Discovery in Data Mining}, KDD '05, 2005.
+
+\end{thebibliography}

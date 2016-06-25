@@ -1,0 +1,809 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  24 JUN 2016 16:33
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**datacrowds.tex
+(./datacrowds.tex
+LaTeX2e <2014/05/01>
+Babel <3.9k> and hyphenation patterns for 78 languages loaded.
+(./IEEEtran.cls
+Document Class: IEEEtran 2014/09/17 V1.8a by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+\@IEEEtrantmpdimenA=\dimen102
+\@IEEEtrantmpdimenB=\dimen103
+\@IEEEtrantmpdimenC=\dimen104
+\@IEEEtrantmpcountA=\count79
+\@IEEEtrantmpcountB=\count80
+\@IEEEtrantmpcountC=\count81
+\@IEEEtrantmptoksA=\toks14
+-- Using IEEE Computer Society mode.
+LaTeX Font Info:    Try loading font information for OT1+ppl on input line 458.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/ot1ppl.fd
+File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
+)
+-- Using 8.5in x 11in (letter) paper.
+-- Using PDF output.
+\@IEEEnormalsizeunitybaselineskip=\dimen105
+-- This is a 10 point document.
+\CLASSINFOnormalsizebaselineskip=\dimen106
+\CLASSINFOnormalsizeunitybaselineskip=\dimen107
+\IEEEnormaljot=\dimen108
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <5.01874> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <5.01874> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <7.02625> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <7.02625> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <8.03> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <8.03> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <9.03374> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <9.03374> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <9.53561> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <9.53561> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <11.04124> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <11.04124> not available
+
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <12.045> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <12.045> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <17.06374> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <17.06374> not available
+
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <20.075> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <20.075> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <24.09> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1039.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <24.09> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 1039.
+
+\IEEEquantizedlength=\dimen109
+\IEEEquantizedlengthdiff=\dimen110
+\IEEEquantizedtextheightdiff=\dimen111
+\IEEEilabelindentA=\dimen112
+\IEEEilabelindentB=\dimen113
+\IEEEilabelindent=\dimen114
+\IEEEelabelindent=\dimen115
+\IEEEdlabelindent=\dimen116
+\IEEElabelindent=\dimen117
+\IEEEiednormlabelsep=\dimen118
+\IEEEiedmathlabelsep=\dimen119
+\IEEEiedtopsep=\skip41
+\c@section=\count82
+\c@subsection=\count83
+\c@subsubsection=\count84
+\c@paragraph=\count85
+\c@IEEEsubequation=\count86
+\abovecaptionskip=\skip42
+\belowcaptionskip=\skip43
+\c@figure=\count87
+\c@table=\count88
+\@IEEEeqnnumcols=\count89
+\@IEEEeqncolcnt=\count90
+\@IEEEsubeqnnumrollback=\count91
+\@IEEEquantizeheightA=\dimen120
+\@IEEEquantizeheightB=\dimen121
+\@IEEEquantizeheightC=\dimen122
+\@IEEEquantizeprevdepth=\dimen123
+\@IEEEquantizemultiple=\count92
+\@IEEEquantizeboxA=\box26
+\@IEEEtmpitemindent=\dimen124
+\c@IEEEbiography=\count93
+\@IEEEtranrubishbin=\box27
+) (/usr/local/texlive/2014/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count94
+)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip44
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/framed/framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip45
+\fb@frw=\dimen125
+\fb@frh=\dimen126
+\FrameRule=\dimen127
+\FrameSep=\dimen128
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks15
+\verbatim@line=\toks16
+\verbatim@in@stream=\read1
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/04/25 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/05/08 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+)
+\Gin@req@height=\dimen129
+\Gin@req@width=\dimen130
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/paralist/paralist.sty
+Package: paralist 2013/06/09 v2.4 Extended list environments
+\pltopsep=\skip46
+\plpartopsep=\skip47
+\plitemsep=\skip48
+\plparsep=\skip49
+\pl@lab=\toks18
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2011/09/28 v3.5.2 Customized lists
+\labelindent=\skip50
+\enit@outerparindent=\dimen131
+\enit@toks=\toks19
+\enit@inbox=\box28
+\enitdp@description=\count95
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip51
+\subfigcapskip=\skip52
+\subfigcaptopadj=\dimen132
+\subfigbottomskip=\skip53
+\subfigcapmargin=\dimen133
+\subfiglabelskip=\skip54
+\c@subfigure=\count96
+\c@lofdepth=\count97
+\c@subtable=\count98
+\c@lotdepth=\count99
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/local/texlive/2014/texmf-dist/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip55
+\subfig@bottom=\skip56
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+\wrapoverhang=\dimen134
+\WF@size=\dimen135
+\c@WF@wrappedlines=\count100
+\WF@box=\box29
+\WF@everypar=\toks20
+Package: wrapfig 2003/01/31  v 3.6
+)
+(./datacrowds.aux)
+\openout1 = `datacrowds.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+
+-- Lines per column: 54 (approximate, difference = 5.75708pt).
+(/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count101
+\scratchdimen=\dimen136
+\scratchbox=\box30
+\nofMPsegments=\count102
+\nofMParguments=\count103
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count104
+\MPscratchDim=\dimen137
+\MPnumerator=\count105
+\makeMPintoPDFobject=\count106
+\everyMPtoPDFconversion=\toks22
+) (/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+))
+(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 75.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/ot1phv.fd
+File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
+)
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <11.04124> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 75.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <8.03> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 75.
+LaTeX Font Info:    Calculating math sizes for size <11.04124> on input line 75
+.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <11.04124> on input line 75.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7.72884> on input line 75.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5.52061> on input line 75.
+LaTeX Font Info:    Try loading font information for U+pzd on input line 75.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/upzd.fd
+File: upzd.fd 2001/06/04 font definitions for U/pzd.
+)
+LaTeX Font Info:    Calculating math sizes for size <8.03> on input line 75.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8.03> on input line 75.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5.62097> on input line 75.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <4.015> on input line 75.
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 75.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/omsppl.fd
+File: omsppl.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ppl/m/it' in size <8.03> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 75.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <11.04124> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 79.
+LaTeX Font Info:    Font shape `OT1/phv/bx/sc' in size <11.04124> not available
+
+(Font)              Font shape `OT1/phv/b/sc' tried instead on input line 79.
+
+
+LaTeX Warning: Citation `snow2008cheap' on page 1 undefined on input line 85.
+
+
+LaTeX Warning: Citation `gwap' on page 1 undefined on input line 86.
+
+
+LaTeX Warning: Citation `crowder' on page 1 undefined on input line 87.
+
+LaTeX Font Info:    Calculating math sizes for size <9.53561> on input line 91.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9.53561> on input line 91.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6.6749> on input line 91.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <4.7678> on input line 91.
+
+LaTeX Warning: Citation `stitchfix' on page 1 undefined on input line 94.
+
+
+LaTeX Warning: Citation `odesk' on page 1 undefined on input line 111.
+
+
+LaTeX Warning: Citation `samasource' on page 1 undefined on input line 111.
+
+
+LaTeX Warning: Citation `crowdflower' on page 1 undefined on input line 114.
+
+
+LaTeX Warning: Citation `raghu' on page 1 undefined on input line 126.
+
+
+LaTeX Warning: Citation `singhal2012introducing' on page 1 undefined on input l
+ine 126.
+
+
+LaTeX Warning: Citation `crowd-book' on page 1 undefined on input line 132.
+
+
+Overfull \vbox (4.90425pt too high) has occurred while \output is active []
+
+
+[1{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+LaTeX Warning: Reference `fig:axes1' on page 2 undefined on input line 184.
+
+
+LaTeX Warning: Citation `Kulkarni:2012gi' on page 2 undefined on input line 203
+.
+
+
+LaTeX Warning: Citation `crowdforge' on page 2 undefined on input line 203.
+
+
+LaTeX Warning: Citation `flashteams' on page 2 undefined on input line 203.
+
+[2]
+
+LaTeX Warning: Reference `fig:axes1' on page 3 undefined on input line 225.
+
+
+LaTeX Warning: Citation `get-another-label' on page 3 undefined on input line 2
+35.
+
+
+LaTeX Warning: Citation `soylent' on page 3 undefined on input line 236.
+
+
+LaTeX Warning: Citation `flashteams' on page 3 undefined on input line 237.
+
+
+LaTeX Warning: Reference `fig:axes2' on page 3 undefined on input line 242.
+
+
+LaTeX Warning: Citation `captcha' on page 3 undefined on input line 256.
+
+
+LaTeX Warning: Citation `gwap' on page 3 undefined on input line 259.
+
+
+LaTeX Warning: Citation `duolingo' on page 3 undefined on input line 260.
+
+
+LaTeX Warning: Citation `galaxy-zoo' on page 3 undefined on input line 264.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 251--266
+[]\OT1/ppl/m/n/9.53561 The in-cen-tives di-men-sion de-scribes what
+ []
+
+
+Underfull \hbox (badness 4048) in paragraph at lines 251--266
+\OT1/ppl/m/n/9.53561 mo-ti-vates (hu-man) work-ers to par-tic-i-pate. The
+ []
+
+
+Underfull \hbox (badness 6300) in paragraph at lines 251--266
+\OT1/ppl/m/n/9.53561 most com-mon in-cen-tives are money, ser-vices,
+ []
+
+
+Underfull \hbox (badness 5077) in paragraph at lines 251--266
+\OT1/ppl/m/n/9.53561 en-ter-tain-ment, learn-ing and phi-lan-thropy. Most
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 251--266
+\OT1/ppl/m/n/9.53561 their work. In other cases, the work-ers re-ceive
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 251--266
+\OT1/ppl/m/n/9.53561 the site con-tributes in solv-ing (e.g., con-vert-ing
+ []
+
+
+Overfull \hbox (31.08264pt too wide) in paragraph at lines 251--266
+\OT1/ppl/m/n/9.53561 (http://www.audubon.org/conservation/science/christmas-
+ []
+
+
+LaTeX Warning: Reference `fig:factors' on page 3 undefined on input line 282.
+
+[3]
+
+LaTeX Warning: Citation `crowddb' on page 4 undefined on input line 353.
+
+
+LaTeX Warning: Citation `little2010turkit' on page 4 undefined on input line 35
+3.
+
+
+LaTeX Warning: Citation `deco-survey' on page 4 undefined on input line 353.
+
+
+LaTeX Warning: Citation `DBLP:conf/sigmod/AmsterdamerGMS13' on page 4 undefined
+ on input line 353.
+
+
+LaTeX Warning: Citation `Amsterdamer:2015:NCN:2723372.2735370' on page 4 undefi
+ned on input line 353.
+
+
+LaTeX Warning: Citation `entity-matching' on page 4 undefined on input line 356
+.
+
+
+LaTeX Warning: Citation `crowdscreen' on page 4 undefined on input line 356.
+
+
+LaTeX Warning: Citation `crowder' on page 4 undefined on input line 356.
+
+
+LaTeX Warning: Citation `Whang:2013td' on page 4 undefined on input line 356.
+
+
+LaTeX Warning: Citation `ilprints1128' on page 4 undefined on input line 363.
+
+
+LaTeX Warning: Citation `zhuangdebiasing' on page 4 undefined on input line 365
+.
+
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9.53561> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 371.
+
+LaTeX Warning: Citation `little2010turkit' on page 4 undefined on input line 39
+6.
+
+
+LaTeX Warning: Citation `DBLP:conf/oopsla/BarowyCBM12' on page 4 undefined on i
+nput line 396.
+
+
+LaTeX Warning: Citation `DBLP:conf/uist/AhmadBMK11' on page 4 undefined on inpu
+t line 397.
+
+
+LaTeX Warning: Citation `deco-survey' on page 4 undefined on input line 404.
+
+
+LaTeX Warning: Citation `crowddb' on page 4 undefined on input line 404.
+
+
+LaTeX Warning: Citation `qurkCIDR' on page 4 undefined on input line 404.
+
+[4]
+
+LaTeX Warning: Citation `DBLP:conf/sigmod/ParameswaranTGW14' on page 5 undefine
+d on input line 452.
+
+
+LaTeX Warning: Citation `DBLP:conf/hcomp/ParameswaranTGW13' on page 5 undefined
+ on input line 452.
+
+
+LaTeX Warning: Citation `lecture' on page 5 undefined on input line 452.
+
+
+LaTeX Warning: Citation `ChimeraVLDB2014' on page 5 undefined on input line 476
+.
+
+
+LaTeX Warning: Citation `entity-matching' on page 5 undefined on input line 477
+.
+
+
+LaTeX Warning: Citation `Whang:2013td' on page 5 undefined on input line 477.
+
+
+LaTeX Warning: Citation `ERerrors2015' on page 5 undefined on input line 477.
+
+
+LaTeX Warning: Citation `KataraSIGMOD2015' on page 5 undefined on input line 47
+9.
+
+
+LaTeX Warning: Citation `DataCleaningICDE2015' on page 5 undefined on input lin
+e 479.
+
+
+LaTeX Warning: Citation `crowdscreen' on page 5 undefined on input line 483.
+
+
+LaTeX Warning: Citation `rate' on page 5 undefined on input line 483.
+
+
+LaTeX Warning: Citation `so-who-won' on page 5 undefined on input line 501.
+
+
+LaTeX Warning: Citation `venetis1' on page 5 undefined on input line 501.
+
+
+LaTeX Warning: Citation `tdp2015' on page 5 undefined on input line 501.
+
+
+LaTeX Warning: Citation `BeingExpertSigmod2015' on page 5 undefined on input li
+ne 501.
+
+
+LaTeX Warning: Citation `markus-sorts-joins' on page 5 undefined on input line 
+506.
+
+[5]
+
+LaTeX Warning: Citation `entity-matching' on page 6 undefined on input line 521
+.
+
+
+LaTeX Warning: Citation `crowder' on page 6 undefined on input line 521.
+
+
+LaTeX Warning: Citation `Whang:2013td' on page 6 undefined on input line 521.
+
+
+LaTeX Warning: Citation `ERerrors2015' on page 6 undefined on input line 521.
+
+
+LaTeX Warning: Citation `so-who-won' on page 6 undefined on input line 536.
+
+
+LaTeX Warning: Citation `markus-sorts-joins' on page 6 undefined on input line 
+536.
+
+
+LaTeX Warning: Citation `entity-matching' on page 6 undefined on input line 536
+.
+
+
+LaTeX Warning: Citation `crowder' on page 6 undefined on input line 536.
+
+
+LaTeX Warning: Citation `ERerrors2015' on page 6 undefined on input line 536.
+
+
+LaTeX Warning: Reference `fig:tradeoffs' on page 6 undefined on input line 559.
+
+
+
+LaTeX Warning: Citation `zhuangdebiasing' on page 6 undefined on input line 628
+.
+
+[6]
+
+LaTeX Warning: Citation `DBLP:journals/pvldb/CaoSTC12' on page 7 undefined on i
+nput line 687.
+
+
+LaTeX Warning: Citation `WiseMarketKDD2013' on page 7 undefined on input line 6
+87.
+
+
+LaTeX Warning: Citation `DBLP:conf/edbt/ZhengCMM15' on page 7 undefined on inpu
+t line 687.
+
+
+LaTeX Warning: Citation `flashteams' on page 7 undefined on input line 687.
+
+
+LaTeX Warning: Citation `DBLP:conf/sigmod/ParameswaranTGW14' on page 7 undefine
+d on input line 721.
+
+
+LaTeX Warning: Citation `DBLP:conf/hcomp/ParameswaranTGW13' on page 7 undefined
+ on input line 721.
+
+[7]
+
+LaTeX Warning: Citation `searching' on page 8 undefined on input line 828.
+
+
+LaTeX Warning: Citation `tdp2015' on page 8 undefined on input line 828.
+
+
+LaTeX Warning: Citation `Fan:2015:IAC:2723372.2750550' on page 8 undefined on i
+nput line 854.
+
+
+LaTeX Warning: Citation `ValidatingCrowdAnsSigmod2015' on page 8 undefined on i
+nput line 854.
+
+
+LaTeX Warning: Citation `Zheng:2015:QQT:2723372.2749430' on page 8 undefined on
+ input line 854.
+
+[8]
+
+LaTeX Warning: Citation `active-learning' on page 9 undefined on input line 919
+.
+
+
+LaTeX Warning: Citation `wang1994familiarity' on page 9 undefined on input line
+ 955.
+
+
+LaTeX Warning: Citation `turk' on page 9 undefined on input line 955.
+
+
+LaTeX Warning: Citation `crowd-art' on page 9 undefined on input line 957.
+
+
+LaTeX Warning: Citation `crowd-book' on page 9 undefined on input line 967.
+
+
+LaTeX Warning: Citation `odesk' on page 9 undefined on input line 971.
+
+[9]
+
+LaTeX Warning: Citation `ajtai2009sorting' on page 10 undefined on input line 1
+007.
+
+
+LaTeX Warning: Citation `DBLP:conf/icdt/DavidsonKMR13' on page 10 undefined on 
+input line 1007.
+
+
+LaTeX Warning: Citation `venetis1' on page 10 undefined on input line 1011.
+
+
+LaTeX Warning: Citation `zhuangdebiasing' on page 10 undefined on input line 10
+51.
+
+
+LaTeX Warning: Citation `schmidt2010crowdsourcing' on page 10 undefined on inpu
+t line 1088.
+
+
+LaTeX Warning: Citation `Trushkowsky:2013kh' on page 10 undefined on input line
+ 1096.
+
+
+Underfull \hbox (badness 1953) in paragraph at lines 1084--1098
+\OT1/ppl/b/n/9.53561 Boredom, Lazi-ness, and Ex-pe-ri-ence: \OT1/ppl/m/n/9.5356
+1 Most data
+ []
+
+
+LaTeX Warning: Citation `confidence-general' on page 10 undefined on input line
+ 1104.
+
+
+LaTeX Warning: Citation `KargerOhSIGMETRICS13' on page 10 undefined on input li
+ne 1104.
+
+
+LaTeX Warning: Citation `WholeStoryVLDB2015' on page 10 undefined on input line
+ 1104.
+
+[10]
+
+LaTeX Warning: Citation `arpita-survey' on page 11 undefined on input line 1114
+.
+
+
+LaTeX Warning: Citation `crowder' on page 11 undefined on input line 1128.
+
+
+LaTeX Warning: Citation `WangTransitiveRelations2013' on page 11 undefined on i
+nput line 1128.
+
+
+LaTeX Warning: Citation `Whang:2013td' on page 11 undefined on input line 1128.
+
+
+
+LaTeX Warning: Citation `ERerrors2015' on page 11 undefined on input line 1128.
+
+
+
+LaTeX Warning: Citation `rate' on page 11 undefined on input line 1134.
+
+
+LaTeX Warning: Citation `mozafari2012active' on page 11 undefined on input line
+ 1153.
+
+
+LaTeX Warning: Citation `YanActiveLearningCrowdsICML2011' on page 11 undefined 
+on input line 1153.
+
+No file datacrowds.bbl.
+[11
+
+] (./datacrowds.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 3703 strings out of 493117
+ 58075 string characters out of 6135433
+ 131602 words of memory out of 5000000
+ 7111 multiletter control sequences out of 15000+600000
+ 44122 words of font info for 92 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 38i,6n,35p,1381b,297s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texli
+ve/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texliv
+e/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/
+2014/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2014/te
+xmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2014/texmf-dis
+t/fonts/type1/urw/helvetic/uhvro8a.pfb></usr/local/texlive/2014/texmf-dist/font
+s/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1
+/urw/palatino/uplr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/pa
+latino/uplri8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/zapfding
+/uzdr.pfb>
+Output written on datacrowds.pdf (11 pages, 169034 bytes).
+PDF statistics:
+ 85 PDF objects out of 1000 (max. 8388607)
+ 60 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+
