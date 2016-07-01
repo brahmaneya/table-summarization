@@ -193,7 +193,7 @@ its significance will be discussed shortly.
 If the analyst drills down on the Store attribute (first $\star$),
 then the operator displays all tuples of the form ($X$, $\star$, $\star$, $C$, $1$),
 where $X$ is a Store in the answer table, and $C$
-is the number of tuples for $X$ (or the aggregate sales for $X$).
+is the number of tuples for $X$ (or aggregate sales for $X$).
 
 Instead, when the analyst uses smart drill down on Table~\ref{table:introexample0},
 she obtains Table~\ref{table:introexample}.
@@ -215,10 +215,10 @@ Again, instead of Count, the operator can display a Sum aggregate, such as
 the total Sales.
 
 
-Say that after seeing the results of Table~\ref{table:introexample},
+Suppose after seeing the results of Table~\ref{table:introexample},
 the analyst wishes to dig deeper into the Walmart tuples
 represented by the last rule.
-For instance, the analyst may want to know
+The analyst may want to know
 which states Walmart has more sales in, or which products they sell
 the most. In this case, the analyst clicks on the Walmart rule,
 obtaining the expanded summary in Table~\ref{table:introexample2}.
@@ -276,17 +276,15 @@ $\triangleright$ $\triangleright$ Walmart & $\star$ & WA-5 & $130$ & $2$ \\ \hli
 
 When the analyst clicks on a rule $r$, smart drill down
 expands $r$ into $k$ sub-rules that as a set are deemed to be ``interesting.''
-(We discuss other smart drill down operations in Section~\ref{sec:interface}.)
 There are three factors that make a rule set interesting.
-One is if it contains rules with high Count (or total sales) fields,
+One is if it contains rules with high Count,
 since the larger the count, the more tuples are summarized.
 A second factor is if the rules have high weight (number of non-$\star$ attributes).
 For instance, the rule (Walmart, cookies, AK-1, $200$, $3$)
-seems more interesting than (Walmart, cookies, $*$, $200$, $2$)
+is more interesting than (Walmart, cookies, $*$, $200$, $2$)
 since the former tells us the high sales are concentrated in a single region.
-A third desirability factor is diversity:
-For example, if we already have the rule (Walmart, $\star$, $\star$, $1000$, $1$)
-in our set, we would rather have the rule (Target, bicycles, $\star$, $200$, $2$)
+The third factor is diversity: For example, if our set already has the rule (Walmart, $\star$, $\star$, $1000$, $1$), 
+we would rather have add rule (Target, bicycles, $\star$, $200$, $2$)
 than (Walmart, bicycles, $\star$, $200$, $2$) since the former rule
 describes tuples that are not described by the first rule.
 \end{example}
@@ -321,7 +319,7 @@ look through all the displayed rules and then find the interesting rule
 (Target, bicycles, $\star$, $200$, $2$).
 \squishend
 
-Incidentally, note that in the example we only described one type of smart drill down,
+Note that in the example we only described one type of smart drill down,
 where the analyst selects a {\em rule} to drill down on
 (e.g., the Walmart rule going from Table~\ref{table:introexample} to
 Table~\ref{table:introexample2}).
@@ -336,7 +334,7 @@ Sarawagi00user-adaptiveexploration,
 Sarawagi98discovery-drivenexploration,
 DBLP:journals/pvldb/GebalyAGKS14}.
 These papers mostly focus on
-giving the most ``surprising'' information to the user, i.e., information
+giving ``surprising'' information to the user, i.e., information
 that would minimize the Kullback-Liebler(KL) divergence between the
 resulting maximum entropy distribution and the actual value distribution. For instance, if a certain set of
 values occur together in an unexpectedly small number of tuples, that
@@ -347,9 +345,9 @@ Furthermore, our summarization is couched in
 an interactive environment, where the analyst
 directs the drill down and can tailor the optimization criteria.
 
-Our work is also related to pattern mining. Several pattern mining papers~\cite{Vreeken:2011:KMI:1969593.1969615,Bringmann:2007:ICDM,Yan:2005:SIP:1081870.1081907} focus on providing one shot summaries of data, but do not propose interactive mechanisms. Moreover, to the best of our knowledge, other pattern mining work is either not flexible enough~\cite{Goethals:2011:MFI:2020408.2020529,Tatti:2014:FRI:2676651.2656261,DeBie:2010:FMI:1816112.1816117}, restricting the amount of tuning the user can perform, or so general~\cite{Leeuwen:2012:DSS:2347179.2347243} as to preclude efficient optimization. Our work also merges `interesting pattern mining' into the OLAP framework. We discuss related work in detail in Section~\ref{sec:related}.
+Our work is also related to pattern mining. Several pattern mining papers~\cite{Vreeken:2011:KMI:1969593.1969615,Bringmann:2007:ICDM,Yan:2005:SIP:1081870.1081907} focus on providing one shot summaries of data, and do not propose interactive mechanisms. Moreover, to the best of our knowledge, other pattern mining work is either not flexible enough~\cite{Goethals:2011:MFI:2020408.2020529,Tatti:2014:FRI:2676651.2656261,DeBie:2010:FMI:1816112.1816117}, restricting the amount of tuning the user can perform, or so general~\cite{Leeuwen:2012:DSS:2347179.2347243} as to preclude efficient optimization. Our work also merges `interesting pattern mining' into the OLAP framework. We discuss related work in detail in Section~\ref{sec:related}.
 
-\noindent {\bf Contributions.} Our chief contribution in this paper is the {\em smart drill down} interaction operator,
+\noindent {\bf Contributions.} Our chief contribution in this paper is the {\em smart drill down} operator,
 an extension of traditional drill down, aimed at allowing analysts to zoom into the
 more ``interesting'' parts of a dataset. In addition to this operator,
 we develop techniques to support this operator on increasingly larger datasets:
@@ -381,7 +379,7 @@ in Section~\ref{sec:experiments} we experimentally evaluate
 performance on real datasets,
 and show additional examples of smart drill down in action.
 
-\item We describe related work in Section~\ref{sec:related}, and conclude in Section~\ref{sec:conclusion}.
+\item Section~\ref{sec:extensions} covers extensions of our work. We describe related work in Section~\ref{sec:related}, and conclude in Section~\ref{sec:conclusion}.
 \squishend 
 
 \section{Formal Description}\label{sec:formal}
@@ -408,7 +406,7 @@ enable smart drill downs on this table or on portions of it:
 the result of our drill downs are lists of {\em rules}. 
 A {\em rule} is a tuple with a value for each column of the table. 
 In addition, a rule has other attributes, such as count and weight 
-(which we define later) associated with it. 
+(defined later) associated with it. 
 The value in each column of the rule can either be one of the values in the corresponding column of the table, or $\star$, representing a wildcard character representing all values in the column. For a column with numerical values in the table, we allow the corresponding rule-value to be a range instead of a single value. The {\em trivial rule} is one that has a $\star$ value in all columns. The {\em Size} of a rule is defined as the number of non-starred values in that rule.
 
 \stitle{Coverage:} A rule $r$ is said to {\em cover} a tuple  $t$ from the table if all non-$\star$ values for all columns of the rule match the corresponding values in the tuple. We abuse notation to write this as $t \in r$. At a high level, we are interested
@@ -439,7 +437,7 @@ Further, we define {\em MCount}($r, R$) (which stands for `Marginal Count') as t
 as part of the smart drill down result, to increase the coverage of the rule-list. 
 
 Now, onto the second portion: we let $W$ denote a function that assigns a non-negative {\em weight} to a rule based on how good the rule is, with higher weights assigned to better rules. 
-As we will see, the weighting function does not depend on the specific
+The weighting function does not depend on the specific
 tuples in $\calD$, but could 
 depend on the number of $\star$s in $r$,
 the schema of $\calD$, 
@@ -477,9 +475,9 @@ for one of the following smart drill down operations:
 \item $[$Star drill down$]$ If the user clicked on a $\star$ on column $c$ of rule $r^{\prime}$, then all $r \in R$ must be super-rules of $r^{\prime}$ and have a non-$\star$ value in column $c$
 \end{denselist}
 \end{problem}
-\noindent Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' $c_m$ instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ 
-\papertext{in our technical report~\cite{tr}}.
-\techreporttext{in the `Extensions' section.}
+\noindent Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ 
+\papertext{in our technical report~\cite{tr}.}
+\techreporttext{in Section~\ref{sec:extensions}.}
 
 \subsection{Weighting Rules}
 \label{sec:weighting}
@@ -489,18 +487,27 @@ it conveys). We mention some canonical forms for function $W(r)$ \papertext{(the
 family of weighting functions our techniques can handle:
 
 \stitle{Size Weighting Function:} 
+\begin{comment}
 \techreporttext{$W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
-Here we set weight equal to the number of non-starred values in the rule $r$; we define this quantity to be the {\em size} of the rule. Consider the examples in Table~\ref{table:sizescoringexample}. The weight for rule ($a$, $b_1$) is $2$, while weight for ($a$, $\star$) is $1$. Thus, the total score for the rule-list with these two rules would be $2 \times 100 + 1 \times 900 = 1100$. If we replaced the rule ($a$, $\star$) by two rules ($a$, $b_2$) and ($a$, $\star$), then the $MCount$ of rule ($a$, $\star$) would reduce to $600$, since $300$ of its tuples would be covered by the previous rule $(a, b_2)$. Thus, our total score would be $2 \times 100 + 2 \times 300 + 1 \times 600 = 1400$. If we had instead replaced ($a$, $\star$) by ($a$, $b_3$) and ($a$, $\star$), then our score would have been $1500$ which is $> 1400$. Thus, when we marginalize on one extra column ($B$ in this case) and include a rule where that column is instantiated, it is better to do so on the value which occurs more frequently (in this case, $b_3$ which occurred $400$ times, compared to the $300$ of $b_2$).} \papertext{$W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
-Here we set weight equal to the number of non-starred values in the rule $r$ i.e. the {\em size} of the rule. For example, in Table~\ref{table:introexample}, the rule (Target, bicycles, $\star$) has weight $2$.}
+Here we set weight equal to the number of non-starred values in the rule $r$; we define this quantity to be the {\em size} of the rule. Consider the examples in Table~\ref{table:sizescoringexample}. The weight for rule ($a$, $b_1$) is $2$, while weight for ($a$, $\star$) is $1$. Thus, the total score for the rule-list with these two rules would be $2 \times 100 + 1 \times 900 = 1100$. If we replaced the rule ($a$, $\star$) by two rules ($a$, $b_2$) and ($a$, $\star$), then the $MCount$ of rule ($a$, $\star$) would reduce to $600$, since $300$ of its tuples would be covered by the previous rule $(a, b_2)$. Thus, our total score would be $2 \times 100 + 2 \times 300 + 1 \times 600 = 1400$. If we had instead replaced ($a$, $\star$) by ($a$, $b_3$) and ($a$, $\star$), then our score would have been $1500$ which is $> 1400$. Thus, when we marginalize on one extra column ($B$ in this case) and include a rule where that column is instantiated, it is better to do so on the value which occurs more frequently (in this case, $b_3$ which occurred $400$ times, compared to the $300$ of $b_2$).} 
+\end{comment}
+%\papertext{
+$W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
+Here we set weight equal to the number of non-starred values in the rule $r$ i.e. the {\em size} of the rule. For example, in Table~\ref{table:introexample}, the rule (Target, bicycles, $\star$) has weight $2$.
+%}
 
 \techreporttext{To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a hundred of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus, this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those tuples. Thus, $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus, this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.}
 
 \stitle{Bits Weighting Function:}
+\begin{comment}
 \techreporttext{
 $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. This scoring function weighs each column depending on its inherent complexity, instead of equally like the Size function. The reason behind is: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
 
 The interpretation for this function is similar to the one for the last function. Except that this time, we count the number of `bits' of the table that are pre-filled by the rules. This is because for column $c$, specifying a value in the column takes $\lceil \text{log}(|c|)\rceil$ bits of information. This scoring function is closely related to the Minimum Description Length (MDL)~\cite{Grunwald:2007:MDL:1213810} of a table. If we describe a table using the rule-set, plus values to fill in for $\star$s in the rules to get tuples, then finding a set of rules of given size $k$ that tries to minimize the length of this description, is equivalent to finding the rule-set that maximizes the total score.}
-\papertext{$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. This function weighs each column based on its inherent complexity, instead of equally like the Size function.}
+\end{comment}
+%\papertext{
+$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. This function weighs each column based on its inherent complexity, instead of equally like the Size function.
+%}
 
 \smallskip
 
@@ -529,10 +536,16 @@ A weight function can be used in several ways, including expressing a higher pre
 \subsection{Smart drill down Operations}
 \label{sec:interface}
 When the user starts using a system equipped with
-the smart drill down operator, they first see a table with a single trivial rule as shown in Table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user.\techreporttext{ As an example, clicking on the trivial rule of Table~\ref{table:introexample0} would display Table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display Table~\ref{table:introexample2}.} The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
+the smart drill down operator, they first see a table with a single trivial rule as shown in Table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user.
+%\techreporttext{ As an example, clicking on the trivial rule of Table~\ref{table:introexample0} would display Table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display Table~\ref{table:introexample2}.} 
+The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
 
-Instead of clicking on a rule, the user can click on a $\star$, say in column $c$ of rule $r$. This will also cause rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. \techreporttext{ For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see Table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise.} Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation, i.e. collapses it. \techreporttext{ For example, clicking on the walmart rule in Table~\ref{table:introexample2} would take the user back to Table~\ref{table:introexample}. This operation is equivalent to a traditional
-roll up, but for smart drill downs instead of traditional drill downs.}
+Instead of clicking on a rule, the user can click on a $\star$, say in column $c$ of rule $r$. This will also cause rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. 
+%\techreporttext{ For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see Table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise.} 
+Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation, i.e. collapses it. 
+\techreporttext{ For example, clicking on the walmart rule in Table~\ref{table:introexample2} would take the user back to Table~\ref{table:introexample}. This operation is equivalent to a traditional roll up, but for smart drill downs instead of traditional drill downs.}
+
+\begin{comment}
 
 \techreporttext{
 \begin{table}
@@ -552,6 +565,8 @@ $\triangleright$ $\triangleright$ walmart & bicycles & $\star$ & $150$ & $2$ \\ 
 \caption{Result of clicking on a $\star$ \label{table:introexample3}}
 \end{table}
 }
+\end{comment}
+
 
 
 
@@ -595,14 +610,14 @@ As a first step towards solving Problem~\ref{prob:optimal-rule-list}, we show th
 Let $R$ be a rule-list. Let $R^{\prime}$ be the rule-list having the same rules as $R$, but ordered in descending order by weight. Then
 $\text{Score}(R^{\prime}) \geq \text{Score}(R)$.
 \end{lemma}
-\papertext{The proof of this lemma, as well as other proofs, can be found in the technical report~\cite{tr}}\techreporttext{
+\papertext{The proof of this lemma, as well as other proofs, can be found in the technical report~\cite{tr}.}\techreporttext{
 \begin{proof}
 The score of rule list $R$ is given by $$\text{Score}(R) = \sum_{r \in R} W(r) \times MCount(r,R)$$
 For each tuple $t$, let $TOP(t,R)$ denote the first rule in rule-list $R$ that covers $t$. Then the MCount of rule $r$ in $R$ is simply $\sum_{t \in T : TOP(t,R) = r} 1$. Thus Score can be rewritten as:
 $$\text{Score}(R) = \sum_{t \in T} W(TOP(t,R))$$
-where we set $W(TOP(t)) = 0$ when $t$ is not covered by any rule in $R$. Now say we have rule lists $R$, $R'$ which have the same rules, but where $R'$ has rules in decreasing order by weight. For any tuple $t$ covered by $R$, let $r'$ be the highest weight rule in $R$ that covers $t$. Let $r$ be the first rule in $R$ that covers $t$. Then we have $TOP(t,R) = r$, $TOP(t, R') = r'$ and $W(r') \geq W(r)$. This gives us $W(TOP(t,R')) \geq W(TOP(t,R))$. Adding these inequalities for all $t$ covered by $R$ gives us $\text{Score}(R') \geq \text{Score}(R)$ as required.
+where we set $W(TOP(t)) = 0$ when $t$ is not covered by any rule in $R$. Now say two rule lists $R$, $R'$ have the same rules, but $R'$ has rules in decreasing order by weight. For any tuple $t$ covered by $R$, let $r'$ be the highest weight rule in $R$ that covers $t$. Let $r$ be the first rule in $R$ that covers $t$. Then $TOP(t,R) = r$, $TOP(t, R') = r'$ and $W(r') \geq W(r)$, so $W(TOP(t,R')) \geq W(TOP(t,R))$. Adding these inequalities for all $t$ covered by $R$ gives us $\text{Score}(R') \geq \text{Score}(R)$ as required.
 \end{proof}
-}. 
+}
 Thus, it is sufficient to restrict our attention to rule-lists that have rules sorted in decreasing order by weight. Or equivalently, we can define Score for a \emph{set} of rules as follows:
 
 \begin{definition}\label{def:set-score}
@@ -619,20 +634,20 @@ Given a table $T$, a monotonic weight function $W$, and a number $k$, find the s
 \noindent The reduction from Problem~\ref{prob:optimal-rule-list} to Problem~\ref{prob:optimal-rule-set} is clear. We now first show that Problem~\ref{prob:optimal-rule-set}, and consequently Problem~\ref{prob:optimal-subrule-list} and Problem~\ref{prob:optimal-rule-list} are {\sc NP-Hard}, and then present an approximation algorithm for solving Problem~\ref{prob:optimal-rule-set}.
 
 \subsection{NP-Hardness for Problem~\ref{prob:optimal-rule-set}}
-We reduce the well known {\sc NP-Hard} {\em Maximum Coverage Problem} to a special case of Problem~\ref{prob:optimal-rule-set};
-thus demonstrating the {\sc NP-Hard}ness of Problem~\ref{prob:optimal-rule-set}. The Maximum Coverage Problem is as follows: 
+We reduce the well known {\sc NP-Hard} {\em Maximum Coverage Problem} (MCP) to a special case of Problem~\ref{prob:optimal-rule-set};
+thus demonstrating the {\sc NP-Hard}ness of Problem~\ref{prob:optimal-rule-set}. MCP is given below: 
 \begin{problem}\label{prob:maximum-coverage}
 Given a universe set $U$, an integer $k$, and a set $S = \left\lbrace S_1, S_2, ... S_m \right\rbrace$ of subsets of $U$ (so each $S_i \subset U$), find $S^{\prime} \subset S$ such that $|S^{\prime}| = k$, which maximizes $\text{Coverage}(S^{\prime}) = |\bigcup_{s \in S^{\prime}} s|$.
 \end{problem}
-Thus, the goal of the maximum coverage problem is to find a set of $k$ of the given subsets of $U$ whose union `covers' as much of $U$ as possible. We can reduce an instance of the Maximum Coverage Problem (with parameters $U, k, S$) to an instance of Problem~\ref{prob:optimal-rule-set}, which gives us the following lemma:
+Thus, the goal of MCP is to find a set of $k$ of the given subsets of $U$ whose union `covers' as much of $U$ as possible. We can reduce an instance of MCP (with parameters $U, k, S$) to an instance of Problem~\ref{prob:optimal-rule-set}, which gives us the following lemma:
 \begin{lemma}
 Problem~\ref{prob:optimal-rule-set} is {\sc NP-Hard}.
 \end{lemma}
 
 
 \subsection{Algorithm Overview}\label{sec:alg-overview}
-Given that the problem is {\sc NP-Hard}, we now present our algorithms 
-for approximating the solution to Problem~\ref{prob:optimal-rule-set}. 
+Given that Problem~\ref{prob:optimal-rule-set} is {\sc NP-Hard}, we now present our algorithms 
+for approximating the solution to it. 
 The problem consists of finding a set of rules, given size $k$, that maximizes 
 Score. 
 
@@ -940,14 +955,14 @@ This can be solved using dynamic programming, in $O(D\mathcal{S}3^d)$ time.
 
 \techreporttext{
 \subsubsection{Alternative Convex-Optimization based solution}
-We noted earlier that Problem~\ref{prob:sample-sizes} is NP-Hard, but can be approximately solved with an additional simplifying assumption regarding the $S(r_1, r_2)$ values. Instead of making this simplification, we can make the problem convex (and hence tractable) with two different simplifications. The first simplification is, we modify our objective function to use hinge-loss instead of a step function. That is, our new objective function to maximise is $$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{min}(1, \frac{ess(r^{\prime})}{minSS} $$
+We noted earlier that Problem~\ref{prob:sample-sizes} is NP-Hard, but can be approximately solved with an additional simplifying assumption regarding the $S(r_1, r_2)$ values. Instead of making this simplification, we can make the problem convex (and hence tractable) with two different simplifications. The first simplification is, we modify our objective function to use hinge-loss instead of a step function. That is, our new objective function to maximise is $$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{min}\left(1, \frac{ess(r^{\prime})}{minSS}\right)$$
 Here we assume that it is acceptable to run our algorithm on samples smaller than $minSS$,  though we still prefer bigger sample sizes upto $minSS$. The other simplification we make is assuming that the sample sizes $n_r$ are real numbers instead of integers. After obtaining our optimal sample sizes, we can round them up to get integer sample sizes. This will increase the memory usage by at most $|U|$, the number of nodes in displayed tree. $|U|$ is usually negligible compared to the memory capacity $M$, or $minSS$.
 
 In addition, in order to express our problem as a convex minimization problem, we negate the objective function and aim to minimize it (which is equivalent to maximizing the original objective function). Thus, our new optimization problem becomes
 \begin{problem}\label{prob:sample-sizes-hinge-loss}
 Given a tree of rules $U$ with leaves $L$, a probability distribution $p$ over $L$, an integer $M$, and selectivity ratio $S(r_1, r_2)$ for each $r_1, r_2 \in U$, 
 choose a real number $n_r \geq 0$ for each $r \in U$ so as to $\textrm{minimize}$ :
-$$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{max}(-1, -\frac{ess(r^{\prime})}{minSS} $$
+$$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{max}\left(-1, -\frac{ess(r^{\prime})}{minSS}\right) $$
 subject to :
 $$\sum_{r \in U} n_r \leq M$$
 \end{problem}
