@@ -66,22 +66,22 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.2}Alternative Convex-Optimization based solution}{9}}
 \newlabel{prob:sample-sizes-hinge-loss}{{6}{9}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.3}Additional optimizations}{9}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.4}Setting $minSS$}{9}}
 \citation{maibdr1983}
 \citation{Vitter:1985:RSR:3147.3165}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.4}Setting $minSS$}{10}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.5}Design of the SampleHandler}{10}}
 \newlabel{sec:sample-handler}{{3.5.5}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experiments}{10}}
+\newlabel{sec:experiments}{{4}{10}}
 \citation{dataset1}
 \citation{uciml}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Experiments}{11}}
-\newlabel{sec:experiments}{{4}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Qualitative Study}{11}}
-\newlabel{sec:exp_qualitative}{{4.1}{11}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Summary after clicking on the empty rule \relax }}{11}}
 \newlabel{fig:uiexample1}{{1}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Qualitative Study}{11}}
+\newlabel{sec:exp_qualitative}{{4.1}{11}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}Testing the User Interface}{11}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Star expansion on `Education' Column \relax }}{11}}
 \newlabel{fig:uiexamplestar}{{2}{11}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}Testing the User Interface}{11}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2}Weighting functions}{11}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A rule expansion \relax }}{12}}
 \newlabel{fig:uiexamplerule}{{3}{12}}
@@ -92,7 +92,11 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Effects of $m_w$}{12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Running time for different values of parameter $m_w$ \relax }}{12}}
 \newlabel{fig:mw_speed}{{5}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Bits scoring\relax }}{12}}
+\newlabel{fig:weigtingbitwise}{{6}{12}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Effects of $minSS$}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Size minus one weighting \relax }}{12}}
+\newlabel{fig:weightingsizeminusone}{{7}{12}}
 \citation{Sarawagi:2001:UMA:767141.767148}
 \citation{Sarawagi00user-adaptiveexploration}
 \citation{Sarawagi98discovery-drivenexploration}
@@ -108,19 +112,6 @@
 \citation{Lakshmanan:2002:GMA:1287369.1287435}
 \citation{DBLP:conf:kdd:XiangJFD08}
 \citation{Geerts04tilingdatabases}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Bits scoring\relax }}{13}}
-\newlabel{fig:weigtingbitwise}{{6}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Size minus one weighting \relax }}{13}}
-\newlabel{fig:weightingsizeminusone}{{7}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Scaling properties of our algorithms}{13}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Extensions}{13}}
-\newlabel{sec:extensions}{{5}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Dealing with Numerical Attributes}{13}}
-\newlabel{sec:extensions-numerical}{{5.1}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Using Sum instead of Count}{13}}
-\newlabel{sec:extensions-sum}{{5.2}{13}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Related Work}{13}}
-\newlabel{sec:related}{{6}{13}}
 \citation{apriori}
 \citation{1411744}
 \citation{Han:2000:MFP:342009.335372}
@@ -130,6 +121,15 @@
 \citation{Vreeken:2011:KMI:1969593.1969615}
 \citation{Bringmann:2007:ICDM}
 \citation{Yan:2005:SIP:1081870.1081907}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Scaling properties of our algorithms}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Extensions}{13}}
+\newlabel{sec:extensions}{{5}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Dealing with Numerical Attributes}{13}}
+\newlabel{sec:extensions-numerical}{{5.1}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Using Sum instead of Count}{13}}
+\newlabel{sec:extensions-sum}{{5.2}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Related Work}{13}}
+\newlabel{sec:related}{{6}{13}}
 \citation{Goethals:2011:MFI:2020408.2020529}
 \citation{Tatti:2014:FRI:2676651.2656261}
 \citation{DeBie:2010:FMI:1816112.1816117}
@@ -156,13 +156,6 @@
 \bibcite{DeBie:2010:FMI:1816112.1816117}{12}
 \bibcite{DBLP:journals/pvldb/GebalyAGKS14}{13}
 \bibcite{Geerts04tilingdatabases}{14}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces (a) Running time for different values of parameter $minSS$ (b) Error in Count for different values of parameter $minSS$ (c) Average number of incorrect rules for different values of parameter $minSS$  \relax }}{14}}
-\newlabel{fig:minSS_speed}{{8}{14}}
-\newlabel{fig:minSS_error_percent}{{8}{14}}
-\newlabel{fig:minSS_error_rule}{{8}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{14}}
-\newlabel{sec:conclusion}{{7}{14}}
-\@writefile{toc}{\contentsline {section}{References}{14}}
 \bibcite{Goethals:2011:MFI:2020408.2020529}{15}
 \bibcite{Golab:2008:GNT:1453856.1453900}{16}
 \bibcite{DBLP:journals/debu/GolabKS11}{17}
@@ -176,6 +169,13 @@
 \bibcite{Mampaey:2011:TMI:2020408.2020499}{25}
 \bibcite{maibdr1983}{26}
 \bibcite{Miller:1997:ARO:253260.253361}{27}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces (a) Running time for different values of parameter $minSS$ (b) Error in Count for different values of parameter $minSS$ (c) Average number of incorrect rules for different values of parameter $minSS$  \relax }}{14}}
+\newlabel{fig:minSS_speed}{{8}{14}}
+\newlabel{fig:minSS_error_percent}{{8}{14}}
+\newlabel{fig:minSS_error_rule}{{8}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{14}}
+\newlabel{sec:conclusion}{{7}{14}}
+\@writefile{toc}{\contentsline {section}{References}{14}}
 \bibcite{Sarawagi00user-adaptiveexploration}{28}
 \bibcite{Sarawagi:2001:UMA:767141.767148}{29}
 \bibcite{Sarawagi98discovery-drivenexploration}{30}
