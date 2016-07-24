@@ -62,11 +62,25 @@
 
 \begin{document}
 
-\title{Interactive Data Exploration with Smart Drill-Down}
+\textbf{Note to Reviewers}: We have made the following additions to the extended version of our paper.
+
+\begin{enumerate}
+\item We have added pseudo-code for the `Find Best Marginal Rule' subroutine of the BRS algorithm.
+\item We have added methods for setting good values of our tunable parameters $W$, $k$, and $m_w$ in Section~\ref{sec:setting-paramters}.
+\item Section~\ref{sec:sampling} has been significantly expanded, with details on how to utilize samples stored in memory and when to form new samples. We have also added a more detailed description and proof for our approximate dynamic-programming based algorithm for determining the best samples to form.
+\item We have added an alternative convex-optimization based solution for determining the best samples.
+\item Additionally, Section~\ref{sec:sampling} contains additional optimizations such as pre-fetching, and guidelines for setting the sampling parameter $minSS$. 
+\item Section~\ref{sec:extensions} contains two simple extensions, namely dealing with numerical attributes, and using aggregates other than Count. 
+\end{enumerate}
+
+\newpage
+
+
+\title{Interactive Data Exploration with Smart Drill-Down (Extended Version)}
 
 \author{Manas~Joglekar,
         Hector~Garcia-Molina,~\IEEEmembership{Member,~IEEE,}
-        Aditya~Parameswaran
+        Aditya~Parameswaran,~\IEEEmembership{Member,~IEEE,}
 %\thanks{H. Garcia-Molina, M. Joglekar and V. Verroios are with Stanford University}%
 %\thanks{A. Marcus is with Unlimited Labs}%
 %\thanks{A. Parameswaran is with the University of Illinois (UIUC)}
@@ -371,8 +385,10 @@ building {\sc DataSpread}~\cite{dataspread}, a data analytics system with a spre
 \item In Section~\ref{sec:formal}, we formally define smart drill down. After that, we describe different schemes for weighting rules, and our interactive user interface.
 
 \item In Section~\ref{sec:algorithms}, we present our algorithms for
-finding optimal sets of rules, as well as our dynamic sampling schemes
-for dealing with large tables.
+finding optimal sets of rules.
+
+\item In Section~\ref{sec:sampling}, we present our dynamic sampling schemes
+for dealing with large tables
 
 \item Based on our implemented smart drill down,
 in Section~\ref{sec:experiments} we experimentally evaluate
@@ -589,21 +605,6 @@ $$\text{Score}(R) = \sum_{r \in R}W(r)MCount(r,R)$$
 \item $[$Star drill down$]$ If the user clicked on a $\star$ in column $c$ of rule $r$, then we first filter table $T$ to get a smaller table $T_r$ consisting of tuples from $T$ that are covered by $r$. In addition, we change the weight function $W$ from Problem~\ref{prob:optimal-subrule-list} to a weight function $W^{\prime}$ such that : For any rule $r^{\prime}$, $W^{\prime}(r^{\prime}) = 0$ if $r^{\prime}$ has a $\star$ in column $c$, and $W^{\prime}(r^{\prime}) = W(r^{\prime})$ otherwise. Then, we solve Problem~\ref{prob:optimal-rule-list} for parameters $(T_r, W^{\prime}, k)$.
 \end{enumerate}
 
-\begin{algorithm}
-\scriptsize
-\KwIn{$k$ (Number of rules required), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
-\KwOut{$S$ (Solution set of rules)}
-$S = \phi$ 
-
-\For {$i$ from $1$ to $k$}{
-$R_m = \text{Find\_best\_marginal\_rule}(S, T, m_w, W)$ 
-
-$S = S \cup \left\lbrace R_m \right\rbrace$
-}
-\Return $S$
-\caption{Greedy Algorithm for Problem~\ref{prob:optimal-rule-set}\label{algo:best-rule-set}}
-\end{algorithm}
-
 As a first step towards solving Problem~\ref{prob:optimal-rule-list}, we show that the rules in the optimal list must effectively be ordered in decreasing order by weight. Note that the weight of a rule is independent of its $MCount$. The $MCount$ of a rule is the number of tuples that have been `assigned' to it, and each tuple assigned to rule $r$ contributes $W(r)$ to the total score. Thus, if the rules are not in decreasing order by weight in a rule list $R$, then switching the order of rules in $R$ transfers some tuples from a lower weight rule to a higher weight rule, which can increase total score.
 
 \begin{lemma}\label{lemma:rule-ordering}
@@ -662,6 +663,65 @@ we start with an empty rule set $R$, and then at each step, we add the next best
 \item In order to find the rule $r$ to add in each step, we need to measure the impact on Score for each $r$. This is done in several passes over the table, using ideas from the a-priori algorithm~\cite{apriori} for frequent item-set mining. 
 \squishend
 
+In some cases, the dataset may still be too large for us to return a good rule set in
+a reasonable time; in such cases, we may want to run our algorithm on a sample of the table
+rather than the entire table. In Section~\ref{sec:sampling}, we describe a scheme 
+for maintaining multiple samples in memory and using them to improve response 
+time for different drill down operations performed by the user. Our sampling scheme dynamically adapts to the current interaction scenario that the user is in; drawing from ideas in approximation algorithms and optimization theory.
+
+\subsection{Greedy Approximation Algorithm}\label{sec:greedy-approx}
+\stitle{Submodularity:} We will now show that the Score function over sets of rules has a property called {\em submodularity}, giving us a greedy approximation algorithm for optimizing it. 
+\begin{definition}
+A function $f: 2^S \rightarrow \mathbb{R}$ for any set $S$ is said to be submodular if and only if, for every $s \in S$, and $A \subset B \subset S$ with $s \notin A$: $f(A \cup \left\lbrace s \right\rbrace) - f(A) \geq f(B \cup \left\lbrace s \right\rbrace) - f(B)$
+\end{definition}
+Intuitively, this means that the marginal value of adding an element to a set $S$ cannot increase if we add it to a superset of $S$ instead. For monotonic non-negative submodular functions, it is well known that the solution to the problem of finding the set of a given size with maximum value for the function can be found approximately in a greedy fashion. 
+
+\begin{lemma}\label{lemma:submodular}
+For a given table $T$, the Score function over sets $S$ of rules, defined by the following is submodular:
+$$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
+\end{lemma}
+\vspace{-10pt}
+
+\stitle{High-Level Procedure:} Based on the submodularity property, the greedy procedure,
+shown in Algorithm~\ref{algo:best-rule-set}, has desirable approximation guarantees. Since Score is a submodular function of the set $S$, 
+this greedy procedure is guaranteed to give us a score within a $1 - \frac{1}{e}$ factor of the optimum (actually, it is $1 - (\frac{k-1}{k})^k$ for $k$ rules, which is much better for small $k$). 
+
+The expensive step in the above procedure is where the Score is computed for every
+single rule. Given the number of rules can be as large as the table itself, this is very time-consuming.
+
+Instead of using the procedure described above directly, we instead develop a ``parameterized'' version 
+that will admit further approximation (depending on the parameter) in order to reduce computation further. We describe
+this algorithm next.
+
+\begin{algorithm}
+\scriptsize
+\KwIn{$k$ (Number of rules required), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
+\KwOut{$S$ (Solution set of rules)}
+$S = \phi$ 
+
+\For {$i$ from $1$ to $k$}{
+$R_m = \text{Find\_best\_marginal\_rule}(S, T, m_w, W)$ 
+
+$S = S \cup \left\lbrace R_m \right\rbrace$
+}
+\Return $S$
+\caption{BRS\label{algo:best-rule-set}}
+\end{algorithm}
+
+\stitle{Parametrized Algorithm:} Our algorithm pseudo-code is given in the box labeled Algorithm~\ref{algo:best-rule-set}. We call our algorithm {\em BRS} (for \textbf{B}est \textbf{R}ule \textbf{S}et). BRS takes four parameters as input: the table $T$, the number of required rules $k$, a parameter $m_w$ (described in the next paragraph), and the weight function $W$. 
+
+The parameter $m_w$ stands for \textit{Max Weight}. This parameter tells the algorithm to assume that all rules that appear in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, BRS is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by BRS does not contain $r$. BRS runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, its Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as Size). Thus, rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small. \papertext{In the technical report~\cite{DBLP:journals/pvldb/JoglekarGP15}, we describe strategies for setting $k$, $m_w$ and other parameters.} \techreporttext{Later in this section, we describe strategies for setting $m_w$ as well as other parameters.}
+
+% TODO: scheme/heuristic for finding good m_w values, since it seems arbitrary. Later, experiments testing effect of m_w on running time, and experiments to test finding heuristic, and show that values are in fact small.
+
+BRS initializes the solution set $S$ to be empty, and then iterates for $k$ steps, adding the best marginal rule at each step. To find the best marginal rule, it calls a function to find the best marginal rule given the existing set of rules $S$. 
+
+\subsection{Finding the Best Marginal Rule}\label{sec:finding-best-marginal}
+In order to find the best marginal rule, we need to find the marginal values of several rules and then choose the best one. A brute-force way to do this would be to enumerate all possible rules, and to find the marginal value for each of those rules in a single pass over the data. But the number of possible rules may be almost as large as the size of the table itself, making this step very expensive in terms of computation and memory. 
+
+In order to avoid counting too many rules, we leverage a technique inspired by the {\em a-priori} algorithm for frequent itemset mining~\cite{apriori}. Recall that the a-priori algorithm is used to find all frequent itemsets that have a support greater than a threshold. Unlike the a-priori algorithm, our goal is to find the single best marginal rule. Since we only aim to find one rule at a time, our pruning power is significantly higher than a vanilla a-priori algorithm, and we terminate in much fewer passes over the dataset. 
+
+
 \techreporttext{
 \begin{algorithm}
 \scriptsize
@@ -715,48 +775,6 @@ $H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
 \end{algorithm}
 }
 
-In some cases, the dataset may still be too large for us to return a good rule set in
-a reasonable time; in such cases, we may want to run our algorithm on a sample of the table
-rather than the entire table. In Section~\ref{sec:sampling}, we describe a scheme 
-for maintaining multiple samples in memory and using them to improve response 
-time for different drill down operations performed by the user. Our sampling scheme dynamically adapts to the current interaction scenario that the user is in; drawing from ideas in approximation algorithms and optimization theory.
-
-\subsection{Greedy Approximation Algorithm}\label{sec:greedy-approx}
-\stitle{Submodularity:} We will now show that the Score function over sets of rules has a property called {\em submodularity}, giving us a greedy approximation algorithm for optimizing it. 
-\begin{definition}
-A function $f: 2^S \rightarrow \mathbb{R}$ for any set $S$ is said to be submodular if and only if, for every $s \in S$, and $A \subset B \subset S$ with $s \notin A$: $f(A \cup \left\lbrace s \right\rbrace) - f(A) \geq f(B \cup \left\lbrace s \right\rbrace) - f(B)$
-\end{definition}
-Intuitively, this means that the marginal value of adding an element to a set $S$ cannot increase if we add it to a superset of $S$ instead. For monotonic non-negative submodular functions, it is well known that the solution to the problem of finding the set of a given size with maximum value for the function can be found approximately in a greedy fashion. 
-
-\begin{lemma}\label{lemma:submodular}
-For a given table $T$, the Score function over sets $S$ of rules, defined by the following is submodular:
-$$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
-\end{lemma}
-\vspace{-10pt}
-
-\stitle{High-Level Procedure:} Based on the submodularity property, the greedy procedure,
-shown in Algorithm~\ref{algo:best-rule-set}, has desirable approximation guarantees. Since Score is a submodular function of the set $S$, 
-this greedy procedure is guaranteed to give us a score within a $1 - \frac{1}{e}$ factor of the optimum (actually, it is $1 - (\frac{k-1}{k})^k$ for $k$ rules, which is much better for small $k$). 
-
-The expensive step in the above procedure is where the Score is computed for every
-single rule. Given the number of rules can be as large as the table itself, this is very time-consuming.
-
-Instead of using the procedure described above directly, we instead develop a ``parameterized'' version 
-that will admit further approximation (depending on the parameter) in order to reduce computation further. We describe
-this algorithm next.
-
-\stitle{Parametrized Algorithm:} Our algorithm pseudo-code is given in the box labeled Algorithm~\ref{algo:best-rule-set}. We call our algorithm {\em BRS} (for \textbf{B}est \textbf{R}ule \textbf{S}et). BRS takes four parameters as input: the table $T$, the number of required rules $k$, a parameter $m_w$ (described in the next paragraph), and the weight function $W$. 
-
-The parameter $m_w$ stands for \textit{Max Weight}. This parameter tells the algorithm to assume that all rules that appear in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, BRS is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by BRS does not contain $r$. BRS runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, its Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as Size). Thus, rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small. \papertext{In the technical report~\cite{DBLP:journals/pvldb/JoglekarGP15}, we describe strategies for setting $k$, $m_w$ and other parameters.} \techreporttext{Later in this section, we describe strategies for setting $m_w$ as well as other parameters.}
-
-% TODO: scheme/heuristic for finding good m_w values, since it seems arbitrary. Later, experiments testing effect of m_w on running time, and experiments to test finding heuristic, and show that values are in fact small.
-
-BRS initializes the solution set $S$ to be empty, and then iterates for $k$ steps, adding the best marginal rule at each step. To find the best marginal rule, it calls a function to find the best marginal rule given the existing set of rules $S$. 
-
-\stitle{Finding the Best Marginal Rule:} In order to find the best marginal rule, we need to find the marginal values of several rules and then choose the best one. A brute-force way to do this would be to enumerate all possible rules, and to find the marginal value for each of those rules in a single pass over the data. But the number of possible rules may be almost as large as the size of the table itself, making this step very expensive in terms of computation and memory. 
-
-In order to avoid counting too many rules, we leverage a technique inspired by the {\em a-priori} algorithm for frequent itemset mining~\cite{apriori}. Recall that the a-priori algorithm is used to find all frequent itemsets that have a support greater than a threshold. Unlike the a-priori algorithm, our goal is to find the single best marginal rule. Since we only aim to find one rule at a time, our pruning power is significantly higher than a vanilla a-priori algorithm, and we terminate in much fewer passes over the dataset. 
-
 We compute the best marginal rule over multiple passes on the dataset, with the maximum number of passes equal to the maximum size of a rule. In the $j^{th}$ pass, we compute counts and marginal values for rules of size $j$. To give an example, suppose we had three columns $c_1$, $c_2$, and $c_3$. In the first pass, we would compute the counts and marginal values of all rules of size $1$. In the second pass, instead of finding marginal values for all size $2$ rules, we can use our knowledge of counts from the first pass to upper bound the potential counts and marginal values of size $2$ rules, and be more selective about which rules to count in the second pass. For instance, suppose we know that the rule $(a, \star, \star)$ has a count of $1000$, while $(\star, b, \star)$ has a count of $100$. Then for any value $c$ in column $c_3$ we would know that the count of $(\star, b, c)$ is at most $100$ because it cannot exceed that of $(\star, b, \star)$. This implies that the maximum marginal value of any super-rule of $(\star, b, c)$ having weight $\leq m_w$ is at most $100m_w$. If the rule $(a, \star, \star)$ has a marginal value of $800$, then the marginal value of any super-rule of $(\star, b, \star)$ cannot possibly exceed that of $(a, \star, \star)$. Since our aim is to only find the highest marginal value rule, we can skip counting for all super-rules of $(\star, b, \star)$ for future passes.
 
 We now describe the function to find the best marginal rule. \papertext{The pesudo-code for the function is in the technical report}\techreporttext{The pseudo-code for the function is in the box titled Algorithm~\ref{algo:best-marginal-rule}}. The function maintains a threshold $H$, which is the highest marginal value that has been found for any rule so far. The function makes several passes over the table \techreporttext{(Step $3$)}, counting marginal values for size $j$ rules in the $j^{th}$ pass. We maintain three sets of rules: $C$, the set of rules whose marginal values have been counted in all previous passes, $C_n$, the set of rules whose marginal values will be counted in the current pass, and $C_o$, the set of rules whose marginal values were counted in the previous pass. For the first pass, we set $C_n$ to be all rules of size $1$. Then we compute marginal values for those rules, and set $C = C_o = C_n$.
@@ -766,7 +784,8 @@ For the second pass onwards, we are more selective about which rules to consider
 The reader may be wondering why we did not simply count the score of each rule using a variant of the a-priori algorithm in one pass, and then pick the set of rules that maximizes score subsequently. This is because doing so will lead to a sub-optimal set of rules: by not accounting for the rules that have already been selected, we will not be able to ascertain the marginal benefit of adding an additional rule correctly.
 
 \techreporttext{
-\stitle{Setting parameters $W$, $k$, $m_w$:} Our system allows the user to tune the smart drill-down by adjusting a number of parameters. Having a lot of tunable parameters can increase the difficulty of using a system by increasing the decision-making burden on the user. To counteract this, we now provide ways to guide the user while selecting appropriate parameter values.
+\subsection{Setting parameters $W$, $k$, $m_w$}\label{sec:setting-paramters}
+Our system allows the user to tune the smart drill-down by adjusting a number of parameters. Having a lot of tunable parameters can increase the difficulty of using a system by increasing the decision-making burden on the user. To counteract this, we now provide ways to guide the user while selecting appropriate parameter values.
 
 Parameter $k$ is the number of new rules to display upon each smart drill-down. Large values of $k$ increase the run-time quadratically, and can also overwhelm the user with too much information. Very small values of $k$ may display too little information about the table. Fortunately, the BRS algorithm is incremental in nature. That is, in order to find the best rule list of size $k+1$, it first finds the best rule-list of size $k$, and then finds another rule to add to get a rule-list of size $k+1$. Thus instead of running the algorithm with a fixed value of $k$, it can start with an empty rule-list and keep adding rules to it, displaying new rules as they are found. This search for additional rules can stop when the user issues a new smart drill-down command to the system, or manually stops the search. Alternatively, we can set a time limit (of say $5$ seconds) and display as many rules as we can find within that time limit.
 
@@ -775,14 +794,14 @@ $W$ is the weight function that determines which rules are interesting. This is 
 The $m_w$ parameter lets the user trade off the accuracy of the optimal rule-list and the running time. Ideally we want $m_w$ to equal the actual maximum weight of a rule in the optimal rule-list; this way we get full accuracy while also optimizing run-time. We cannot know the ideal value of $m_w$ in advance, but we can easily estimate it using sampling. We create a small random sample of tuples from the table, and run the BRS algorithm on it. Then the maximum weight $x$ of the output on the sample is likely to equal the maximum weight of the actual output. To account for sampling error, we can set $m_w$ to $2x$, which works well in practice.
 }
 
-\subsection{Dynamic Sampling for Large Tables}\label{sec:sampling}
+\section{Dynamic Sampling for Large Tables}\label{sec:sampling}
 
 \papertext{
 BRS makes multiple passes over the table in order to determine the best set of rules to display. This can be slow when the table is too large to fit in main memory. We can reduce the response time of smart drill down by running BRS on a sample of the table instead, trading off accuracy of our rules for performance. If we had obtained a sample $s$ by selecting each table tuple with probability $p$, and run BRS on $s$, then we multiply the count of each rule found by BRS, by $\frac{1}{p}$ to estimate its count over the full table.
 
 In Section~\ref{sec:sampling_algorithms}, we describe the problem of optimally allocating memory to different samples. We show that the problem is NP-Hard, and describe an approximate solution. In Section~\ref{sec:sample-handler}, we describe a component of the system called the {\em SampleHandler}, which is responsible for creating and maintaining multiple samples of different parts of the table in memory, and creating temporary samples for BRS to process. Detailed descriptions of the sampling problem and the SampleHandler are in the technical report. The technical report also contains some additional optimizations, and ways to set the minimum sample size.
 
-\subsubsection{Deciding what to sample}\label{sec:sampling_algorithms}
+\subsection{Deciding what to sample}\label{sec:sampling_algorithms}
 We are given a memory capacity $M$, and a minimum sample size $minSS$, both specified by the user. $minSS$ is the minimum number of tuples on which we are allowed to run BRS, without accessing the hard disk. A higher value of $minSS$ increases both accuracy and computation cost of our system.
 
 At any point, we have a tree $U$ of rules displayed to the user. Initially, the tree consists of a single node corresponding to the empty rule. When the user drills down on a rule $r$, the sub-rules of $r$ obtained by running BRS are added as children of node $r$. 
@@ -817,17 +836,17 @@ The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace,
 }
 
 \techreporttext{
-Our greedy algorithm needs to make multiple passes over the entire table in order to find counts of rules. These passes can be expensive if the table is large and the table does not fit in main memory. If we want exact counts for rules, we have no choice but to read the entire table. 
+The BRS algorithm need to to make multiple passes over the entire table in order to find counts of rules. These passes can be expensive if the table is large and the table does not fit in main memory. If we want exact counts for rules, we have no choice but to read the entire table. 
 
 But if we are willing to accept approximate counts rather than exact counts, we can speed up our algorithm by loading a sample of the table into main memory, finding rule counts on the sample, and scaling up the count. Since our goal is to find a representative coverage of the table, if we miss out on a few rare tuples, it does not hurt us. If we had obtained the sample by sampling each tuple with probability $p$, then we must multiply the sample count of each rule by $\frac{1}{p}$ to get an estimate of its count over the full table. 
 
 Thus, we use sampling to trade-off a small amount of accuracy for a faster response time. We now describe our sampling schemes for improving the running time of our algorithm on tables that are too large to fit in main memory. 
 
-We describe our technique to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk in Section~\ref{sec:sampling_algorithms}. 
+We describe our technique to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk in Section~\ref{sec:sampling_algorithms} through Section~\ref{sec:alternative-convex}. 
 Then, in Section~\ref{sec:sample-handler}, we describe a component of our system, called the {\em SampleHandler}, which is responsible for creating and maintaining samples of the table in memory, subject to user specified memory constraints. The SampleHandler maintains multiple samples corresponding to different parts of the table, which can be used depending on which rule the user decides to expand next. Finally, we mention some additional optimizations we can make, and
 describe how we can set the minimum sample size required from the SampleHandler.
 
-\subsubsection{Algorithms for deciding what to sample}\label{sec:sampling_algorithms}
+\subsection{Algorithms for deciding what to sample}\label{sec:sampling_algorithms}
 
 We are given a memory capacity or budget $M$, and a minimum sample size $minSS$ (both specified by the user). $M$ can simply be set to the actual available memory, while $minSS$ can easily be computed as a function of the desired estimation error.
 The parameter $minSS$ is the minimum number of sample tuples needed
@@ -877,10 +896,11 @@ We assume that we have a probability distribution over leaves, which assigns a p
 % When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to make a pass through the entire table, as well as potentially shrink some existing samples to free up memory. Since making a pass over the the table from the hard disk is usually a bottleneck, it can also do things like creating samples for rules other than $r$, and augmenting existing samples, in the same pass. Hence, we assume that in a \textbf{Create} phase, the SampleHandler not only creates one new sample for $r$, but also potentially creates other new samples, or resizes existing samples. For each displayed rule $r^{\prime}$, it may create a new sample for $r^{\prime}$ in the same pass through the table. Based on the current leaves and their expansion probabilities, it finds an optimal set of sizes of samples to create for each displayed rule. More specifically, for every displayed rule $r^{\prime}$, it determines an integer $n_{r^{\prime}}$, and then creates a fresh sample $s_{r^{\prime}}$ with $f_{s_{r^{\prime}}} = r^{\prime}$ and $|T_{s_{r^{\prime}}}| = n_{r^{\prime}}$ while making its pass through the table. 
 
 \stitle{Sampling Strategy.} The sampling strategy we adopt involves storing, 
-for every displayed rule $r'$, a sample of $r'$ of size $n_{r'}$, i.e., 
+for every displayed rule $r'$ in $U$, a sample of $r'$ of size $n_{r'}$, i.e., 
 containing $n_{r'}$ randomly chosen tuples $\in r'$.
 Note that we may choose to not store a sample for some rules, in which case $n_{r'}$
-will be zero for those rules. 
+will be zero for those rules. Also note that we may store samples for $r' \in U \setminus L$, because even though the user cannot expand an internal node of $U$, a sample of an internal $r'$ can help us create samples for each descendant of $r'$ in $L$.
+
 We need to pick the $n_{r^{\prime}}$ values so as to maximize the probability that the next user drill down can be satisfied using samples available in memory. 
 As it turns out, picking a sample for some rules can help not just that rule, but
 also all of its sub-rules, all the while preserving uniform randomness of samples. We formalize this notion next.
@@ -954,7 +974,7 @@ Dynamic programming solves this in $O(D\mathcal{S}3^d)$ time.
 }
 
 \techreporttext{
-\subsubsection{Alternative Convex-Optimization based solution}
+\subsection{Alternative Convex-Optimization based solution}\label{sec:alternative-convex}
 We noted earlier that Problem~\ref{prob:sample-sizes} is NP-Hard, but can be approximately solved with an additional simplifying assumption regarding the $S(r_1, r_2)$ values. Instead of making this simplification, we can make the problem convex (and hence tractable) with two different simplifications. The first simplification is, we modify our objective function to use hinge-loss instead of a step function. That is, our new objective function to maximise is $$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{min}\left(1, \frac{ess(r^{\prime})}{minSS}\right)$$
 Here we assume that it is acceptable to run our algorithm on samples smaller than $minSS$, though we still prefer bigger sample sizes upto $minSS$. The other simplification we make is assuming that sample sizes are real numbers instead of integers. After determining optimal sample sizes, we can round them up to get integer sample sizes. This will increase the memory usage by at most $|U|$, the number of nodes in displayed tree, which is negligible compared to the memory capacity $M$, or $minSS$.
 
@@ -971,13 +991,13 @@ The constraint is linear in the $n_r$ variables, and hence convex. Each $ess$ va
 The main weakness of this approach is that the hinge-loss objective rewards values of $ess < minSS$, which may lead us to all leaves having large $ess$ values that are nonetheless less than $minSS$, and thus gives lower quality count estimates than required by the user.
 
 
-\subsubsection{Additional optimizations}
+\stitle{Additional optimizations:}
 There are some additional minor optimizations we can make to reduce the memory cost per sample, allowing us to store more and bigger samples. 
 Suppose we have a sample $s$, and say its filter rule $f_s$ has value $v$ in column $c$. Then we know that each tuple $t$ in $T_s$ must also have value $v$ in column $c$, since it is covered by $f_s$. So we do not need to explicitly store the column $c$ value of any tuple in $T_s$. We only need to store the tuple values of columns that have a $\star$ value in $f_s$.
 In addition, we may have a tuple occur in multiple samples. Instead of storing the entire tuple repeatedly, we could create a dictionary of common tuples, and only store a pointer to the tuple's dictionary entry in $T_s$. 
 
 
-\subsubsection{Setting $minSS$}
+\stitle{Setting $minSS$:}
 Suppose a rule $r$ covers $x$ fraction of the tuples of $T$ i.e. $x|T|$ tuples. Say we have a uniform random sample $s$ of $T$. The samples has size $|T_s|$, and let $X_{r,s}$ be the random variable denoting the number of tuples of $T_s$ covered by $r$. Then $E\left[ X_{r,s} \right] = x|T_s|$, and $\text{Dev}(X_{r,s}) \approx \sqrt{|T_s|x(1-x)}$. In order to get a good estimate of $x$ (and hence of Count$(r) = x|T|$), we want $E\left[X_{r,s}\right] >> \text{Dev}(X_{r,s})$. That is, $x|T_s| >> \sqrt{|T_s|x(1-x)} \Leftrightarrow \frac{x|T_s|}{1-x} >> 1$. 
 
 We want to set the parameter minSS such that we get good count estimates for rules when using a sample of size $|T_s| = minSS$. If a rule displayed in our summary has covers $x$ fraction of the tuples, we want minSS to be at least $\rho\frac{1-x}{x}$, So the value of minSS must be at least $\rho\frac{1-x}{x}$ where $\rho$ is a constant chosen by us based on how accurate we want the count estimate to be. Moreover, since we want good Count estimates for all rules displayed in the summary, we want $minSS >> \rho\frac{1-x}{x}$ where $x$ is the minimum fraction of tuples covered by any of the rules displayed in our summary.
@@ -989,7 +1009,7 @@ The highest scoring rule can have weight at most $|C|$ (the total number of colu
 
 
 
-\subsubsection{Design of the SampleHandler}\label{sec:sample-handler}
+\subsection{Design of the SampleHandler}\label{sec:sample-handler}
 \papertext{
 We now briefly describe the design of the {\em SampleHandler}, which given
 a certain memory capacity $M$, and a minimum sample size $minSS$,
@@ -1129,7 +1149,7 @@ The value of $m_w$ required to ensure a correct answer is equal to the maximum w
 
 \begin{figure}
 \centering
-  \includegraphics[scale=0.46]{graphs/mw_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
+  \includegraphics[scale=0.5]{graphs/mw_speed.pdf}%change height to 2 inch for actual paper, 5 inch for single column
   \caption{Running time for different values of parameter $m_w$ \label{fig:mw_speed}}
 \vspace{-10pt}
 \end{figure}
@@ -1175,7 +1195,7 @@ When $|T|$ is small, the runtme is dominated by the $b \times minSS$ term, as se
 \techreporttext{
 \section{Extensions}\label{sec:extensions}
 \subsection{Dealing with Numerical Attributes}\label{sec:extensions-numerical}
-Our algorithm assumes that all attributes are categorical. Attributes that have a large domain tend to have fewer tuples per value, and hence don't appear in rule summaries. Thus our algorithm does not summarise information about numerical attributes. 
+Our framework assumes that all attributes are categorical. Attributes that have a large domain tend to have fewer tuples per value, and hence don't appear in rule summaries. Thus our algorithm does not summarize information about numerical attributes. 
 
 However, we can modify the algorithm to deal with numerical attributes. Suppose we have a numerical attribute $A$. We can create buckets for values of $A$. We choose a number of buckets $b$, and divide the range of values of $A$ into $b$ intervals, with one bucket per interval. We can create buckets having equal range sizes, or decide their range such that there is an approximately equal number of tuples in each bucket. Then we run BRS, treating the bucket id as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
 
