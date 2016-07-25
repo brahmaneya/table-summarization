@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  24 JUL 2016 15:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  24 JUL 2016 20:42
 entering extended mode
 **./smartDrillDown.tex
 (smartDrillDown.tex
@@ -626,7 +626,7 @@ T1/cmr/m/n/10 (\OML/cmm/m/it/10 A [] [] \OT1/cmr/m/n/10 + \OML/cmm/m/it/10 P\OT
 
 [10] [11]
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <9.53561> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 1084.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 1081.
 
 
 <graphs/screenshots6col/empty_expansion.jpg, id=60, 868.74562pt x 264.99pt>
@@ -634,19 +634,19 @@ File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1090.
+ut line 1087.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1097.
+ut line 1094.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
  [12 <./graphs/screenshots6col/empty_expansion.jpg>]
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
  <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1123.
+ut line 1120.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
 
 <graphs/screenshots6col/age_drilldown.jpg, id=64, 860.46469pt x 406.51875pt>
@@ -654,13 +654,13 @@ File: graphs/screenshots6col/age_drilldown.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/age_drilldown.jpg>
 Package pdftex.def Info: graphs/screenshots6col/age_drilldown.jpg used on input
- line 1130.
+ line 1127.
 (pdftex.def)             Requested size: 227.62204pt x 107.53465pt.
 
 <graphs/mw_speed.pdf, id=65, 361.35pt x 216.81pt>
 File: graphs/mw_speed.pdf Graphic file (type pdf)
  <use graphs/mw_speed.pdf>
-Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1152.
+Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1149.
 (pdftex.def)             Requested size: 180.67456pt x 108.40472pt.
 
 <graphs/screenshots6col/bits_scoring.jpg, id=66, 860.46469pt x 422.32782pt>
@@ -668,7 +668,7 @@ File: graphs/screenshots6col/bits_scoring.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/bits_scoring.jpg>
 Package pdftex.def Info: graphs/screenshots6col/bits_scoring.jpg used on input 
-line 1164.
+line 1161.
 (pdftex.def)             Requested size: 227.62204pt x 111.71657pt.
 
 <graphs/screenshots6col/min2_scoring.jpg, id=67, 855.94781pt x 264.23718pt>
@@ -676,7 +676,7 @@ File: graphs/screenshots6col/min2_scoring.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/min2_scoring.jpg>
 Package pdftex.def Info: graphs/screenshots6col/min2_scoring.jpg used on input 
-line 1172.
+line 1169.
 (pdftex.def)             Requested size: 227.62204pt x 70.26846pt.
  [13 <./graphs/screenshots6col/age_drilldown.jpg> <./graphs/mw_speed.pdf> <./gr
 aphs/screenshots6col/bits_scoring.jpg>] <graphs/minSS_speed.pdf, id=83, 361.35p
@@ -684,14 +684,14 @@ t x 216.81pt>
 File: graphs/minSS_speed.pdf Graphic file (type pdf)
 
 <use graphs/minSS_speed.pdf>
-Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1183.
+Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1180.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
 <graphs/minSS_error_percent.pdf, id=84, 361.35pt x 216.81pt>
 File: graphs/minSS_error_percent.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_percent.pdf>
-Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1184
+Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1181
 .
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
@@ -699,7 +699,7 @@ Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1184
 File: graphs/minSS_error_rule.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_rule.pdf>
-Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1185.
+Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1182.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
  [14 <./graphs/screenshots6col/min2_scoring.jpg>] (smartDrillDown.bbl
 Overfull \hbox (6.25761pt too wide) in paragraph at lines 4--5
@@ -728,6 +728,9 @@ ultiple pdfs with page group included in a single page
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.6161pt have occurred.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  )
 (\end occurred inside a group at level 1)
 
@@ -736,7 +739,7 @@ LaTeX Font Warning: Size substitutions with differences
 Here is how much of TeX's memory you used:
  7183 strings out of 493335
  113644 string characters out of 3139263
- 208079 words of memory out of 3000000
+ 208092 words of memory out of 3000000
  10532 multiletter control sequences out of 15000+200000
  94040 words of font info for 207 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
@@ -765,7 +768,7 @@ e1/urw/helvetic/uhvro8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/
 utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb><C:/Program Files/MiKT
 eX 2.9/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on smartDrillDown.pdf (16 pages, 785542 bytes).
+Output written on smartDrillDown.pdf (16 pages, 785147 bytes).
 PDF statistics:
  201 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

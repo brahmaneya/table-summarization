@@ -990,12 +990,9 @@ The constraint is linear in the $n_r$ variables, and hence convex. Each $ess$ va
 
 The main weakness of this approach is that the hinge-loss objective rewards values of $ess < minSS$, which may lead us to all leaves having large $ess$ values that are nonetheless less than $minSS$, and thus gives lower quality count estimates than required by the user.
 
-\begin{comment}
 \stitle{Additional optimizations:}
-There are some additional minor optimizations we can make to reduce the memory cost per sample, allowing us to store more and bigger samples. 
-Suppose we have a sample $s$, and say its filter rule $f_s$ has value $v$ in column $c$. Then we know that each tuple $t$ in $T_s$ must also have value $v$ in column $c$, since it is covered by $f_s$. So we do not need to explicitly store the column $c$ value of any tuple in $T_s$. We only need to store the tuple values of columns that have a $\star$ value in $f_s$.
-In addition, we may have a tuple occur in multiple samples. Instead of storing the entire tuple repeatedly, we could create a dictionary of common tuples, and only store a pointer to the tuple's dictionary entry in $T_s$. 
-\end{comment}
+There are some additional minor optimizations we can make to reduce the memory cost per sample, allowing us to store more and bigger samples. Suppose we have a sample $s$, and say its filter rule $f_s$ has value $v$ in column $c$. Then we know that each tuple $t$ in $T_s$ must also have value $v$ in column $c$, since it is covered by $f_s$. So we do not need to explicitly store the column $c$ value of any tuple in $T_s$. We only need to store the tuple values of columns that have a $\star$ value in $f_s$. In addition, we may have a tuple occur in multiple samples. Instead of storing the entire tuple repeatedly, we could create a dictionary of common tuples, and only store a pointer to the tuple's dictionary entry in $T_s$. 
+
 
 \stitle{Setting $minSS$:}
 Suppose a rule $r$ covers $x$ fraction of the tuples of $T$ i.e. $x|T|$ tuples. Say we have a uniform random sample $s$ of $T$. The samples has size $|T_s|$, and let $X_{r,s}$ be the random variable denoting the number of tuples of $T_s$ covered by $r$. Then $E\left[ X_{r,s} \right] = x|T_s|$, and $\text{Dev}(X_{r,s}) \approx \sqrt{|T_s|x(1-x)}$. In order to get a good estimate of $x$ (and hence of Count$(r) = x|T|$), we want $E\left[X_{r,s}\right] >> \text{Dev}(X_{r,s})$. That is, $x|T_s| >> \sqrt{|T_s|x(1-x)} \Leftrightarrow \frac{x|T_s|}{1-x} >> 1$. 
