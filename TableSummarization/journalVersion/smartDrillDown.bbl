@@ -94,10 +94,6 @@ J.~Han, J.~Pei, and Y.~Yin.
 \newblock Mining frequent patterns without candidate generation.
 \newblock In {\em SIGMOD}, pages 1--12, 2000.
 
-\bibitem{tr}
-M.~Joglekar, H.~Garcia-Molina, and A.~Parameswaran.
-\newblock http://arxiv.org/pdf/1412.0364.
-
 \bibitem{DBLP:journals/pvldb/JoglekarGP15}
 M.~Joglekar, H.~Garcia{-}Molina, and A.~G. Parameswaran.
 \newblock Smart drill-down: {A} new data exploration operator.

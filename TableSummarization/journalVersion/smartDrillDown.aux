@@ -29,8 +29,6 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Preliminaries and Definitions}{4}}
 \newlabel{sec:preliminaries}{{2.1}{4}}
 \newlabel{prob:optimal-subrule-list}{{1}{4}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Example of Rule-based scoring with score equal to rule size \relax }}{5}}
-\newlabel{table:sizescoringexample}{{4}{5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Weighting Rules}{5}}
 \newlabel{sec:weighting}{{2.2}{5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Smart drill down Operations}{5}}
@@ -40,8 +38,8 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Problem Reduction and Important Property}{5}}
 \newlabel{sec:reduction}{{3.1}{5}}
 \newlabel{prob:optimal-rule-list}{{2}{5}}
+\newlabel{lemma:rule-ordering}{{1}{5}}
 \citation{apriori}
-\newlabel{lemma:rule-ordering}{{1}{6}}
 \newlabel{def:set-score}{{2}{6}}
 \newlabel{prob:optimal-rule-set}{{3}{6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}NP-Hardness for Problem\nobreakspace  {}3\hbox {}}{6}}
@@ -51,9 +49,9 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Greedy Approximation Algorithm}{6}}
 \newlabel{sec:greedy-approx}{{3.4}{6}}
 \newlabel{lemma:submodular}{{3}{6}}
+\newlabel{algo:best-rule-set}{{1}{6}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces BRS\relax }}{6}}
 \citation{apriori}
-\newlabel{algo:best-rule-set}{{1}{7}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces BRS\relax }}{7}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Finding the Best Marginal Rule}{7}}
 \newlabel{sec:finding-best-marginal}{{3.5}{7}}
 \newlabel{algo:best-marginal-rule}{{2}{7}}
@@ -72,32 +70,35 @@
 \newlabel{prob:sample-sizes-hinge-loss}{{6}{10}}
 \citation{maibdr1983}
 \citation{Vitter:1985:RSR:3147.3165}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Design of the SampleHandler}{11}}
-\newlabel{sec:sample-handler}{{4.3}{11}}
 \citation{dataset1}
 \citation{uciml}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{12}}
-\newlabel{sec:experiments}{{5}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Qualitative Study}{12}}
-\newlabel{sec:exp_qualitative}{{5.1}{12}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.1}Testing the User Interface}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Design of the SampleHandler}{11}}
+\newlabel{sec:sample-handler}{{4.3}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{11}}
+\newlabel{sec:experiments}{{5}{11}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Summary after clicking on the empty rule \relax }}{12}}
 \newlabel{fig:uiexample1}{{1}{12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Star expansion on `Education' Column \relax }}{12}}
 \newlabel{fig:uiexamplestar}{{2}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Qualitative Study}{12}}
+\newlabel{sec:exp_qualitative}{{5.1}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.1}Testing the User Interface}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A rule expansion \relax }}{12}}
+\newlabel{fig:uiexamplerule}{{3}{12}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.2}Weighting functions}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A rule expansion \relax }}{13}}
-\newlabel{fig:uiexamplerule}{{3}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Quantitative Study}{12}}
+\newlabel{sec:quantitative_study}{{5.2}{12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces A regular drill down on Age\relax }}{13}}
 \newlabel{fig:drilldownexample}{{4}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Quantitative Study}{13}}
-\newlabel{sec:quantitative_study}{{5.2}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Effects of $m_w$}{13}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Running time for different values of parameter $m_w$ \relax }}{13}}
 \newlabel{fig:mw_speed}{{5}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Effects of $m_w$}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Effects of $minSS$}{13}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Bits scoring\relax }}{13}}
 \newlabel{fig:weigtingbitwise}{{6}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Effects of $minSS$}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Size minus one weighting \relax }}{13}}
+\newlabel{fig:weightingsizeminusone}{{7}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.3}Scaling properties of our algorithms}{13}}
 \citation{Sarawagi:2001:UMA:767141.767148}
 \citation{Sarawagi00user-adaptiveexploration}
 \citation{Sarawagi98discovery-drivenexploration}
@@ -119,9 +120,13 @@
 \citation{apriori}
 \citation{Srikant:1996:MQA:233269.233311}
 \citation{Miller:1997:ARO:253260.253361}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Size minus one weighting \relax }}{14}}
-\newlabel{fig:weightingsizeminusone}{{7}{14}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.3}Scaling properties of our algorithms}{14}}
+\citation{Vreeken:2011:KMI:1969593.1969615}
+\citation{Bringmann:2007:ICDM}
+\citation{Yan:2005:SIP:1081870.1081907}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces (a) Running time for different values of parameter $minSS$ (b) Error in Count for different values of parameter $minSS$ (c) Average number of incorrect rules for different values of parameter $minSS$  \relax }}{14}}
+\newlabel{fig:minSS_speed}{{8}{14}}
+\newlabel{fig:minSS_error_percent}{{8}{14}}
+\newlabel{fig:minSS_error_rule}{{8}{14}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Extensions}{14}}
 \newlabel{sec:extensions}{{6}{14}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Dealing with Numerical Attributes}{14}}
@@ -130,9 +135,6 @@
 \newlabel{sec:extensions-sum}{{6.2}{14}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Related Work}{14}}
 \newlabel{sec:related}{{7}{14}}
-\citation{Vreeken:2011:KMI:1969593.1969615}
-\citation{Bringmann:2007:ICDM}
-\citation{Yan:2005:SIP:1081870.1081907}
 \citation{Goethals:2011:MFI:2020408.2020529}
 \citation{Tatti:2014:FRI:2676651.2656261}
 \citation{DeBie:2010:FMI:1816112.1816117}
@@ -163,31 +165,26 @@
 \bibcite{Golab:2008:GNT:1453856.1453900}{16}
 \bibcite{DBLP:journals/debu/GolabKS11}{17}
 \bibcite{Han:2000:MFP:342009.335372}{18}
-\bibcite{tr}{19}
-\bibcite{DBLP:journals/pvldb/JoglekarGP15}{20}
-\bibcite{gartner}{21}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces (a) Running time for different values of parameter $minSS$ (b) Error in Count for different values of parameter $minSS$ (c) Average number of incorrect rules for different values of parameter $minSS$  \relax }}{15}}
-\newlabel{fig:minSS_speed}{{8}{15}}
-\newlabel{fig:minSS_error_percent}{{8}{15}}
-\newlabel{fig:minSS_error_rule}{{8}{15}}
+\bibcite{DBLP:journals/pvldb/JoglekarGP15}{19}
+\bibcite{gartner}{20}
+\bibcite{data-deluge}{21}
+\bibcite{Lakshmanan:2002:GMA:1287369.1287435}{22}
+\bibcite{Leeuwen:2012:DSS:2347179.2347243}{23}
+\bibcite{Mampaey:2011:TMI:2020408.2020499}{24}
+\bibcite{maibdr1983}{25}
+\bibcite{Miller:1997:ARO:253260.253361}{26}
+\bibcite{Sarawagi00user-adaptiveexploration}{27}
+\bibcite{Sarawagi:2001:UMA:767141.767148}{28}
+\bibcite{Sarawagi98discovery-drivenexploration}{29}
+\bibcite{sellam:meet}{30}
+\bibcite{6691587}{31}
+\bibcite{Srikant:1996:MQA:233269.233311}{32}
+\bibcite{Tatti:2014:FRI:2676651.2656261}{33}
+\bibcite{Vitter:1985:RSR:3147.3165}{34}
+\bibcite{Vreeken:2011:KMI:1969593.1969615}{35}
+\bibcite{1411744}{36}
+\bibcite{DBLP:conf:kdd:XiangJFD08}{37}
+\bibcite{Yan:2005:SIP:1081870.1081907}{38}
 \@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{15}}
 \newlabel{sec:conclusion}{{8}{15}}
 \@writefile{toc}{\contentsline {section}{References}{15}}
-\bibcite{data-deluge}{22}
-\bibcite{Lakshmanan:2002:GMA:1287369.1287435}{23}
-\bibcite{Leeuwen:2012:DSS:2347179.2347243}{24}
-\bibcite{Mampaey:2011:TMI:2020408.2020499}{25}
-\bibcite{maibdr1983}{26}
-\bibcite{Miller:1997:ARO:253260.253361}{27}
-\bibcite{Sarawagi00user-adaptiveexploration}{28}
-\bibcite{Sarawagi:2001:UMA:767141.767148}{29}
-\bibcite{Sarawagi98discovery-drivenexploration}{30}
-\bibcite{sellam:meet}{31}
-\bibcite{6691587}{32}
-\bibcite{Srikant:1996:MQA:233269.233311}{33}
-\bibcite{Tatti:2014:FRI:2676651.2656261}{34}
-\bibcite{Vitter:1985:RSR:3147.3165}{35}
-\bibcite{Vreeken:2011:KMI:1969593.1969615}{36}
-\bibcite{1411744}{37}
-\bibcite{DBLP:conf:kdd:XiangJFD08}{38}
-\bibcite{Yan:2005:SIP:1081870.1081907}{39}
