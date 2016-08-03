@@ -5,6 +5,7 @@
 \usepackage{balance}  % for  \balance command ON LAST PAGE  (only there!)
 \usepackage{enumitem}
 \usepackage{times}
+\usepackage{wrapfig}
 \usepackage{subfigure}
 \let\proof\relax
 \let\endproof\relax
@@ -61,20 +62,6 @@
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 \begin{document}
-
-\textbf{Note to Reviewers}: This paper is an extended version of the paper "Interactive Data Exploration with Smart Drill Down" that appeared in the 2016 IEEE International Conference on Data Engineering. This extended version contains about $30\%$ new material compared to the original version. In particular, the additions include:
-
-\begin{enumerate}
-\item We have added pseudo-code for the `Find Best Marginal Rule' subroutine of the BRS algorithm.
-\item The new Section~\ref{sec:setting-paramters} contains methods for setting good values of our tunable parameters $W$, $k$, and $m_w$ .
-\item Section~\ref{sec:sampling} has been significantly expanded, with details on how to utilize samples stored in memory and when to form new samples. We have also added a more detailed description and proof for our approximate dynamic-programming based algorithm for determining the best samples to form.
-\item We have added an alternative convex-optimization based solution for determining the best samples in Section~\ref{sec:sampling}.
-\item Additionally, Section~\ref{sec:sampling} contains additional optimizations such as pre-fetching, and guidelines for setting the sampling parameter $minSS$. 
-\item We added Section~\ref{sec:extensions}, which contains two extensions, namely dealing with numerical attributes, and using aggregates other than Count. 
-\end{enumerate}
-
-\newpage
-
 
 \title{Interactive Data Exploration with Smart Drill-Down (Extended Version)}
 
@@ -1234,7 +1221,6 @@ approximation is used. Moreover, we have a tunable parameter $minSS$ that the us
 
 \vspace{17pt}
 
-\begin{comment}
 \begin{wrapfigure}{l}{0.15\textwidth}
 %   \begin{center}
 \includegraphics[height=3.5cm, width=2.7cm]{./figures/hector.pdf}
@@ -1262,9 +1248,8 @@ Manas Joglekar is a fifth year PhD student in the Computer Science Department at
 \end{wrapfigure}
 
 Aditya Parameswaran is an Assistant Professor in Computer Science at the University of Illinois (UIUC). He spent the 2013-14 year visiting MIT CSAIL and Microsoft Research New England, after completing his Ph.D. from Stanford University, advised by Prof. Hector Garcia-Molina. He is broadly interested in data analytics, with research results in human computation, visual analytics, information extraction and integration, and recommender systems. 
-Aditya is a recipient of the Arthur Samuel award for the best dissertation in CS at Stanford (2014), the SIGMOD Jim Gray dissertation award (2014), the SIGKDD dissertation award runner up (2014), a Google Faculty Research Award (2015), the Key Scientific Challenges Award from Yahoo! Research (2010), three best-of-conference citations (VLDB 2010, KDD 2012 and ICDE 2014), the Terry Groswith graduate fellowship at Stanford (2007), and the Gold Medal in Computer Science at IIT Bombay (2007). His research group is supported with funding from by the NIH, the NSF, and Google.
+Aditya is a recipient of the Arthur Samuel award for the best dissertation in CS at Stanford (2014), the SIGMOD Jim Gray dissertation award (2014), the SIGKDD dissertation award runner up (2014), a Google Faculty Research Award (2015), the Key Scientific Challenges Award from Yahoo! Research (2010), four best-of-conference citations (VLDB 2010, KDD 2012, ICDE 2014, ICDE 2016), the Terry Groswith graduate fellowship at Stanford (2007), and the Gold Medal in Computer Science at IIT Bombay (2007). His research group is supported with funding from by the NIH, the NSF, and Google.
 \medskip
-\end{comment}
 
 
 \end{document}

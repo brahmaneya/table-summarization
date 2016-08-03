@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  30 JUL 2016 14:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  2 AUG 2016 20:46
 entering extended mode
 **./smartDrillDown.tex
 (smartDrillDown.tex
@@ -160,18 +160,26 @@ Package: enumitem 2011/09/28 v3.5.2 Customized lists
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\times.sty"
 Package: times 2005/04/12 PSNFSS-v9.2a (SPQR) 
 )
+("C:\Program Files\MiKTeX 2.9\tex\latex\wrapfig\wrapfig.sty"
+\wrapoverhang=\dimen129
+\WF@size=\dimen130
+\c@WF@wrappedlines=\count96
+\WF@box=\box29
+\WF@everypar=\toks17
+Package: wrapfig 2003/01/31  v 3.6
+)
 ("C:\Program Files\MiKTeX 2.9\tex\latex\subfigure\subfigure.sty"
 Package: subfigure 2002/07/30 v2.1.4 subfigure package
 \subfigtopskip=\skip45
 \subfigcapskip=\skip46
-\subfigcaptopadj=\dimen129
+\subfigcaptopadj=\dimen131
 \subfigbottomskip=\skip47
-\subfigcapmargin=\dimen130
+\subfigcapmargin=\dimen132
 \subfiglabelskip=\skip48
-\c@subfigure=\count96
-\c@lofdepth=\count97
-\c@subtable=\count98
-\c@lotdepth=\count99
+\c@subfigure=\count97
+\c@lofdepth=\count98
+\c@subtable=\count99
+\c@lotdepth=\count100
 
 ****************************************
 * Local config file subfigure.cfg used *
@@ -190,51 +198,51 @@ Package: amstext 2000/06/29 v2.01 AMS text
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty"
 File: amsgen.sty 1999/11/30 v2.0 generic functions
-\@emptytoks=\toks17
-\ex@=\dimen131
+\@emptytoks=\toks18
+\ex@=\dimen133
 ))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen132
+\pmbraise@=\dimen134
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty"
 Package: amsopn 2016/03/08 v2.02 operator names
 )
-\inf@bad=\count100
+\inf@bad=\count101
 LaTeX Info: Redefining \frac on input line 199.
-\uproot@=\count101
-\leftroot@=\count102
+\uproot@=\count102
+\leftroot@=\count103
 LaTeX Info: Redefining \overline on input line 297.
-\classnum@=\count103
-\DOTSCASE@=\count104
+\classnum@=\count104
+\DOTSCASE@=\count105
 LaTeX Info: Redefining \ldots on input line 394.
 LaTeX Info: Redefining \dots on input line 397.
 LaTeX Info: Redefining \cdots on input line 518.
-\Mathstrutbox@=\box29
-\strutbox@=\box30
-\big@size=\dimen133
+\Mathstrutbox@=\box30
+\strutbox@=\box31
+\big@size=\dimen135
 LaTeX Font Info:    Redeclaring font encoding OML on input line 634.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 635.
-\macc@depth=\count105
-\c@MaxMatrixCols=\count106
+\macc@depth=\count106
+\c@MaxMatrixCols=\count107
 \dotsspace@=\muskip10
-\c@parentequation=\count107
-\dspbrk@lvl=\count108
-\tag@help=\toks18
-\row@=\count109
-\column@=\count110
-\maxfields@=\count111
-\andhelp@=\toks19
-\eqnshift@=\dimen134
-\alignsep@=\dimen135
-\tagshift@=\dimen136
-\tagwidth@=\dimen137
-\totwidth@=\dimen138
-\lineht@=\dimen139
-\@envbody=\toks20
+\c@parentequation=\count108
+\dspbrk@lvl=\count109
+\tag@help=\toks19
+\row@=\count110
+\column@=\count111
+\maxfields@=\count112
+\andhelp@=\toks20
+\eqnshift@=\dimen136
+\alignsep@=\dimen137
+\tagshift@=\dimen138
+\tagwidth@=\dimen139
+\totwidth@=\dimen140
+\lineht@=\dimen141
+\@envbody=\toks21
 \multlinegap=\skip52
 \multlinetaggap=\skip53
-\mathdisplay@stack=\toks21
+\mathdisplay@stack=\toks22
 LaTeX Info: Redefining \[ on input line 2739.
 LaTeX Info: Redefining \] on input line 2740.
 )
@@ -250,15 +258,15 @@ LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 ))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amscls\amsthm.sty"
 Package: amsthm 2015/03/04 v2.20.2
-\thm@style=\toks22
-\thm@bodyfont=\toks23
-\thm@headfont=\toks24
-\thm@notefont=\toks25
-\thm@headpunct=\toks26
+\thm@style=\toks23
+\thm@bodyfont=\toks24
+\thm@headfont=\toks25
+\thm@notefont=\toks26
+\thm@headpunct=\toks27
 \thm@preskip=\skip54
 \thm@postskip=\skip55
 \thm@headsep=\skip56
-\dth@everypar=\toks27
+\dth@everypar=\toks28
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty"
 Package: color 2016/06/02 v1.1d Standard LaTeX Color (DPC)
@@ -270,21 +278,21 @@ Package color Info: Driver file: pdftex.def on input line 147.
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\verbatim.sty"
 Package: verbatim 2014/10/28 v1.5q LaTeX2e package for verbatim enhancements
-\every@verbatim=\toks28
-\verbatim@line=\toks29
+\every@verbatim=\toks29
+\verbatim@line=\toks30
 \verbatim@in@stream=\read1
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\framed\framed.sty"
 Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \OuterFrameSep=\skip57
-\fb@frw=\dimen140
-\fb@frh=\dimen141
-\FrameRule=\dimen142
-\FrameSep=\dimen143
+\fb@frw=\dimen142
+\fb@frh=\dimen143
+\FrameRule=\dimen144
+\FrameSep=\dimen145
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\algorithm2e\algorithm2e.sty"
 Package: algorithm2e 2013/01/06 v5.00 algorithms environments
-\c@AlgoLine=\count112
+\c@AlgoLine=\count113
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\ifthen.sty"
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
@@ -312,43 +320,43 @@ subscribe by emailing sympa@lirmm.fr with 'subscribe <list> <firstname name>'
 \skiplength=\skip64
 \algomargin=\skip65
 \skipalgocfslide=\skip66
-\algowidth=\dimen144
-\inoutsize=\dimen145
-\inoutindent=\dimen146
-\interspacetitleruled=\dimen147
-\interspacealgoruled=\dimen148
-\interspacetitleboxruled=\dimen149
+\algowidth=\dimen146
+\inoutsize=\dimen147
+\inoutindent=\dimen148
+\interspacetitleruled=\dimen149
+\interspacealgoruled=\dimen150
+\interspacetitleboxruled=\dimen151
 \algocf@ruledwidth=\skip67
-\algocf@inoutbox=\box31
-\algocf@inputbox=\box32
+\algocf@inoutbox=\box32
+\algocf@inputbox=\box33
 \AlCapSkip=\skip68
 \AlCapHSkip=\skip69
 \algoskipindent=\skip70
-\algocf@nlbox=\box33
-\algocf@hangingbox=\box34
-\algocf@untilbox=\box35
+\algocf@nlbox=\box34
+\algocf@hangingbox=\box35
+\algocf@untilbox=\box36
 \algocf@skipuntil=\skip71
-\algocf@capbox=\box36
+\algocf@capbox=\box37
 \algoheightruledefault=\skip72
 \algoheightrule=\skip73
 \algotitleheightruledefault=\skip74
 \algotitleheightrule=\skip75
-\c@algocfline=\count113
-\c@algocfproc=\count114
-\c@algocf=\count115
-\algocf@algoframe=\box37
-\algocf@algobox=\box38
+\c@algocfline=\count114
+\c@algocfproc=\count115
+\c@algocf=\count116
+\algocf@algoframe=\box38
+\algocf@algobox=\box39
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\ulem\ulem.sty"
-\UL@box=\box39
-\UL@hyphenbox=\box40
+\UL@box=\box40
+\UL@hyphenbox=\box41
 \UL@skip=\skip76
-\UL@hook=\toks30
-\UL@height=\dimen150
-\UL@pe=\count116
-\UL@pixel=\dimen151
-\ULC@box=\box41
+\UL@hook=\toks31
+\UL@height=\dimen152
+\UL@pe=\count117
+\UL@pixel=\dimen153
+\ULC@box=\box42
 Package: ulem 2012/05/18
-\ULdepth=\dimen152
+\ULdepth=\dimen154
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\adjustbox\adjustbox.sty"
 Package: adjustbox 2012/05/21 v1.0 Adjusting TeX boxes (trim, clip, ...)
@@ -358,10 +366,10 @@ Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\xkeyval\xkeyval.tex"
 ("C:\Program Files\MiKTeX 2.9\tex\generic\xkeyval\xkvutils.tex"
-\XKV@toks=\toks31
-\XKV@tempa@toks=\toks32
+\XKV@toks=\toks32
+\XKV@tempa@toks=\toks33
 )
-\XKV@depth=\count117
+\XKV@depth=\count118
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\adjustbox\adjcalc.sty"
@@ -373,32 +381,32 @@ Package: trimclip 2012/05/16 v1.0 Trim and clip general TeX material
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\collectbox\collectbox.sty"
 Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
-\collectedbox=\box42
+\collectedbox=\box43
 )
-\tc@llx=\dimen153
-\tc@lly=\dimen154
-\tc@urx=\dimen155
-\tc@ury=\dimen156
+\tc@llx=\dimen155
+\tc@lly=\dimen156
+\tc@urx=\dimen157
+\tc@ury=\dimen158
 Package trimclip Info: Using driver 'tc-pdftex.def'.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\adjustbox\tc-pdftex.def"
 File: tc-pdftex.def 2012/05/13 v1.0 Clipping driver for pdftex
 ))
-\adjbox@Width=\dimen157
-\adjbox@Height=\dimen158
-\adjbox@Depth=\dimen159
-\adjbox@Totalheight=\dimen160
+\adjbox@Width=\dimen159
+\adjbox@Height=\dimen160
+\adjbox@Depth=\dimen161
+\adjbox@Totalheight=\dimen162
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\ifoddpage\ifoddpage.sty"
 Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
-\c@checkoddpage=\count118
+\c@checkoddpage=\count119
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\ltxmisc\varwidth.sty"
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box43
-\sift@deathcycles=\count119
-\@vwid@loff=\dimen161
-\@vwid@roff=\dimen162
+\@vwid@box=\box44
+\sift@deathcycles=\count120
+\@vwid@loff=\dimen163
+\@vwid@roff=\dimen164
 ))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption.sty"
 Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
@@ -406,13 +414,13 @@ Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
 ("C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption3.sty"
 Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 67.
-\captionmargin=\dimen163
-\captionmargin@=\dimen164
-\captionwidth=\dimen165
-\caption@tempdima=\dimen166
-\caption@indent=\dimen167
-\caption@parindent=\dimen168
-\caption@hangindent=\dimen169
+\captionmargin=\dimen165
+\captionmargin@=\dimen166
+\captionwidth=\dimen167
+\caption@tempdima=\dimen168
+\caption@indent=\dimen169
+\caption@parindent=\dimen170
+\caption@hangindent=\dimen171
 Package caption Info: Unknown document class (or package),
 (caption)             standard defaults will be used.
 )
@@ -431,89 +439,90 @@ x {\normalfont \sffamily \footnotesize {#1.}\nobreakspace }\parbox [t]{\hsize }
 {\normalfont \sffamily \footnotesize \noindent \unhbox \@tempboxa #2}\else \hbo
 x to\hsize {\normalfont \sffamily \footnotesize \box \@tempboxa \hfil }\fi \fi 
 .
-\c@ContinuedFloat=\count120
+\c@ContinuedFloat=\count121
 Package caption Info: subfigure package is loaded.
+Package caption Info: wrapfig package is loaded.
 )
-\c@theorem=\count121
-\c@lemma=\count122
-\c@definition=\count123
-\c@prob=\count124
+\c@theorem=\count122
+\c@lemma=\count123
+\c@definition=\count124
+\c@prob=\count125
  (smartDrillDown.aux)
 \openout1 = `smartDrillDown.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 63.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 64.
  ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5.01874> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <5.01874> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.02625> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <7.02625> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8.03> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <8.03> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9.03374> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9.03374> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9.53561> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9.53561> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11.04124> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <11.04124> not available
 
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12.045> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12.045> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.06374> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <17.06374> not available
 
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.075> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20.075> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24.09> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24.09> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 63.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 64.
 
 -- Lines per column: 61 (exact).
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count125
-\scratchdimen=\dimen170
-\scratchbox=\box44
-\nofMPsegments=\count126
-\nofMParguments=\count127
-\everyMPshowfont=\toks33
-\MPscratchCnt=\count128
-\MPscratchDim=\dimen171
-\MPnumerator=\count129
-\makeMPintoPDFobject=\count130
-\everyMPtoPDFconversion=\toks34
+\scratchcounter=\count126
+\scratchdimen=\dimen172
+\scratchbox=\box45
+\nofMPsegments=\count127
+\nofMParguments=\count128
+\everyMPshowfont=\toks34
+\MPscratchCnt=\count129
+\MPscratchDim=\dimen173
+\MPnumerator=\count130
+\makeMPintoPDFobject=\count131
+\everyMPtoPDFconversion=\toks35
 ) ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty"
 Package: pdftexcmds 2016/05/21 v0.22 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -561,64 +570,62 @@ G,.JBIG2,.JB2,.eps]
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Calculating math sizes for size <9.53561> on input line 65.
-
-LaTeX Font Info:    Try loading font information for U+msa on input line 65.
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 65.
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
-
-
-]
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 136.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 123.
 
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1phv.fd"
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <11.04124> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 136.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 123.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <8.03> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 136.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 123.
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <8.03> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 136.
-LaTeX Font Info:    Calculating math sizes for size <8.03> on input line 136.
-LaTeX Font Info:    Calculating math sizes for size <11.04124> on input line 13
-6.
-LaTeX Font Info:    Try loading font information for U+pzd on input line 136.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 123.
+LaTeX Font Info:    Calculating math sizes for size <8.03> on input line 123.
+LaTeX Font Info:    Try loading font information for U+msa on input line 123.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 123.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Calculating math sizes for size <11.04124> on input line 12
+3.
+LaTeX Font Info:    Try loading font information for U+pzd on input line 123.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\upzd.fd"
 File: upzd.fd 2001/06/04 font definitions for U/pzd.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <11.04124> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 138.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 125.
 LaTeX Font Info:    Font shape `OT1/phv/bx/sc' in size <11.04124> not available
 
-(Font)              Font shape `OT1/phv/b/sc' tried instead on input line 138.
- [2
+(Font)              Font shape `OT1/phv/b/sc' tried instead on input line 125.
+LaTeX Font Info:    Calculating math sizes for size <9.53561> on input line 187
+.
+ [1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
+
 
 ]
-LaTeX Font Info:    Calculating math sizes for size <7.02625> on input line 248
+LaTeX Font Info:    Calculating math sizes for size <7.02625> on input line 235
 .
- [3]
+ [2]
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9.53561> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 408.
-LaTeX Font Info:    Calculating math sizes for size <9.03374> on input line 490
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 395.
+LaTeX Font Info:    Calculating math sizes for size <9.03374> on input line 477
 .
- [4] [5]
-[6]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 779.
+ [3] [4] [5]
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 766.
 
- ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [7] [8] [9]
-Overfull \hbox (9.0064pt too wide) detected at line 963
+) [6] [7] [8]
+Overfull \hbox (9.0064pt too wide) detected at line 950
 \OML/cmm/m/it/10 A [] [] \OT1/cmr/m/n/10 = [](\OML/cmm/m/it/10 A [] [] ; [][]\O
 T1/cmr/m/n/10 (\OML/cmm/m/it/10 A [] [] \OT1/cmr/m/n/10 + \OML/cmm/m/it/10 P\OT
 1/cmr/m/n/10 (\OML/cmm/m/it/10 e\OT1/cmr/m/n/10 )))
@@ -627,87 +634,87 @@ T1/cmr/m/n/10 (\OML/cmm/m/it/10 A [] [] \OT1/cmr/m/n/10 + \OML/cmm/m/it/10 P\OT
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [10]
-[11]
+ [9]
+[10]
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <9.53561> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 1068.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 1055.
 
 
-<graphs/screenshots6col/empty_expansion.jpg, id=60, 868.74562pt x 264.99pt>
+<graphs/screenshots6col/empty_expansion.jpg, id=57, 868.74562pt x 264.99pt>
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1074.
+ut line 1061.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1081.
+ut line 1068.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1107.
+ut line 1094.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
 
-<graphs/screenshots6col/age_drilldown.jpg, id=61, 860.46469pt x 406.51875pt>
+<graphs/screenshots6col/age_drilldown.jpg, id=58, 860.46469pt x 406.51875pt>
 File: graphs/screenshots6col/age_drilldown.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/age_drilldown.jpg>
 Package pdftex.def Info: graphs/screenshots6col/age_drilldown.jpg used on input
- line 1114.
+ line 1101.
 (pdftex.def)             Requested size: 227.62204pt x 107.53465pt.
- [12 <./graphs/screenshots6col/empty_expansion.jpg>] <graphs/mw_speed.pdf, id=6
-5, 361.35pt x 216.81pt>
+ [11 <./graphs/screenshots6col/empty_expansion.jpg>] <graphs/mw_speed.pdf, id=6
+2, 361.35pt x 216.81pt>
 File: graphs/mw_speed.pdf Graphic file (type pdf)
 
 <use graphs/mw_speed.pdf>
-Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1136.
+Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1123.
 (pdftex.def)             Requested size: 180.67456pt x 108.40472pt.
 
-<graphs/screenshots6col/bits_scoring.jpg, id=66, 860.46469pt x 422.32782pt>
+<graphs/screenshots6col/bits_scoring.jpg, id=63, 860.46469pt x 422.32782pt>
 File: graphs/screenshots6col/bits_scoring.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/bits_scoring.jpg>
 Package pdftex.def Info: graphs/screenshots6col/bits_scoring.jpg used on input 
-line 1148.
+line 1135.
 (pdftex.def)             Requested size: 227.62204pt x 111.71657pt.
 
-<graphs/screenshots6col/min2_scoring.jpg, id=67, 855.94781pt x 264.23718pt>
+<graphs/screenshots6col/min2_scoring.jpg, id=64, 855.94781pt x 264.23718pt>
 File: graphs/screenshots6col/min2_scoring.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/min2_scoring.jpg>
 Package pdftex.def Info: graphs/screenshots6col/min2_scoring.jpg used on input 
-line 1156.
+line 1143.
 (pdftex.def)             Requested size: 227.62204pt x 70.26846pt.
 
-<graphs/minSS_speed.pdf, id=68, 361.35pt x 216.81pt>
+<graphs/minSS_speed.pdf, id=65, 361.35pt x 216.81pt>
 File: graphs/minSS_speed.pdf Graphic file (type pdf)
 
 <use graphs/minSS_speed.pdf>
-Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1167.
+Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1154.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
-<graphs/minSS_error_percent.pdf, id=69, 361.35pt x 216.81pt>
+<graphs/minSS_error_percent.pdf, id=66, 361.35pt x 216.81pt>
 File: graphs/minSS_error_percent.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_percent.pdf>
-Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1168
+Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1155
 .
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
-<graphs/minSS_error_rule.pdf, id=70, 361.35pt x 216.81pt>
+<graphs/minSS_error_rule.pdf, id=67, 361.35pt x 216.81pt>
 File: graphs/minSS_error_rule.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_rule.pdf>
-Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1169.
+Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1156.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
- [13 <./graphs/screenshots6col/age_drilldown.jpg> <./graphs/mw_speed.pdf> <./gr
+ [12 <./graphs/screenshots6col/age_drilldown.jpg> <./graphs/mw_speed.pdf> <./gr
 aphs/screenshots6col/bits_scoring.jpg> <./graphs/screenshots6col/min2_scoring.j
-pg>] [14 <./graphs/minSS_speed.pdf> <./graphs/minSS_error_percent.pdf
+pg>] [13 <./graphs/minSS_speed.pdf> <./graphs/minSS_error_percent.pdf
 
 pdfTeX warning: pdflatex (file ./graphs/minSS_error_percent.pdf): PDF inclusion
 : multiple pdfs with page group included in a single page
@@ -722,7 +729,40 @@ rketing.info.txt.
  []
 
 Missing character: There is no ä in font ptmr7t!
-) [15] (smartDrillDown.aux)
+) <./figures/hector.pdf, id=111, 109.1277pt x 143.0946pt>
+File: ./figures/hector.pdf Graphic file (type pdf)
+
+<use ./figures/hector.pdf>
+Package pdftex.def Info: ./figures/hector.pdf used on input line 1226.
+(pdftex.def)             Requested size: 76.82346pt x 99.58473pt.
+ [14]
+<./figures/Manas.pdf, id=115, 687.56876pt x 893.3375pt>
+File: ./figures/Manas.pdf Graphic file (type pdf)
+
+<use ./figures/Manas.pdf>
+Package pdftex.def Info: ./figures/Manas.pdf used on input line 1236.
+(pdftex.def)             Requested size: 76.81833pt x 99.57602pt.
+
+
+Package wrapfig Warning: Collision between wrapping environments on input line 
+1244.
+
+<./figures/aditya.pdf, id=116, 2509.375pt x 3276.24pt>
+File: ./figures/aditya.pdf Graphic file (type pdf)
+
+<use ./figures/aditya.pdf>
+Package pdftex.def Info: ./figures/aditya.pdf used on input line 1246.
+(pdftex.def)             Requested size: 76.8096pt x 99.58273pt.
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 12
+50.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15 <./figures/hector.pdf> <./figures/Manas.pdf> <./figures/aditya.pdf>]
+(smartDrillDown.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.6161pt have occurred.
@@ -733,13 +773,13 @@ LaTeX Font Warning: Size substitutions with differences
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 7181 strings out of 493335
- 113614 string characters out of 3139263
- 206762 words of memory out of 3000000
- 10530 multiletter control sequences out of 15000+200000
+ 7255 strings out of 493335
+ 114709 string characters out of 3139263
+ 207908 words of memory out of 3000000
+ 10596 multiletter control sequences out of 15000+200000
  94040 words of font info for 207 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 53i,19n,92p,1909b,3666s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 53i,19n,92p,1909b,3670s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C
 :/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Progra
 m Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Program Fi
@@ -764,9 +804,9 @@ e1/urw/helvetic/uhvro8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/
 utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb><C:/Program Files/MiKT
 eX 2.9/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on smartDrillDown.pdf (15 pages, 782182 bytes).
+Output written on smartDrillDown.pdf (15 pages, 4720073 bytes).
 PDF statistics:
- 198 PDF objects out of 1000 (max. 8388607)
+ 231 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
