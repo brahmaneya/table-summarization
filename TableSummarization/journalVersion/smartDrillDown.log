@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  2 AUG 2016 20:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  6 AUG 2016 12:39
 entering extended mode
 **./smartDrillDown.tex
 (smartDrillDown.tex
@@ -624,40 +624,36 @@ LaTeX Font Info:    Try loading font information for OT1+pcr on input line 766.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [6] [7] [8]
+) [6] [7]
 Overfull \hbox (9.0064pt too wide) detected at line 950
 \OML/cmm/m/it/10 A [] [] \OT1/cmr/m/n/10 = [](\OML/cmm/m/it/10 A [] [] ; [][]\O
 T1/cmr/m/n/10 (\OML/cmm/m/it/10 A [] [] \OT1/cmr/m/n/10 + \OML/cmm/m/it/10 P\OT
 1/cmr/m/n/10 (\OML/cmm/m/it/10 e\OT1/cmr/m/n/10 )))
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [9]
-[10]
+[8] [9]
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <9.53561> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 1055.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 1052.
 
 
-<graphs/screenshots6col/empty_expansion.jpg, id=57, 868.74562pt x 264.99pt>
+<graphs/screenshots6col/empty_expansion.jpg, id=54, 868.74562pt x 264.99pt>
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1061.
+ut line 1058.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1068.
+ut line 1065.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
+ [10 <./graphs/screenshots6col/empty_expansion.jpg>]
 File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
-
-<use graphs/screenshots6col/empty_expansion.jpg>
+ <use graphs/screenshots6col/empty_expansion.jpg>
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1094.
+ut line 1091.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
 
 <graphs/screenshots6col/age_drilldown.jpg, id=58, 860.46469pt x 406.51875pt>
@@ -665,56 +661,62 @@ File: graphs/screenshots6col/age_drilldown.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/age_drilldown.jpg>
 Package pdftex.def Info: graphs/screenshots6col/age_drilldown.jpg used on input
- line 1101.
+ line 1098.
 (pdftex.def)             Requested size: 227.62204pt x 107.53465pt.
- [11 <./graphs/screenshots6col/empty_expansion.jpg>] <graphs/mw_speed.pdf, id=6
-2, 361.35pt x 216.81pt>
-File: graphs/mw_speed.pdf Graphic file (type pdf)
 
-<use graphs/mw_speed.pdf>
-Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1123.
+<graphs/mw_speed.pdf, id=59, 361.35pt x 216.81pt>
+File: graphs/mw_speed.pdf Graphic file (type pdf)
+ <use graphs/mw_speed.pdf>
+Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1120.
 (pdftex.def)             Requested size: 180.67456pt x 108.40472pt.
 
-<graphs/screenshots6col/bits_scoring.jpg, id=63, 860.46469pt x 422.32782pt>
+[11 <./graphs/screenshots6col/age_drilldown.jpg> <./graphs/mw_speed.pdf>]
+<graphs/screenshots6col/bits_scoring.jpg, id=74, 860.46469pt x 422.32782pt>
 File: graphs/screenshots6col/bits_scoring.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/bits_scoring.jpg>
 Package pdftex.def Info: graphs/screenshots6col/bits_scoring.jpg used on input 
-line 1135.
+line 1132.
 (pdftex.def)             Requested size: 227.62204pt x 111.71657pt.
 
-<graphs/screenshots6col/min2_scoring.jpg, id=64, 855.94781pt x 264.23718pt>
+<graphs/screenshots6col/min2_scoring.jpg, id=75, 855.94781pt x 264.23718pt>
 File: graphs/screenshots6col/min2_scoring.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/min2_scoring.jpg>
 Package pdftex.def Info: graphs/screenshots6col/min2_scoring.jpg used on input 
-line 1143.
+line 1140.
 (pdftex.def)             Requested size: 227.62204pt x 70.26846pt.
 
-<graphs/minSS_speed.pdf, id=65, 361.35pt x 216.81pt>
+<graphs/minSS_speed.pdf, id=76, 361.35pt x 216.81pt>
 File: graphs/minSS_speed.pdf Graphic file (type pdf)
 
 <use graphs/minSS_speed.pdf>
-Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1154.
+Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1151.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
-<graphs/minSS_error_percent.pdf, id=66, 361.35pt x 216.81pt>
+<graphs/minSS_error_percent.pdf, id=77, 361.35pt x 216.81pt>
 File: graphs/minSS_error_percent.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_percent.pdf>
-Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1155
+Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1152
 .
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
-<graphs/minSS_error_rule.pdf, id=67, 361.35pt x 216.81pt>
+<graphs/minSS_error_rule.pdf, id=78, 361.35pt x 216.81pt>
 File: graphs/minSS_error_rule.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_rule.pdf>
-Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1156.
+Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1153.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
- [12 <./graphs/screenshots6col/age_drilldown.jpg> <./graphs/mw_speed.pdf> <./gr
-aphs/screenshots6col/bits_scoring.jpg> <./graphs/screenshots6col/min2_scoring.j
-pg>] [13 <./graphs/minSS_speed.pdf> <./graphs/minSS_error_percent.pdf
+ [12 <./graphs/screenshots6col/bits_scoring.jpg> <./graphs/screenshots6col/min2
+_scoring.jpg>] (smartDrillDown.bbl
+Overfull \hbox (6.25761pt too wide) in paragraph at lines 4--5
+[]\OT1/ptm/m/n/8.03 http://statweb.stanford.edu/ tibs/ElemStatLearn/datasets/ma
+rketing.info.txt. 
+ []
+
+Missing character: There is no ä in font ptmr7t!
+[13 <./graphs/minSS_speed.pdf> <./graphs/minSS_error_percent.pdf
 
 pdfTeX warning: pdflatex (file ./graphs/minSS_error_percent.pdf): PDF inclusion
 : multiple pdfs with page group included in a single page
@@ -722,47 +724,28 @@ pdfTeX warning: pdflatex (file ./graphs/minSS_error_percent.pdf): PDF inclusion
 
 pdfTeX warning: pdflatex (file ./graphs/minSS_error_rule.pdf): PDF inclusion: m
 ultiple pdfs with page group included in a single page
->] (smartDrillDown.bbl
-Overfull \hbox (6.25761pt too wide) in paragraph at lines 4--5
-[]\OT1/ptm/m/n/8.03 http://statweb.stanford.edu/ tibs/ElemStatLearn/datasets/ma
-rketing.info.txt. 
- []
-
-Missing character: There is no ä in font ptmr7t!
-) <./figures/hector.pdf, id=111, 109.1277pt x 143.0946pt>
+>]) <./figures/hector.pdf, id=111, 109.1277pt x 143.0946pt>
 File: ./figures/hector.pdf Graphic file (type pdf)
 
 <use ./figures/hector.pdf>
-Package pdftex.def Info: ./figures/hector.pdf used on input line 1226.
+Package pdftex.def Info: ./figures/hector.pdf used on input line 1223.
 (pdftex.def)             Requested size: 76.82346pt x 99.58473pt.
- [14]
-<./figures/Manas.pdf, id=115, 687.56876pt x 893.3375pt>
+
+<./figures/Manas.pdf, id=112, 687.56876pt x 893.3375pt>
 File: ./figures/Manas.pdf Graphic file (type pdf)
 
 <use ./figures/Manas.pdf>
-Package pdftex.def Info: ./figures/Manas.pdf used on input line 1236.
+Package pdftex.def Info: ./figures/Manas.pdf used on input line 1233.
 (pdftex.def)             Requested size: 76.81833pt x 99.57602pt.
 
-
-Package wrapfig Warning: Collision between wrapping environments on input line 
-1244.
-
-<./figures/aditya.pdf, id=116, 2509.375pt x 3276.24pt>
+<./figures/aditya.pdf, id=113, 2509.375pt x 3276.24pt>
 File: ./figures/aditya.pdf Graphic file (type pdf)
 
 <use ./figures/aditya.pdf>
-Package pdftex.def Info: ./figures/aditya.pdf used on input line 1246.
+Package pdftex.def Info: ./figures/aditya.pdf used on input line 1243.
 (pdftex.def)             Requested size: 76.8096pt x 99.58273pt.
-
-
-Package wrapfig Warning: Stationary wrapfigure forced to float on input line 12
-50.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [15 <./figures/hector.pdf> <./figures/Manas.pdf> <./figures/aditya.pdf>]
-(smartDrillDown.aux)
+ [14 <./figures/hector.pdf> <./figures/Manas.pdf> <./figures/aditya.pdf>] (smar
+tDrillDown.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.6161pt have occurred.
@@ -773,10 +756,10 @@ LaTeX Font Warning: Size substitutions with differences
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 7255 strings out of 493335
- 114709 string characters out of 3139263
- 207908 words of memory out of 3000000
- 10596 multiletter control sequences out of 15000+200000
+ 7254 strings out of 493335
+ 114700 string characters out of 3139263
+ 204632 words of memory out of 3000000
+ 10595 multiletter control sequences out of 15000+200000
  94040 words of font info for 207 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  53i,19n,92p,1909b,3670s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -804,9 +787,9 @@ e1/urw/helvetic/uhvro8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/
 utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb><C:/Program Files/MiKT
 eX 2.9/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on smartDrillDown.pdf (15 pages, 4720073 bytes).
+Output written on smartDrillDown.pdf (14 pages, 4715901 bytes).
 PDF statistics:
- 231 PDF objects out of 1000 (max. 8388607)
+ 228 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  56 words of extra memory for PDF output out of 10000 (max. 10000000)
 

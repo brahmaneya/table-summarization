@@ -786,7 +786,7 @@ The $m_w$ parameter lets the user trade off the accuracy of the optimal rule-lis
 
 \section{Dynamic Sampling for Large Tables}\label{sec:sampling}
 
-\papertext{
+\techreporttext{
 BRS makes multiple passes over the table in order to determine the best set of rules to display. This can be slow when the table is too large to fit in main memory. We can reduce the response time of smart drill down by running BRS on a sample of the table instead, trading off accuracy of our rules for performance. If we had obtained a sample $s$ by selecting each table tuple with probability $p$, and run BRS on $s$, then we multiply the count of each rule found by BRS, by $\frac{1}{p}$ to estimate its count over the full table.
 
 In Section~\ref{sec:sampling_algorithms}, we describe the problem of optimally allocating memory to different samples. We show that the problem is NP-Hard, and describe an approximate solution. In Section~\ref{sec:sample-handler}, we describe a component of the system called the {\em SampleHandler}, which is responsible for creating and maintaining multiple samples of different parts of the table in memory, and creating temporary samples for BRS to process. Detailed descriptions of the sampling problem and the SampleHandler are in the technical report. The technical report also contains some additional optimizations, and ways to set the minimum sample size.
@@ -826,7 +826,7 @@ The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace,
 %\noindent A more detailed proof sketch is given in the technical report.
 }
 
-\techreporttext{
+\papertext{
 BRS makes multiple passes over the table in order to determine the best set of rules to display. This can be slow when the table is too large to fit in main memory. We can reduce the response time of smart drill down by running BRS on a sample of the table instead, trading off accuracy of our rules for performance. If we had obtained a sample $s$ by selecting each table tuple with probability $p$, and run BRS on $s$, then we multiply the count of each rule found by BRS, by $\frac{1}{p}$ to estimate its count over the full table. 
 
 We describe our technique to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk in Section~\ref{sec:sampling_algorithms} through Section~\ref{sec:alternative-convex}. 
@@ -1019,9 +1019,6 @@ When the SamplerHandler gets called with argument $r$, it needs to find or creat
 
 \item \textbf{Combine:} If \textbf{Find} doesn't work i.e., if the SampleHandler cannot find an existing sample with filter $r$ and $\geq minSS$ tuples, then it looks at all existing samples $s^{\prime}$ such that $f_{s^{\prime}}$ is a sub-rule of $r$. If the set of all tuples that are covered by $r$, from all such $T_{s^{\prime}}$'s combined, exceeds $minSS$ in size, then we can simply treat that set as our sample for $r$.
 Tuples that are covered by $r$, from the combination of $T_{s^{\prime}}$s, follow a uniform distribution. That is, each table tuple $t$ that is covered by $r$ is equally likely to appear in a $T_{s^{\prime}}$. 
-
-Note that the \textbf{Combine} procedure doesn't really require additional memory apart from the temporary memory used by BRS. Since all the tuples in the `new' sample are already present in existing samples, it can give BRS a set of temporary pointers to the tuples, and the memory for the pointers can be freed as soon as the sample has been processed by BRS. In contrast, if we had created a new sample from hard disk, we would maintain the sample even after BRS terminated, and would hence need to use memory from the SampleHandler's capacity $M$.
-%TODO: Not sure how clear/necessary this is.  
 
 \item \textbf{Create:} If \textbf{Combine} doesn't work either, then the SampleHandler needs to create a new sample $s$ with $f_s = r$ by making a pass through the table. Making a pass can be expensive for big tables, so we only use \textbf{Create} when \textbf{Find} and \textbf{Combine} cannot be used. We can use reservoir sampling~\cite{maibdr1983,Vitter:1985:RSR:3147.3165} to get a uniformly random sample of given size in a single pass through the table. 
 
@@ -1238,19 +1235,17 @@ Hector Garcia-Molina is the Leonard Bosack and Sandra Lerner Professor in the De
 \end{wrapfigure}
 
 Manas Joglekar is a fifth year PhD student in the Computer Science Department at Stanford University. Manas' advisor is Prof. Hector Garcia-Molina, and his research interests include Crowdsourcing, Data Quality Evaluation and Database Theory. Prior to that, he received a B. Tech in Computer Science and Engineering from the Indian Institute of Technology Bombay, in 2011.
+Manas is a recipient of International Mathematics Olympiad Silver (2007) and Bronze (2006) Medals, and two best-of-conference citations (ICDT 2016, ICDE 2016).
 \medskip
 
 
 \begin{wrapfigure}{l}{0.15\textwidth}
-%   \begin{center}
 \includegraphics[height=3.5cm, width=2.7cm]{./figures/aditya.pdf}
-%   \end{center}
 \end{wrapfigure}
-
 Aditya Parameswaran is an Assistant Professor in Computer Science at the University of Illinois (UIUC). He spent the 2013-14 year visiting MIT CSAIL and Microsoft Research New England, after completing his Ph.D. from Stanford University, advised by Prof. Hector Garcia-Molina. He is broadly interested in data analytics, with research results in human computation, visual analytics, information extraction and integration, and recommender systems. 
 Aditya is a recipient of the Arthur Samuel award for the best dissertation in CS at Stanford (2014), the SIGMOD Jim Gray dissertation award (2014), the SIGKDD dissertation award runner up (2014), a Google Faculty Research Award (2015), the Key Scientific Challenges Award from Yahoo! Research (2010), four best-of-conference citations (VLDB 2010, KDD 2012, ICDE 2014, ICDE 2016), the Terry Groswith graduate fellowship at Stanford (2007), and the Gold Medal in Computer Science at IIT Bombay (2007). His research group is supported with funding from by the NIH, the NSF, and Google.
-\medskip
 
+\medskip
 
 \end{document}
 			
