@@ -677,6 +677,7 @@ $$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
 \papertext{\vspace{-10pt}}
 \techreporttext{
 \begin{proof}
+\mrj{
 Let $R(S)$ be the rule list obtained by sorting $S$ in descending weight order. For each tuple $t$, let $TOP(t,S)$ denote the first rule in rule-list $R(S)$ that covers $t$. By definition of $R(S)$, $r$ must also have the highest weight out of all rules in $S$ that cover $t$. Then $MCount(r,S)$ is simply $\sum_{t \in T : TOP(t,S) = r} 1$. Thus Score can be rewritten as:
 $$\text{Score}(S) = \sum_{t \in T} W(TOP(t,S))$$
 Now let $S \subsetneq S'$ and $s \notin S$. Then to prove submodularity, we simply need to prove that $$\text{Score}(S \cup \{s\}) - \text{Score}(S) \geq \text{Score}(S' \cup \{s\}) - \text{Score}(S')$$. We have
@@ -689,7 +690,7 @@ $W(TOP(t,S' \cup \{s\})) - W(TOP(t,S')) \leq W(TOP(t,S \cup \{s\})) - W(TOP(t,S)
 \end{enumerate}
 Either way, we have $W(TOP(t,S' \cup \{s\})) - W(TOP(t,S')) \leq W(TOP(t,S \cup \{s\})) - W(TOP(t,S))$, and summing over all $t \in T$ gives us 
 $$\text{Score}(S \cup \{s\}) - \text{Score}(S) \geq \text{Score}(S' \cup \{s\}) - \text{Score}(S')$$
-as required.
+as required.}
 \end{proof}
 }
 
