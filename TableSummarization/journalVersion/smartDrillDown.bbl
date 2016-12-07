@@ -34,6 +34,11 @@ A.~Bosworth, J.~Gray, A.~Layman, and H.~Pirahesh.
   cross-tab, and sub-totals.
 \newblock Technical report, Microsoft Research, 1995.
 
+\bibitem{Boyd:2004:CO:993483}
+S.~Boyd and L.~Vandenberghe.
+\newblock {\em Convex Optimization}.
+\newblock Cambridge University Press, New York, NY, USA, 2004.
+
 \bibitem{Bringmann:2007:ICDM}
 B.~Bringmann, L.~Katholieke, and A.~Zimmermann.
 \newblock The chosen few: On identifying valuable patterns.
@@ -67,7 +72,7 @@ K.~E. Gebaly, P.~Agrawal, L.~Golab, F.~Korn, and D.~Srivastava.
 \newblock {\em {PVLDB}}, pages 61--72, 2014.
 
 \bibitem{Geerts04tilingdatabases}
-F.~Geerts, B.~Goethals, and T.~Mielikäinen.
+F.~Geerts, B.~Goethals, and T.~Mielikï¿½inen.
 \newblock Tiling databases.
 \newblock In {\em Discovery Science}, pages 278--289, 2004.
 

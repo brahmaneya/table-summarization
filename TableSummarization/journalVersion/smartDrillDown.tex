@@ -44,8 +44,8 @@
 \newcommand{\stitle}[1]{\vspace{0.5em}\noindent\textbf{#1}}
 \newcommand{\squishend}{\end{list}}
 \newcommand{\eat}[1]{}
-\newcommand{\papertext}[1]{}
-\newcommand{\techreporttext}[1]{#1}
+\newcommand{\papertext}[1]{#1}
+\newcommand{\techreporttext}[1]{}
 
 
 \newcommand{\calD}{\mathcal{D}\xspace}
@@ -479,18 +479,18 @@ for one of the following smart drill down operations:
 \end{denselist}
 \end{problem}
 \noindent Throughout this paper, we use the {\em Count} aggregate of a rule to display to the user. We can also use a {\em Sum} of values over a given `measure column' instead. We discuss how to modify our algorithms to use $Sum$ instead of $Count$ 
-\papertext{in our technical report~\cite{tr}.}
-\techreporttext{in Section~\ref{sec:extensions}.}
+\eat{in our technical report~\cite{tr}.}
+\papertext{in Section~\ref{sec:extensions}.}
 
 \subsection{Weighting Rules}
 \label{sec:weighting}
 We now describe our weighting function $W$ that is used to score individual rules. 
 At a high level, we want our rules to be as descriptive of the table as possible, i.e. given the rules, it should be as easy as possible to reproduce the table. We consider a general family of weighting functions, that assigns for each rule $r$, a weight $W(r)$ depending on how expressive the rule is (i.e., how much information
-it conveys). We mention some canonical forms for function $W(r)$ \papertext{(their detailed interpretations are described in the technical report)}; later, we specify the full
+it conveys). We mention some canonical forms for function $W(r)$ \eat{(their detailed interpretations are described in the technical report)}; later, we specify the full
 family of weighting functions our techniques can handle:
 
 \begin{comment}
-\techreporttext{
+\papertext{
 \begin{table}
 \centering
 \scriptsize
@@ -507,24 +507,24 @@ family of weighting functions our techniques can handle:
 
 \stitle{Size Weighting Function:} 
 \begin{comment}
-\techreporttext{$W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
+\papertext{$W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
 Here we set weight equal to the number of non-starred values in the rule $r$; we define this quantity to be the {\em size} of the rule. Consider the examples in Table~\ref{table:sizescoringexample}. The weight for rule ($a$, $b_1$) is $2$, while weight for ($a$, $\star$) is $1$. Thus, the total score for the rule-list with these two rules would be $2 \times 100 + 1 \times 900 = 1100$. If we replaced the rule ($a$, $\star$) by two rules ($a$, $b_2$) and ($a$, $\star$), then the $MCount$ of rule ($a$, $\star$) would reduce to $600$, since $300$ of its tuples would be covered by the previous rule $(a, b_2)$. Thus, our total score would be $2 \times 100 + 2 \times 300 + 1 \times 600 = 1400$. If we had instead replaced ($a$, $\star$) by ($a$, $b_3$) and ($a$, $\star$), then our score would have been $1500$ which is $> 1400$. Thus, when we marginalize on one extra column ($B$ in this case) and include a rule where that column is instantiated, it is better to do so on the value which occurs more frequently (in this case, $b_3$ which occurred $400$ times, compared to the $300$ of $b_2$).} 
 \end{comment}
-%\papertext{
+%\eat{
 $W(r) = |\left\lbrace c \in C \mid r(c) \neq \star \right\rbrace |$ : 
 Here we set weight equal to the number of non-starred values in the rule $r$ i.e. the {\em size} of the rule. For example, in Table~\ref{table:introexample}, the rule (Target, bicycles, $\star$) has weight $2$.
 %}
 
-\techreporttext{To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a hundred of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus, this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those tuples. Thus, $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus, this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.}
+\papertext{To get an intuitive feel for this scoring function, imagine we are trying to reconstruct the table from the rules. Since we have rule ($a$, $b_1$) with $MCount$ $100$, we are going to get a hundred of the table's tuples from this rule. For those hundred tuples, out of the $200$ total values to be filled ($2$ per tuple, since there are $2$ columns), all $200$ values will already have been filled (since the rule specifies both columns). Thus, this rule contributes $200$ to the score. For the rule ($a$, $\star$), there are $900$ table tuples, and the $a$ value will be pre-filled for those tuples. Thus, $900$ slots of these tuples have been pre-filled, and so the rule contributes $900$ to the total. Thus, this scoring function can be thought of as the number of values that have been pre-filled in the table by our rule-list. Since having more of the table pre-filled is better, maximizing the score gives us a desirable set of rules.}
 
 \stitle{Bits Weighting Function:}
 \begin{comment}
-\techreporttext{
+\papertext{
 $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. This scoring function weighs each column depending on its inherent complexity, instead of equally like the Size function. The reason behind is: Say column $c_1$ is a boolean, while $c_2$ is a column with $20$ possible values. Then, a rule that gives us a value for $c_2$ is clearly giving us more information than a rule that gives us a value for $c_1$. Thus, this scoring function gives a higher weight to a rule that gives a value for a column with more distinct values. 
 
 The interpretation for this function is similar to the one for the last function. Except that this time, we count the number of `bits' of the table that are pre-filled by the rules. This is because for column $c$, specifying a value in the column takes $\lceil \text{log}(|c|)\rceil$ bits of information. This scoring function is closely related to the Minimum Description Length (MDL)~\cite{Grunwald:2007:MDL:1213810} of a table. If we describe a table using the rule-set, plus values to fill in for $\star$s in the rules to get tuples, then finding a set of rules of given size $k$ that tries to minimize the length of this description, is equivalent to finding the rule-set that maximizes the total score.}
 \end{comment}
-%\papertext{
+%\eat{
 $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ where $|c|$ refers to the number of distinct possible values in column $c$. This function weighs each column based on its inherent complexity, instead of equally like the Size function.
 %}
 
@@ -543,17 +543,17 @@ A weight function can be used in several ways, including expressing a higher pre
 \label{sec:interface}
 When the user starts using a system equipped with
 the smart drill down operator, they first see a table with a single trivial rule as shown in Table~\ref{table:introexample0}. At any point, the user can click on either a rule, or a star within a rule, to perform a `smart drill down' on the rule. Clicking on a rule $r$ causes $r$ to expand into the highest-scoring rule-list consisting of super-rules of $r$. By default, the rule $r$ expands into a list of $3$ rules, but this number can be changed by the user.
-%\techreporttext{ As an example, clicking on the trivial rule of Table~\ref{table:introexample0} would display Table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display Table~\ref{table:introexample2}.} 
+%\papertext{ As an example, clicking on the trivial rule of Table~\ref{table:introexample0} would display Table~\ref{table:introexample}. Clicking further on the third rule in the expanded rule-list would display Table~\ref{table:introexample2}.} 
 The rules obtained from the expansion are listed directly below $r$, ordered in decreasing order by weight (the reasoning behind the ordering is explained in Section~\ref{sec:algorithms}).
 
 Instead of clicking on a rule, the user can click on a $\star$, say in column $c$ of rule $r$. This will also cause rule $r$ to expand into a rule-list, but this time the new displayed rules are guaranteed to have non-$\star$ values for in column $c$. 
-%\techreporttext{ For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see Table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise.} 
+%\papertext{ For instance, if the user clicks on the $\star$ in the product column of the walmart rule, they will see Table~\ref{table:introexample3}, which shows super-rules of the walmart rule all specific to some product. This operation is useful if the user is more interested in a particular column that is unlikely to be instantiated in the top rules otherwise.} 
 Finally, when the user clicks on a rule that has already been expanded, it reverses the expansion operation, i.e. collapses it. 
-\techreporttext{ For example, clicking on the walmart rule in Table~\ref{table:introexample2} would take the user back to Table~\ref{table:introexample}. This operation is equivalent to a traditional roll up, but for smart drill downs instead of traditional drill downs.}
+\papertext{ For example, clicking on the walmart rule in Table~\ref{table:introexample2} would take the user back to Table~\ref{table:introexample}. This operation is equivalent to a traditional roll up, but for smart drill downs instead of traditional drill downs.}
 
 \begin{comment}
 
-\techreporttext{
+\papertext{
 \begin{table}
 \scriptsize
 \centering
@@ -578,7 +578,7 @@ $\triangleright$ $\triangleright$ walmart & bicycles & $\star$ & $150$ & $2$ \\ 
 
 \section{Smart drill down Algorithms} \label{sec:algorithms}
 We now describe online algorithms for implementing
-the smart drill down operator. We assume that all columns are categorical (so numerical columns have been bucketized beforehand). \papertext{We further discuss bucketization of numerical attributes in the Extensions section in the technical report~\cite{tr}}\techreporttext{We further discuss bucketization of numerical attributes in Section~\ref{sec:extensions}}.
+the smart drill down operator. We assume that all columns are categorical (so numerical columns have been bucketized beforehand). \eat{We further discuss bucketization of numerical attributes in the Extensions section in the technical report~\cite{tr}}\papertext{We further discuss bucketization of numerical attributes in Section~\ref{sec:extensions}}.
 
 
 \subsection{Problem Reduction and Important Property} \label{sec:reduction}
@@ -601,7 +601,7 @@ As a first step towards solving Problem~\ref{prob:optimal-rule-list}, we show th
 Let $R$ be a rule-list. Let $R^{\prime}$ be the rule-list having the same rules as $R$, but ordered in descending order by weight. Then
 $\text{Score}(R^{\prime}) \geq \text{Score}(R)$.
 \end{lemma}
-\papertext{The proof of this lemma, as well as other proofs, can be found in the technical report~\cite{tr}.}\techreporttext{
+\eat{The proof of this lemma, as well as other proofs, can be found in the technical report~\cite{tr}.}\papertext{
 \begin{proof}
 The score of rule list $R$ is given by $$\text{Score}(R) = \sum_{r \in R} W(r) \times MCount(r,R)$$
 For each tuple $t$, let $TOP(t,R)$ denote the first rule in rule-list $R$ that covers $t$. Then the MCount of rule $r$ in $R$ is simply $\sum_{t \in T : TOP(t,R) = r} 1$. Thus Score can be rewritten as:
@@ -634,11 +634,14 @@ Thus, the goal of MCP is to find a set of $k$ of the given subsets of $U$ whose 
 \begin{lemma}
 Problem~\ref{prob:optimal-rule-set} is {\sc NP-Hard}.
 \end{lemma}
+Proofs can be found in the technical report~\cite{tr}.
+\techreporttext{
 \begin{proof}
-\mrj{Consider a table with $|U|$ rows (one per element of $U$) and $m$ columns (one per $S_j$, that has value $1$ in row $i$, column $j$ if the $i^{th}$ belongs to $S_j$ and $0$ otherwise. And consider a weighting function with $W(r) = 1$ if there is at least one $1$ in $r$, and $0$ otherwise. Let $k \leq m$.}
+Consider a table with $|U|$ rows (one per element of $U$) and $m$ columns (one per $S_j$, that has value $1$ in row $i$, column $j$ if the $i^{th}$ belongs to $S_j$ and $0$ otherwise. And consider a weighting function with $W(r) = 1$ if there is at least one $1$ in $r$, and $0$ otherwise. Let $k \leq m$.
 
-\mrj{Then a rule with multiple $1$s is clearly dominated (or matched) by a subrule with only one $1$. Moreover, a rule-list that has two rules with a $1$ in the same column is dominated by one that that $1$s in different columns. Then the score of a rule list that has rules with $1$s in column set $C \subset \{1, 2,\ldots m\}$ with $|C| = k$ has score equal to the size of union $\bigcup_{c \in C} S_c$. Thus maximizing score is equivalent to maximizing the size of the union of $k$ sets, which is the Maximum Coverage Problem. Thus the NP-Hardness of Maximum Coverage implies that Score maximization is NP-hard.}
+Then a rule with multiple $1$s is clearly dominated (or matched) by a subrule with only one $1$. Moreover, a rule-list that has two rules with a $1$ in the same column is dominated by one that that $1$s in different columns. Then the score of a rule list that has rules with $1$s in column set $C \subset \{1, 2,\ldots m\}$ with $|C| = k$ has score equal to the size of union $\bigcup_{c \in C} S_c$. Thus maximizing score is equivalent to maximizing the size of the union of $k$ sets, which is the Maximum Coverage Problem. Thus the NP-Hardness of Maximum Coverage implies that Score maximization is NP-hard.
 \end{proof}
+}
 
 \subsection{Algorithm Overview}\label{sec:alg-overview}
 Given that Problem~\ref{prob:optimal-rule-set} is {\sc NP-Hard}, we now present our algorithms 
@@ -674,13 +677,12 @@ Intuitively, this means that the marginal value of adding an element to a set $S
 For a given table $T$, the Score function over sets $S$ of rules, defined by the following is submodular:
 $$\text{Score}(S) = \sum_{r \in S} MCount(r,S)W(r)$$
 \end{lemma}
-\papertext{\vspace{-10pt}}
 \techreporttext{
 \begin{proof}
-\mrj{
+
 Let $R(S)$ be the rule list obtained by sorting $S$ in descending weight order. For each tuple $t$, let $TOP(t,S)$ denote the first rule in rule-list $R(S)$ that covers $t$. By definition of $R(S)$, $r$ must also have the highest weight out of all rules in $S$ that cover $t$. Then $MCount(r,S)$ is simply $\sum_{t \in T : TOP(t,S) = r} 1$. Thus Score can be rewritten as:
 $$\text{Score}(S) = \sum_{t \in T} W(TOP(t,S))$$
-Now let $S \subsetneq S'$ and $s \notin S$. Then to prove submodularity, we simply need to prove that $$\text{Score}(S \cup \{s\}) - \text{Score}(S) \geq \text{Score}(S' \cup \{s\}) - \text{Score}(S')$$. We have
+Now let $S \subsetneq S'$ and $s \notin S$. Then to prove submodularity, we simply need to prove that $$\text{Score}(S \cup \{s\}) - \text{Score}(S) \geq \text{Score}(S' \cup \{s\}) - \text{Score}(S')$$. This gives us
 $\text{Score}(S \cup \{s\}) - \text{Score}(S) = \sum_{t \in T} W(TOP(t,S \cup \{s\})) - W(TOP(t,S))$ 
 and an analogous equation for $S'$. Consider two cases: 
 \begin{enumerate}
@@ -690,7 +692,7 @@ $W(TOP(t,S' \cup \{s\})) - W(TOP(t,S')) \leq W(TOP(t,S \cup \{s\})) - W(TOP(t,S)
 \end{enumerate}
 Either way, we have $W(TOP(t,S' \cup \{s\})) - W(TOP(t,S')) \leq W(TOP(t,S \cup \{s\})) - W(TOP(t,S))$, and summing over all $t \in T$ gives us 
 $$\text{Score}(S \cup \{s\}) - \text{Score}(S) \geq \text{Score}(S' \cup \{s\}) - \text{Score}(S')$$
-as required.}
+as required.
 \end{proof}
 }
 
@@ -722,7 +724,7 @@ $S = S \cup \left\lbrace R_m \right\rbrace$
 
 \stitle{Parametrized Algorithm:} Our algorithm pseudo-code is given in the box labeled Algorithm~\ref{algo:best-rule-set}. We call our algorithm {\em BRS} (for \textbf{B}est \textbf{R}ule \textbf{S}et). BRS takes four parameters as input: the table $T$, the number of required rules $k$, a parameter $m_w$ (described in the next paragraph), and the weight function $W$. 
 
-The parameter $m_w$ stands for \textit{Max Weight}. This parameter tells the algorithm to assume that all rules that appear in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, BRS is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by BRS does not contain $r$. BRS runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, its Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as Size). Thus, rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small. \papertext{In the Extensions Section of the technical report~\cite{DBLP:journals/pvldb/JoglekarGP15}, we describe strategies for setting $k$, $m_w$ and other parameters.} \techreporttext{Later in the extensions section, we describe strategies for setting $m_w$ as well as other parameters.}
+The parameter $m_w$ stands for \textit{Max Weight}. This parameter tells the algorithm to assume that all rules that appear in the optimal solution are going to have weight $\leq m_w$. Thus, if $S_o$ denotes set of rules with maximum score, then as long as $m_w \geq \textrm{max}_{r \in S_o}W(r)$, BRS is guaranteed to return $S_o$. On the other hand if $m_w < W(r)$ for some $r \in S_o$, then there is a chance that the set returned by BRS does not contain $r$. BRS runs faster for smaller values of $m_w$, and may only return a suboptimal result if $m_w < \textrm{max}_{r \in S_o}W(r)$. In practice, $\textrm{max}_{r \in S_o}W(r)$ is usually small. This is because as the size (and weight) of a rule increases, its Count falls rapidly. The Count tends to decrease exponentially with rule size, while Weight increases linearly for common weight functions (such as Size). Thus, rules with high weight and size have very low count, and are unlikely to occur in the optimal solution set $S_o$. Our experiments in Section~\ref{sec:experiments} also show that the weights of rules in the optimal set tend to be small. \eat{In the Extensions Section of the technical report~\cite{DBLP:journals/pvldb/JoglekarGP15}, we describe strategies for setting $k$, $m_w$ and other parameters.} \papertext{Later in the extensions section, we describe strategies for setting $m_w$ as well as other parameters.}
 
 BRS initializes the solution set $S$ to be empty, and then iterates for $k$ steps, adding the best marginal rule at each step. To find the best marginal rule, it calls a function to find the best marginal rule given the existing set of rules $S$. 
 
@@ -732,7 +734,7 @@ In order to find the best marginal rule, we need to find the marginal values of 
 In order to avoid counting too many rules, we leverage a technique inspired by the {\em a-priori} algorithm for frequent itemset mining~\cite{apriori}. Recall that the a-priori algorithm is used to find all frequent itemsets that have a support greater than a threshold. Unlike the a-priori algorithm, our goal is to find the single best marginal rule. Since we only aim to find one rule at a time, our pruning power is significantly higher than a vanilla a-priori algorithm, and we terminate in much fewer passes over the dataset. 
 
 
-\techreporttext{
+\papertext{
 \begin{algorithm}
 \scriptsize
 \KwIn{$S$ (Current solution set), $T$ (database table), $m_w$ (max weight), $W$ (weight function)}
@@ -787,33 +789,35 @@ $H = \textrm{max}_{R \in C}(\text{MarginalValue}(R))$
 
 We compute the best marginal rule over multiple passes on the dataset, with the maximum number of passes equal to the maximum size of a rule. In the $j^{th}$ pass, we compute counts and marginal values for rules of size $j$. To give an example, suppose we had three columns $c_1$, $c_2$, and $c_3$. In the first pass, we would compute the counts and marginal values of all rules of size $1$. In the second pass, instead of finding marginal values for all size $2$ rules, we can use our knowledge of counts from the first pass to upper bound the potential counts and marginal values of size $2$ rules, and be more selective about which rules to count in the second pass. For instance, suppose we know that the rule $(a, \star, \star)$ has a count of $1000$, while $(\star, b, \star)$ has a count of $100$. Then for any value $c$ in column $c_3$ we would know that the count of $(\star, b, c)$ is at most $100$ because it cannot exceed that of $(\star, b, \star)$. This implies that the maximum marginal value of any super-rule of $(\star, b, c)$ having weight $\leq m_w$ is at most $100m_w$. If the rule $(a, \star, \star)$ has a marginal value of $800$, then the marginal value of any super-rule of $(\star, b, \star)$ cannot possibly exceed that of $(a, \star, \star)$. Since our aim is to only find the highest marginal value rule, we can skip counting for all super-rules of $(\star, b, \star)$ for future passes.
 
-We now describe the function to find the best marginal rule. \papertext{The pesudo-code for the function is in the technical report}\techreporttext{The pseudo-code for the function is in the box titled Algorithm~\ref{algo:best-marginal-rule}}. The function maintains a threshold $H$, which is the highest marginal value that has been found for any rule so far. The function makes several passes over the table \techreporttext{(Step $3$)}, counting marginal values for size $j$ rules in the $j^{th}$ pass. We maintain three sets of rules: $C$, the set of rules whose marginal values have been counted in all previous passes, $C_n$, the set of rules whose marginal values will be counted in the current pass, and $C_o$, the set of rules whose marginal values were counted in the previous pass. For the first pass, we set $C_n$ to be all rules of size $1$. Then we compute marginal values for those rules, and set $C = C_o = C_n$.
+We now describe the function to find the best marginal rule. \eat{The pesudo-code for the function is in the technical report}\papertext{The pseudo-code for the function is in the box titled Algorithm~\ref{algo:best-marginal-rule}}. The function maintains a threshold $H$, which is the highest marginal value that has been found for any rule so far. The function makes several passes over the table \papertext{(Step $3$)}, counting marginal values for size $j$ rules in the $j^{th}$ pass. We maintain three sets of rules: $C$, the set of rules whose marginal values have been counted in all previous passes, $C_n$, the set of rules whose marginal values will be counted in the current pass, and $C_o$, the set of rules whose marginal values were counted in the previous pass. For the first pass, we set $C_n$ to be all rules of size $1$. Then we compute marginal values for those rules, and set $C = C_o = C_n$.
 
 For the second pass onwards, we are more selective about which rules to consider for marginal value evaluation. We first set $C_n$ to be the set of rules of size $j$ which are super-rules of rules from $C_o$. Then for each rule $r$ from $C_n$, we consider the known marginal values of its sub-rules from $C$, and use them to upper-bound the marginal value of all super-rules of $r$, as shown in Step 3.3.2. Then we delete from $C_n$ the rules whose marginal value upper bound is less than the currently known best marginal value, since they have no chance of being returned as the best marginal rule. Then we make as actual pass through the table to compute the marginal value of the rules in $C_n$, as shown in Step 3.5. If in any round, the $C_n$ obtained after deleting rules is empty, then we terminate the algorithm and return the highest value rule. 
 
 The reader may be wondering why we did not simply count the score of each rule using a variant of the a-priori algorithm in one pass, and then pick the set of rules that maximizes score subsequently. This is because doing so will lead to a sub-optimal set of rules: by not accounting for the rules that have already been selected, we will not be able to ascertain the marginal benefit of adding an additional rule correctly.
 
+\noindent
 \textbf{Runtime analysis:}
-\mrj{Our algorithm runs calls the function for finding best marginal rule $k$ times. Thus the total computational cost is about $k$ times the cost of computing the best marginal rule. Let $c_n$ be the number of counts in $C_n$ at the end of the $n^{th}$ iteration (that is, after eliminating rules that have no chance of having the highest marginal value). Also, let $c_0 = 1$.}
+\mrj{Our algorithm calls the function for finding best marginal rule $k$ times. Thus the total computational cost is about $k$ times the cost of computing the best marginal rule. Let $c_n$ be the number of counts in $C_n$ at the end of the $n^{th}$ iteration (that is, after eliminating rules that have no chance of having the highest marginal value). Also, let $c_0 = 1$.}
 
-\mrj{The cost of the finding the best marginal rule can be split into three parts: (i) Enumerating all new rules to add to $C_n$ at the start of the $n^{th}$ iteration. (ii) Determining which of the rules in $C_n$ to eliminate (iii) Finding counts and marginal values for the remaining $c_n$ rules in $C_n$. The number of super-rules we can consider for (i) can be no larger than $c_{n-1}|T|$, since each rule in $C_{n-1}$ can give us at most $|T|$ new candidate super-rules for $C_n$. The cost of (ii) is $O(|C_n|)$. Finally, the cost of (iii) is again $c_n|T|$, since we have two nested for loops over $T$ and $C_n$ respectively. Thus our total cost is $O(|T|\sum_i c_i)$.}
+\mrj{The cost of the finding the best marginal rule can be split into three parts: (i) Enumerating all new rules to add to $C_n$ at the start of the $n^{th}$ iteration. (ii) Determining which of the rules in $C_n$ to eliminate (iii) Finding counts and marginal values for the remaining $c_n$ rules in $C_n$. The number of super-rules we can consider for (i) can be no larger than $c_{n-1}|T|$, since each rule in $C_{n-1}$ can give us at most $|T|$ new candidate super-rules for $C_n$. The cost of (ii) is $O(|C_n|)$. Finally, the cost of (iii) is again $c_n|T|$, since we have two nested for loops over $T$ and $C_n$ respectively. Thus, our total cost is $O(|T|\sum_i c_i)$.}
 
 \mrj{In the worst case, we may need to evaluate all possible rules; since the total possible number of rules is $|T||C|$ where $C$ is the set of columns, our cost is at most $O(k|C||T|^2))$. However, note that this worst case is unlikely to occur when we use the Size or Bits weighting function, because the count of a rule decreases rapidly with its size, making it unlikely that we will need to find counts for its super-rules.}
 
 \mrj{In fact, if we assume that values in columns occur independently of each other, and that the most frequent value occurs $x < 1$ fraction of the time, then the number of candidate rules is bounded by $c_i \leq c_1 x^i$. This gives us $\sum_i c_i \leq c_1\sum_i x^i \leq c_1/(1-x)$.
-Thus our cost is now only $O(k|T|c_1/(1-x))$ for some constant $x$. If the number of distinct values in the table ($c_1$), $k$ and $x$ are taken to be constants (i.e. not scale with table size), then our cost is $O(|T|)$.}
+Thus our cost is now only $O(k|T|c_1/(1-x))$ for some constant $x$. If the number of distinct values in the table ($c_1$), $k$ and $x$ are taken to be constants (i.e. they do not scale with table size), then our cost is $O(|T|)$.}
 
+\noindent
 \textbf{Approximation ratio:}
-\mrj{If our $m_w$ is higher than the actual weight of every rule in the best rule list, then the only approximation ratio we incur is that in the greedy approximation, which is a multiplicative factor of up to $1 - 1/e$. On the other hand, if our $m_w$ estimate is smaller than the actual maximum weight $m_w^*$ of a rule in the best list, then we may end up picking a sub-optimal rule in the best marginal rule function.}
+\mrj{If $m_w$ is higher than the actual weight of every rule in the best rule list, then the only approximation ratio we incur is that in the greedy approximation, which is a multiplicative factor of up to $1 - 1/e$. On the other hand, if our $m_w$ estimate is smaller than the actual maximum weight $m_w^*$ of a rule in the best list, then we may end up picking a sub-optimal rule in the best marginal rule function.}
 
-\mrj{We now bound the sub-optimality of our chosen rule. Suppose the best rule to pick is $r^*$, and we pick rule $r$. Since we estimated $r^*$'s weight to be at most $m_w$, we would have estimated $r^*$ to have marginal value $\text{Est}(r^*) = \sum_{t \in r^*}(m_w - w(t))$ where $t \in r^*$ iterates over all tuples covered by $r^*$, and $w(t)$ is the weight of the current highest weight rule covering $t$. Since we picked $r$ over $r^*$, it means $\text{MarginalValue}(r) \geq \text{Est}(r^*)$. Suppose $m$ is the highest weight of a rule selected in the previous steps of BRS (so $w(t) \leq m$ for all $t$). Then the actual marginal value of $r^*$ is $\leq \frac{m_w - m}{m_w^* - m}\text{Est}(r^*)$. Thus our pick of $r$ is at most a $\frac{m_w - m}{m_w^* - m}$ factor worse than the optimal pick. If we always choose  our $m_w$ such we have $\frac{m_w - m}{m_w^* - m} \geq w$, for some constant $w < 1$, then our final score is guaranteed to be withing a $w(1-1/e)$ factor of the optimal score.}
+\mrj{We now bound the sub-optimality of our chosen rule. Suppose the best rule to pick is $r^*$, and we pick rule $r$. Since we estimated $r^*$'s weight to be at most $m_w$, we would have estimated $r^*$ to have marginal value $\text{Est}(r^*) = \sum_{t \in r^*}(m_w - w(t))$ where $t \in r^*$ iterates over all tuples covered by $r^*$, and $w(t)$ is the weight of the current highest weight rule covering $t$. Since we picked $r$ over $r^*$, it means $\text{MarginalValue}(r) \geq \text{Est}(r^*)$. Suppose $m$ is the highest weight of a rule selected in the previous steps of BRS (so $w(t) \leq m$ for all $t$). Then, the actual marginal value of $r^*$ is $\leq \frac{m_w - m}{m_w^* - m}\text{Est}(r^*)$. Thus, our pick of $r$ is at most a $\frac{m_w - m}{m_w^* - m}$ factor worse than the optimal pick. If we always choose  our $m_w$ such that we have $\frac{m_w - m}{m_w^* - m} \geq w$, for some constant $w < 1$, then our final score is guaranteed to be within a $w(1-1/e)$ factor of the optimal score.}
 
 \section{Dynamic Sampling for Large Tables}\label{sec:sampling}
 
-\techreporttext{
+\papertext{
 BRS makes multiple passes over the table in order to determine the best set of rules to display. This can be slow when the table is too large to fit in main memory. We can reduce the response time of smart drill down by running BRS on a sample of the table instead, trading off accuracy of our rules for performance. If we had obtained a sample $s$ by selecting each table tuple with probability $p$, and run BRS on $s$, then we multiply the count of each rule found by BRS, by $\frac{1}{p}$ to estimate its count over the full table.
 
-In Section~\ref{sec:sampling_algorithms}, we describe the problem of optimally allocating memory to different samples. We show that the problem is NP-Hard, and describe an approximate solution. In Section~\ref{sec:sample-handler}, we describe a component of the system called the {\em SampleHandler}, which is responsible for creating and maintaining multiple samples of different parts of the table in memory, and creating temporary samples for BRS to process. Detailed descriptions of the sampling problem and the SampleHandler are in the technical report. The technical report also contains some additional optimizations, and ways to set the minimum sample size.
+In Section~\ref{sec:sampling_algorithms}, we describe the problem of optimally allocating memory to different samples. We show that the problem is NP-Hard, and describe an approximate solution. In Section~\ref{sec:sample-handler}, we describe a component of the system called the {\em SampleHandler}, which is responsible for creating and maintaining multiple samples of different parts of the table in memory, and creating temporary samples for BRS to process. 
 
 \subsection{Deciding what to sample}\label{sec:sampling_algorithms}
 We are given a memory capacity $M$, and a minimum sample size $minSS$, both specified by the user. $minSS$ is the minimum number of tuples on which we are allowed to run BRS, without accessing the hard disk. A higher value of $minSS$ increases both accuracy and computation cost of our system.
@@ -850,7 +854,7 @@ The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace,
 %\noindent A more detailed proof sketch is given in the technical report.
 }
 
-\papertext{
+\eat{
 BRS makes multiple passes over the table in order to determine the best set of rules to display. This can be slow when the table is too large to fit in main memory. We can reduce the response time of smart drill down by running BRS on a sample of the table instead, trading off accuracy of our rules for performance. If we had obtained a sample $s$ by selecting each table tuple with probability $p$, and run BRS on $s$, then we multiply the count of each rule found by BRS, by $\frac{1}{p}$ to estimate its count over the full table. 
 
 We describe our technique to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk in Section~\ref{sec:sampling_algorithms} through Section~\ref{sec:alternative-convex}. 
@@ -947,14 +951,14 @@ The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace,
 
 \stitle{Approximate DP Solution.} The problem as stated is {\sc NP-Hard}, but with a simplifying assumption we can make the problem approximately solvable using  Dynamic Programming. The assumption is: for each $r \in L$, we assume that its $ess$ can get tuples only from samples obtained for itself and its parent. That is, we set $S(r_1, r_2)$ to be zero if $r_1 \neq r_2$ and $r_2$ is not a child of $r_1$. This is similar to what we had for tree $U$ in our proof of Lemma~\ref{lemma:sampling-hardness}. So now $ess(r^{\prime}) = n_{r^{\prime}} + n_rS(r, r^{\prime})$ where $r$ is the parent of $r^{\prime}$.
 
-\papertext{We present the idea behind the approximate solution below. A more detailed description can be found in the technical report. The solution consists of two main steps:
+\eat{We present the idea behind the approximate solution below. A more detailed description can be found in the technical report. The solution consists of two main steps:
 \squishlist
 \item \textbf{Locally Optimal Solutions :} For each rule $r_0 \in U \setminus L$, let $M_{r_0}$ be the set consisting of $r_0$ and its leaf children. We consider the number of tuples assigned to members of $M_{r_0}$. Each such assignment of numbers has a `cost' equal to total number of tuples assigned, and `value' equal to sum of probabilities of $M_{r_0}$ members with $ess > minSS$. We consider all `locally optimal' assignments, where probability value cannot be increased without increasing the cost.
 \item \textbf{Combining Solutions :} Then, we use dynamic programming to pick one optimal solution per $r_0$ so as to get maximum probability value with the given cost constraint. We discretize costs, say to have granularity $100$. Let $M_{0}, M_{1}, ... M_{D}$ be the sets for which we have found locally optimal solutions. We make $D$ iterations in all, where in the $i^{th}$ iteration, we try different locally optimal solutions for $M_i$ and use it to update the maximum attainable value for each cost. 
 \squishend
 }
 
-\techreporttext{
+\papertext{
 Consider a rule $r_0 \in U \setminus L$. Let $M_{r_0}$ denote the set containing $r_0$ and all its leaf children. By our assumption, the number of tuples $n_{r^{\prime}}$ for any rule$r^{\prime} \in M_{r_0}$ only affects the $ess$ value of rules in $M_{r_0}$. This allows us to split the problem into multiple subproblems,  with one subproblem per $M_{r_0}$. For each non-leaf rule $r_0$ and all its children, we compute all `locally optimal' assignments of $n_r \mid r \in M_{r_0}$. Locally optimal means that we cannot get a higher `probability value' $\sum_{r \in M_{r_0}} p_rI_{ess(r) \geq minSS}$ for the same `sampling cost' $\sum_{r\in M_{r_0}} n_r$. Then we use dynamic programming to combine locally optimal solutions of different $M_{r_0}$s. We describe these steps in detail below:
 
 Let $r_0 \in U \setminus L$. Let $r_1, r_2, ... r_d$ be the leaf children of $r_0$. For any child $r_i$, $n_{r_i}$ only contributes to its own $ess$, while $n_{r_0}$ contributes to the $ess$ of all children $r_1, ... r_d$. Given a value of $n_{r_0}$, in a locally optimal solution, each child $r_i$ must satisfy:
@@ -973,7 +977,7 @@ $$A\left[i+1\right] \left[j \right] = \textrm{max} (A\left[i\right]\left[j\right
 Dynamic programming solves this in $O(D\mathcal{S}3^d)$ time. 
 }
 
-\techreporttext{
+\papertext{
 \subsection{Alternative Convex-Optimization based solution}\label{sec:alternative-convex}
 We noted earlier that Problem~\ref{prob:sample-sizes} is NP-Hard, but can be approximately solved with an additional simplifying assumption regarding the $S(r_1, r_2)$ values. Instead of making this simplification, we can make the problem convex (and hence tractable) with two different simplifications. The first simplification is, we modify our objective function to use hinge-loss instead of a step function. That is, our new objective function to maximise is $$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{min}\left(1, \frac{ess(r^{\prime})}{minSS}\right)$$
 Here we assume that it is acceptable to run our algorithm on samples smaller than $minSS$, though we still prefer bigger sample sizes upto $minSS$. The other simplification we make is assuming that sample sizes are real numbers instead of integers. After determining optimal sample sizes, we can round them up to get integer sample sizes. This will increase the memory usage by at most $|U|$, the number of nodes in displayed tree, which is negligible compared to the memory capacity $M$, or $minSS$.
@@ -1005,7 +1009,7 @@ The highest scoring rule can have weight at most $|C|$ (the total number of colu
 }
 
 \subsection{Design of the SampleHandler}\label{sec:sample-handler}
-\papertext{
+\eat{
 We now briefly describe the design of the {\em SampleHandler}, which given
 a certain memory capacity $M$, and a minimum sample size $minSS$,
 creates, maintains, retrieves, and removes samples, all in
@@ -1024,7 +1028,7 @@ Whenever the user drills down on a rule $r$, our system calls the SampleHandler 
 \squishend
 }
 
-\techreporttext{
+\papertext{
 We now describe the design of the {\em SampleHandler}, which given
 a certain memory capacity $M$, and a minimum sample size $minSS$,
 creates, maintains, retrieves, and removes samples, in
@@ -1050,7 +1054,7 @@ When the SamplerHandler uses \textbf{Create} for a rule $r$, it needs to access 
 \squishend
 }
 
-\techreporttext{
+\papertext{
 \noindent \textbf{Pre-fetching:} When the user clicks on rule $r$ (or on a $\star$ in $r$), we need to get a sample, run the BRS, and display a rule-list to the user. If we use \textbf{Find} or \textbf{Combine}, then we can display the rule-list much faster because we don't have to read the entire table. But after expanding $r$, there is a high chance that the user goes further and drills down on one of the sub-rules $r^{\prime}$ of $r$. We may not be able to use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ with the existing samples. So while the user is busy reading the current rule-list obtained from drilling down on $r$, we can start running the algorithm from Section~\ref{sec:sampling_algorithms} in the background, and then making a pass through the table to create a new samples. That way, when the user expands the next rule $r^{\prime}$, there will be a high chance of a sample being pre-fetched for $r^{\prime}$, increasing the chance that we can use \textbf{Find} or \textbf{Combine} on $r^{\prime}$ and reducing our response time.
 In addition, while we are making the pass in the background, we can find the exact counts for currently displayed rules (which only have estimated counts shown), and update them when our pass is complete.
 }
@@ -1103,7 +1107,7 @@ The other weighting function we try is given by:
 $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
 This gives us Figure~\ref{fig:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Figure~\ref{fig:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
 
-A regular drill down can be thought of as a special case of smart drill-down with the right weighting function and number of rules\papertext{ (see technical report for details)}\techreporttext{. Specifically, if we want to perform a regular drill down on a column $C$ that has $n$ distinct values, then we set the number of rules to be displayed ($k$) to $n$. The weighting function $W$ is set such that $W(r) = 1$ if rule $r$ has $C$ instantiated, and $0$ otherwise. This ensures that all displayed rules have $C$ instantiated (with no other column $C'$ instantiated unless there is a functional dependency from $C$ to $C'$), and that each displayed rule has a distinct value of $C$. This effectively gives us a regular drill-down on $C$}. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
+A regular drill down can be thought of as a special case of smart drill-down with the right weighting function and number of rules\eat{ (see technical report for details)}\papertext{. Specifically, if we want to perform a regular drill down on a column $C$ that has $n$ distinct values, then we set the number of rules to be displayed ($k$) to $n$. The weighting function $W$ is set such that $W(r) = 1$ if rule $r$ has $C$ instantiated, and $0$ otherwise. This ensures that all displayed rules have $C$ instantiated (with no other column $C'$ instantiated unless there is a functional dependency from $C$ to $C'$), and that each displayed rule has a distinct value of $C$. This effectively gives us a regular drill-down on $C$}. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
 
 %TODO: Give application examples for different weighting functions
 %TODO: Say somewhere, that we haev drop-down list of common weighting functions in the user interface, with column selects and unselects.
@@ -1183,10 +1187,10 @@ The computation time for a smart drill-down is linear in both the table size $|T
 
 When $|T|$ is small, the runtme is dominated by the $b \times minSS$ term, as seen for the Marketing Dataset in Figure~\ref{fig:minSS_speed}(a). When $|T|$ is large relative to $minSS$, like for the Census Dataset, the runtime is dominated by $a \times |T|$ (this is when we need to create a fresh sample from hard disk). When we have a few million tuples, our total runtime is only a few seconds. But if the dataset contained billions of tuples, the process of reading the table to create a sample could itself take a very long time. To counteract this, we could preprocess the dataset by down-sampling it to only a million tuples, and perform the summarization on the million tuple sample (which also summarizes the billion tuple table).
 
-\techreporttext{
+\papertext{
 \vspace{-5pt}
 \section{Extensions}\label{sec:extensions}
-\techreporttext{
+\papertext{
 \subsection{Setting parameters $W$, $k$, $m_w$}\label{sec:setting-paramters}
 Our system allows the user to tune the smart drill-down by adjusting a number of parameters. Having a lot of tunable parameters can increase the difficulty of using a system by increasing the decision-making burden on the user. To counteract this, we now provide ways to guide the user while selecting appropriate parameter values.
 
@@ -1198,18 +1202,18 @@ The $m_w$ parameter lets the user trade off the accuracy of the optimal rule-lis
 
 \mrj{We now analyze a parametric family of weighting functions that generalizes our functions from Section~\ref{sec:weighting} and provides intuition for them. Let $W(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^k$, where the $w_c$'s and $k$ are parameters of the weighting function, and $o_{r,c}$ ($o$ stands for occurrence) is $1$ if $r(c) \neq \star$ and $0$ otherwise. The Size and Bits weighting functions can be seen as special cases of the above function with $k=1$ and with $w_c$ equal to $1$ for Size and $\text{log}(|c|)$ for Bits.}
 
-\mrj{We want to estimate the Score contribution of a rule according to this weight function, which requires estimating the count of the rule. Suppose for each column $c$, the most frequent value occurs $f_c$ fraction of the time. If the probability of a value occurring in a column of a tuple is independent of other values in the tuple, the $Count$ of rule $r$ is approximately $|T|\Pi_{c \in C}f_c^{o_{r,c}}$. Thus the score of a rule set containing $r$ alone can be approximated by:
+\mrj{We want to estimate the Score contribution of a rule according to this weight function, which requires estimating the count of the rule. Suppose that for each column $c$, the most frequent value occurs a $f_c$ fraction of the time. If the probability of a value occurring in a column of a tuple is independent of other values in the tuple, the $Count$ of rule $r$ is approximately $|T|\Pi_{c \in C}f_c^{o_{r,c}}$. Thus the score of a rule set containing $r$ alone can be approximated by:
 $$S(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^k|T|\Pi_{c \in C}f_c^{o_{r,c}}$$
 }
 
-\mrj{Now consider the rule that has the highest weight times count according to the above weighting function. We can approximate this rule by relaxing $o_{r,c}$ to a real number; that is by maximizing the estimated $S(r)$ subject to $0 \leq o_{r,c} \leq 1$. According to the KKT conditions, at the optimum, the partial derivative of $W(r)$ with respect to $o_{r,c}$ must be $\leq 0$ for each $c$ where $o_{r,c} = 0$, equal to $0$ if $0 < o_{r,c} < 1$ and $\geq 0$ otherwise. For each $c$, we have:
+\mrj{Now consider the rule that has the highest weight times count according to the above weighting function. We can approximate this rule by relaxing $o_{r,c}$ to a real number; that is by maximizing the estimated $S(r)$ subject to $0 \leq o_{r,c} \leq 1$. According to the KKT conditions~\cite{Boyd:2004:CO:993483}, at the optimum $Weight \times Count$, the partial derivative of $W(r)$ with respect to $o_{r,c}$ must be $\leq 0$ for each $c$ where $o_{r,c} = 0$, equal to $0$ if $0 < o_{r,c} < 1$ and $\geq 0$ otherwise. For each $c$, we have:
 $$\frac{\partial S(r)}{\partial o_{r,c}} = S(r)(\frac{kw_c}{\sum_{c \in C} o_{r,c}w_c} + \ln f_c)$$}
 
-\mrj{Thus if $x = \frac{k}{\sum_{c \in C} o_{r,c}w_c}$, then the maximum scoring rule should instantiate columns where $\frac{\ln f_c}{w_c} > x$ and some of the ones with $\frac{\ln f_c}{w_c} = x$. Thus for Size weighting, the highest score rule should select columns with high values of $\ln f_c$ i.e. highest frequency values. In contrast, Bits will select columns with highest values of $\log_{|c|}(f_c)$ i.e. values that are frequent relative to the number of distinct values in the column.}
+\mrj{Thus, if $x = \frac{k}{\sum_{c \in C} o_{r,c}w_c}$, then the maximum scoring rule should instantiate columns where $\frac{\ln f_c}{w_c} > x$ and some of the ones with $\frac{\ln f_c}{w_c} = x$. Thus, for Size weighting, the highest score rule should select columns with high values of $\ln f_c$, i.e., the highest frequency values. In contrast, Bits weighting will select columns with highest values of $\log_{|c|}(f_c)$, i.e., values that are frequent relative to the number of distinct values in the column.}
 
-\mrj{If we want the score to treat all columns equally, then the derivative must be $0$ for all $c$. This implies that for all $c$, we must have $w_c \propto \ln f_c$. Notice that Bits satisfies the above criterion if we assume that values in each column are uniformly distributed (that is, $f_c = 1/|c|$). This provides an intuitive justification for we might want to use the Bits weighting function.}
+\mrj{If we want the score to treat all columns equally, then the derivative must be $0$ for all $c$. This implies that for all $c$, we must have $w_c \propto \ln f_c$. Notice that Bits satisfies the above criterion if we assume that values in each column are uniformly distributed (that is, $f_c = 1/|c|$). This provides an intuitive justification for why we might want to use the Bits weighting function.}
 
-\mrj{We can also estimate the size of the optimal rule under the above weighting function. Specifically, the weighted fraction of columns with non-$\star$ values is given by $\frac{\sum_{c\in C} o_{r,c}w_c}{\sum_{c \in C} w_c}$ which equals $-k/(\sum_{c \in C} \ln f_c)$. Thus if we wanted our highest score rule to have $s$ fraction of the columns get instantiated, we can achieve that by setting $k = -s\sum_{c \in C} \ln f_c$.}
+\mrj{We can also estimate the size of the optimal rule under the above weighting function. Specifically, the weighted fraction of columns with non-$\star$ values is given by $\frac{\sum_{c\in C} o_{r,c}w_c}{\sum_{c \in C} w_c}$ which equals $-k/(\sum_{c \in C} \ln f_c)$. Thus, if we wanted our highest score rule to have $s$ fraction of the columns get instantiated, we can achieve that by setting $k = -s\sum_{c \in C} \ln f_c$.}
 
 \mrj{The above reasoning also lets us estimate the $m_w$ parameter we need to use. Specifically, the highest score rule above has weight $(\frac{-\ln f_c}{kw_c})^k$.}
 
@@ -1218,17 +1222,11 @@ $$\frac{\partial S(r)}{\partial o_{r,c}} = S(r)(\frac{kw_c}{\sum_{c \in C} o_{r,
 %This evaluates to $1.44$, while the observed value in our experiments is $10$. 
 
 \subsection{Dealing with Numerical Attributes}\label{sec:extensions-numerical}
-\mrjdel{Our framework assumes that all attributes are categorical. Attributes that have a large domain tend to have fewer tuples per value, and hence don't appear in rule summaries. Thus our algorithm does not summarize information about numerical attributes.}
-
-\mrjdel{However, we can modify the algorithm to deal with numerical attributes. Suppose we have a numerical attribute $A$. We can create buckets for values of $A$. We choose a number of buckets $b$, and divide the range of values of $A$ into $b$ intervals, with one bucket per interval. We can create buckets having equal range sizes, or decide their range such that there is an approximately equal number of tuples in each bucket. Then we run BRS, treating the bucket id as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).}
-
 \mrj{Our framework assumes that all attributes are categorical. Attributes that have a large domain tend to have fewer tuples per value, and hence don't appear in rule summaries. Thus our algorithm does not summarize information about numerical attributes. But it can easily be modified to do so by bucketizing a numerical attribute and treating the bucket id as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).}
 
 
 \vspace{-5pt}
 \subsection{Using Sum instead of Count}\label{sec:extensions-sum}
-\mrjdel{Throughout the paper, we define the total score of a rule-list using the marginal counts of rules in the list, and display the count of each rule in our table summary. However, if we have a numerical column (i.e. a `measure' column) in the table, it is straightforward to extend our summary to the `Sum' aggregate over that column instead. Suppose we are given a measure column $c_m$. Then the {\em Sum} for a rule can be defined to be the sum of $c_m$ values over all tuples covered by the rule. {\em MSum} of a rule $r$ in a rule-list $R$ is the sum of $c_m$ values over all tuples covered by $r$ and not covered by any rule in $R$ that occurs before $r$. The Score for $R$ becomes $\text{Score}(R) = \sum_{r\in R} MSum(r,R)W(r)$. Algorithm~\ref{algo:best-rule-set} can be modified to find the best rule set using the new definition of Score, simply by replacing $Count(r)$ by $Sum(r)$ and computing sum and marginal sum instead of count and marginal count in each pass over the table.}
-
 \mrj{Throughout the paper, we define the total score of a rule-list using the marginal counts of rules in the list, and display the count of each rule in our table summary. However, if we have a numerical column (i.e. a `measure' column) in the table, it is straightforward to extend our summary to the `Sum' aggregate over that column instead. We can define $Sum$ and $MSum$ for a rule analogously to $Count$ and $MCount$, and $Score$ can be modified to use $MSum$ instead of $MCount$. We can then modify Algorithm~\ref{algo:best-rule-set} to maximize the new score by replacing $Count(r)$ by $Sum(r)$ and computing sum and marginal sum instead of count and marginal count in each pass over the table.}
 }
 
