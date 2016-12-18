@@ -857,7 +857,7 @@ The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace,
 \eat{
 BRS makes multiple passes over the table in order to determine the best set of rules to display. This can be slow when the table is too large to fit in main memory. We can reduce the response time of smart drill down by running BRS on a sample of the table instead, trading off accuracy of our rules for performance. If we had obtained a sample $s$ by selecting each table tuple with probability $p$, and run BRS on $s$, then we multiply the count of each rule found by BRS, by $\frac{1}{p}$ to estimate its count over the full table. 
 
-We describe our technique to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk in Section~\ref{sec:sampling_algorithms}\techreporttext{ through Section~\ref{sec:alternative-convex}}. 
+We describe our technique to efficiently allocate memory to different samples, so as to maximize the probability that we can respond to the next user operation without accessing the hard disk in Section~\ref{sec:sampling_algorithms} through Section~\ref{sec:alternative-convex}. 
 Then, in Section~\ref{sec:sample-handler}, we describe a component of our system, called the {\em SampleHandler}, which is responsible for creating and maintaining samples of the table in memory, subject to user specified memory constraints. The SampleHandler maintains multiple samples corresponding to different parts of the table, which can be used depending on which rule the user decides to expand next. Finally, we mention some additional optimizations we can make, and
 describe how we can set the minimum sample size required from the SampleHandler.
 
@@ -977,7 +977,6 @@ $$A\left[i+1\right] \left[j \right] = \textrm{max} (A\left[i\right]\left[j\right
 Dynamic programming solves this in $O(D\mathcal{S}3^d)$ time. 
 }
 
-\techreporttext{
 \subsection{Alternative Convex-Optimization based solution}\label{sec:alternative-convex}
 We noted earlier that Problem~\ref{prob:sample-sizes} is NP-Hard, but can be approximately solved with an additional simplifying assumption regarding the $S(r_1, r_2)$ values. Instead of making this simplification, we can make the problem convex (and hence tractable) with two different simplifications. The first simplification is, we modify our objective function to use hinge-loss instead of a step function. That is, our new objective function to maximise is $$\sum_{r^{\prime} \in L} p_{r^{\prime}}\textrm{min}\left(1, \frac{ess(r^{\prime})}{minSS}\right)$$
 Here we assume that it is acceptable to run our algorithm on samples smaller than $minSS$, though we still prefer bigger sample sizes upto $minSS$. The other simplification we make is assuming that sample sizes are real numbers instead of integers. After determining optimal sample sizes, we can round them up to get integer sample sizes. This will increase the memory usage by at most $|U|$, the number of nodes in displayed tree, which is negligible compared to the memory capacity $M$, or $minSS$.
@@ -994,9 +993,11 @@ The constraint is linear in the $n_r$ variables, and hence convex. Each $ess$ va
 
 The main weakness of this approach is that the hinge-loss objective rewards values of $ess < minSS$, which may lead us to all leaves having large $ess$ values that are nonetheless less than $minSS$, and thus gives lower quality count estimates than required by the user.
 
+
 \stitle{Additional optimizations:}
 There are some additional minor optimizations we can make to reduce the memory cost per sample, allowing us to store more and bigger samples. Suppose we have a sample $s$, and say its filter rule $f_s$ has value $v$ in column $c$. Then we know that each tuple $t$ in $T_s$ must also have value $v$ in column $c$, since it is covered by $f_s$. So we do not need to explicitly store the column $c$ value of any tuple in $T_s$. We only need to store the tuple values of columns that have a $\star$ value in $f_s$. In addition, we may have a tuple occur in multiple samples. Instead of storing the entire tuple repeatedly, we could create a dictionary of common tuples, and only store a pointer to the tuple's dictionary entry in $T_s$. 
 
+\techreporttext{
 
 \stitle{Setting $minSS$:}
 Suppose a rule $r$ covers $x$ fraction of the tuples of $T$ i.e. $x|T|$ tuples. Say we have a uniform random sample $s$ of $T$. The samples has size $|T_s|$, and let $X_{r,s}$ be the random variable denoting the number of tuples of $T_s$ covered by $r$. Then $E\left[ X_{r,s} \right] = x|T_s|$, and $\text{Dev}(X_{r,s}) \approx \sqrt{|T_s|x(1-x)}$. In order to get a good estimate of $x$ (and hence of Count$(r) = x|T|$), we want $E\left[X_{r,s}\right] >> \text{Dev}(X_{r,s})$. That is, $x|T_s| >> \sqrt{|T_s|x(1-x)} \Leftrightarrow \frac{x|T_s|}{1-x} >> 1$. 
@@ -1076,7 +1077,7 @@ We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size
 
 
 \subsection{Qualitative Study}\label{sec:exp_qualitative}
-We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset), and then try out different weight functions to study their effects.
+We first perform a qualitative study of smart drill down. We observe the effects of various user interface operations on the Marketing Dataset (the results are similar on the Census dataset)\techreporttext{, and then try out different weight functions to study their effects}. \papertext{In the technical report, we try out different weight functions to study their effects.}
 \subsubsection{Testing the User Interface}
 We now present the rule-based summaries displayed as a result of a few different user actions.
 To begin with, the user sees an empty rule with the total number of tuples as the count. Suppose the user expands the rule. Then the user will see Figure~\ref{fig:uiexample1}. The first two new rules simply tell us that the table has $4918$ female and $4075$ male tuples. The next two rules also slightly more detailed, saying that there are $2940$ females who have been in the Bay Area for $> 10$ years, and $980$ males who have never been married and been in the Bay Area for $> 10$ years. Note that the latter two rules give very specific information which would require up to $3$ user clicks to find using traditional drill down, whereas smart drill down displays that information to the user with a single click.
@@ -1097,6 +1098,7 @@ To begin with, the user sees an empty rule with the total number of tuples as th
 
 Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up Figure~\ref{fig:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females. Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed Figure~\ref{fig:uiexamplerule}. 
 
+\techreporttext{
 \subsubsection{Weighting functions}
 Our system can display optimal rule lists for any monotonic weighting function. By default, we assign a rule weight equal to its size. In this section, we consider other weighting functions. 
 
@@ -1108,7 +1110,7 @@ $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
 This gives us Figure~\ref{fig:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Figure~\ref{fig:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
 
 A regular drill down can be thought of as a special case of smart drill-down with the right weighting function and number of rules\eat{ (see technical report for details)}\papertext{. Specifically, if we want to perform a regular drill down on a column $C$ that has $n$ distinct values, then we set the number of rules to be displayed ($k$) to $n$. The weighting function $W$ is set such that $W(r) = 1$ if rule $r$ has $C$ instantiated, and $0$ otherwise. This ensures that all displayed rules have $C$ instantiated (with no other column $C'$ instantiated unless there is a functional dependency from $C$ to $C'$), and that each displayed rule has a distinct value of $C$. This effectively gives us a regular drill-down on $C$}. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
-
+}
 %TODO: Give application examples for different weighting functions
 %TODO: Say somewhere, that we haev drop-down list of common weighting functions in the user interface, with column selects and unselects.
 
@@ -1127,8 +1129,6 @@ A regular drill down can be thought of as a special case of smart drill-down wit
 \caption{A regular drill down on Age\label{fig:drilldownexample}}
 \vspace{-10pt}
 \end{figure}
-
-
 
 % TODO: Add the experiment where you compare to vanilla a priori.
 \subsection{Quantitative Study}\label{sec:quantitative_study}
@@ -1155,6 +1155,7 @@ We now study the effects of sampling parameter $minSS$. This parameter determine
 
 We consider one value of $minSS$ and one weight function $W$ at a time. For those values of $minSS$ and $W$, we drill down on the empty rule and measure the time taken. We also measure the percent error in the estimated counts of the displayed rules. That is, for each displayed rule $r$, if the displayed (estimated) count if $c_1$ and the actual count (computed separately on the entire table) is $c_2$, then the percent error for rule $r$ is $\frac{100 \times |c_1-c_2|}{c_2}$. We consider the average of percent errors over all displayed rules. For each value of $minSS$ and $W$, we drill down on the empty rule and find the computation time and percent error $50$ times, and take the average value for time and error over those $50$ iterations. This average time is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_speed}(a). The average percent error is plotted against $minSS$, for $W(r) = \text{Size}(r)$ and $W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$ in Figure~\ref{fig:minSS_error_percent}(b). 
 
+\techreporttext{
 \begin{figure}
 \centering
 \includegraphics[width=80mm,frame]{graphs/screenshots6col/bits_scoring.jpg}
@@ -1168,6 +1169,7 @@ We consider one value of $minSS$ and one weight function $W$ at a time. For thos
 \caption{Size minus one weighting \label{fig:weightingsizeminusone}}
 \vspace{-10pt}
 \end{figure}
+}
 
 Figure~\ref{fig:minSS_speed}(a) shows that sampling gives us noticeable time savings. The percent error decreases approximately as $\frac{1}{\sqrt{minSS}}$, which is again expected because the standard deviation of estimated $Count$ is approximately inversely proportional to the square root of sample size.
 
@@ -1200,7 +1202,8 @@ $W$ is the weight function that determines which rules are interesting. This is 
 
 The $m_w$ parameter lets the user trade off the accuracy of the optimal rule-list and the running time. Ideally we want $m_w$ to equal the actual maximum weight of a rule in the optimal rule-list; this way we get full accuracy while also optimizing run-time. We cannot know the ideal value of $m_w$ in advance, but we can easily estimate it using sampling. We create a small random sample of tuples from the table, and run the BRS algorithm on it. Then the maximum weight $x$ of the output on the sample is likely to equal the maximum weight of the actual output. To account for sampling error, we can set $m_w$ to $2x$, which works well in practice.
 
-We now analyze a parametric family of weighting functions that generalizes our functions from Section~\ref{sec:weighting} and provides intuition for them. Let $W(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^k$, where the $w_c$'s and $k$ are parameters of the weighting function, and $o_{r,c}$ ($o$ stands for occurrence) is $1$ if $r(c) \neq \star$ and $0$ otherwise. The Size and Bits weighting functions can be seen as special cases of the above function with $k=1$ and with $w_c$ equal to $1$ for Size and $\text{log}(|c|)$ for Bits.
+\noindent
+\textbf{Generalizing our weight functions:} We now analyze a parametric family of weighting functions that generalizes our functions from Section~\ref{sec:weighting} and provides intuition for them. Let $W(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^k$, where the $w_c$'s and $k$ are parameters of the weighting function, and $o_{r,c}$ ($o$ stands for occurrence) is $1$ if $r(c) \neq \star$ and $0$ otherwise. The Size and Bits weighting functions can be seen as special cases of the above function with $k=1$ and with $w_c$ equal to $1$ for Size and $\text{log}(|c|)$ for Bits.
 
 We want to estimate the Score contribution of a rule according to this weight function, which requires estimating the count of the rule. Suppose that for each column $c$, the most frequent value occurs a $f_c$ fraction of the time. If the probability of a value occurring in a column of a tuple is independent of other values in the tuple, the $Count$ of rule $r$ is approximately $|T|\Pi_{c \in C}f_c^{o_{r,c}}$. Thus the score of a rule set containing $r$ alone can be approximated by:
 $$S(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^k|T|\Pi_{c \in C}f_c^{o_{r,c}}$$
@@ -1275,13 +1278,13 @@ approximation is used. Moreover, we have a tunable parameter $minSS$ that the us
 
 \vspace{17pt}
 
+Hector Garcia-Molina is the Leonard Bosack and Sandra Lerner Professor in the Departments of Computer Science and Electrical Engineering at Stanford University, Stanford, California. 
 \begin{wrapfigure}{l}{0.15\textwidth}
 %   \begin{center}
 \includegraphics[height=3.5cm, width=2.7cm]{./figures/hector.pdf}
 %   \end{center}
 \end{wrapfigure}
-
-Hector Garcia-Molina is the Leonard Bosack and Sandra Lerner Professor in the Departments of Computer Science and Electrical Engineering at Stanford University, Stanford, California. He was the chairman of the Computer Science Department from January 2001 to December 2004. From 1997 to 2001 he was a member the President's Information Technology Advisory Committee (PITAC). From August 1994 to December 1997 he was the Director of the Computer Systems Laboratory at Stanford. From 1979 to 1991 he was on the faculty of the Computer Science Department at Princeton University, Princeton, New Jersey. His research interests include distributed computing systems, digital libraries and database systems. He received a BS in electrical engineering from the Instituto Tecnologico de Monterrey, Mexico, in 1974. From Stanford University, Stanford, California, he received in 1975 a MS in electrical engineering and a PhD in computer science in 1979. He holds an honorary PhD from ETH Zurich (2007). Garcia-Molina is a Fellow of the Association for Computing Machinery and of the American Academy of Arts and Sciences; is a member of the National Academy of Engineering; received the 1999 ACM SIGMOD Innovations Award; is a Venture Advisor for Onset Ventures, is a member of the Board of Directors of Oracle, and is a member of the State Farm Technical Advisory Council.
+He was the chairman of the Computer Science Department from January 2001 to December 2004. From 1997 to 2001 he was a member the President's Information Technology Advisory Committee (PITAC). From August 1994 to December 1997 he was the Director of the Computer Systems Laboratory at Stanford. From 1979 to 1991 he was on the faculty of the Computer Science Department at Princeton University, Princeton, New Jersey. His research interests include distributed computing systems, digital libraries and database systems. He received a BS in electrical engineering from the Instituto Tecnologico de Monterrey, Mexico, in 1974. From Stanford University, Stanford, California, he received in 1975 a MS in electrical engineering and a PhD in computer science in 1979. He holds an honorary PhD from ETH Zurich (2007). Garcia-Molina is a Fellow of the Association for Computing Machinery and of the American Academy of Arts and Sciences; is a member of the National Academy of Engineering; received the 1999 ACM SIGMOD Innovations Award; is a Venture Advisor for Onset Ventures, is a member of the Board of Directors of Oracle, and is a member of the State Farm Technical Advisory Council.
 \medskip
 
 

@@ -1,0 +1,43 @@
+\documentclass[11pt,a4paper]{letter}
+
+\usepackage{microtype} % Improves typography
+\usepackage{gfsdidot} % Use the GFS Didot font: http://www.tug.dk/FontCatalogue/gfsdidot/
+\usepackage[T1]{fontenc} % Required for accented characters
+\usepackage{lmodern}
+
+\textwidth 6.75in
+\textheight 11.25in
+\oddsidemargin -.25in
+\evensidemargin -.25in
+\topmargin -1in
+\longindentation 0.50\textwidth
+\parindent 0in
+
+
+\begin{document}
+\begin{letter}
+{{\bf Subject:} {\it TKDE submission, titled ``Interactive Data Exploration with Smart Drill-Down (Extended Version)''}}
+\opening{To the Editors, and the Reviewers:}
+
+We would like to thank the reviewers for their insightful comments for our TKDE submission, titled ``Interactive Data Exploration with Smart Drill-Down (Extended Version)''. We have made changes to our paper based on the suggestions made by the reviewers.
+
+The primary concern raised by the reviewers and the editor was
+that the additions in Section 3.6 and Section 6 were relatively straightforward. To address this, we have added an analysis of a general family of weighting functions, that includes our Size and Bits weighting functions as special cases. Our analysis provides theoretical justification for these two weighting functions. We also estimate the right values for parameters $k$ and $m_w$ for this family. This has been added to the parameter settings section (formerly 3.6), which has now been combined with Section 6.
+
+Other major changes in our revision include: 
+\begin{enumerate}
+\item Reviewer 3 pointed out that we were missing proofs for some lemmas. This apologize for this oversight; proofs for the sub-modularity lemma and the NP-hardness results have now been added to our arxiv technical report. Unfortunately, we could not make space for these proofs in the main manuscript.
+\item Reviewer 3 also mentioned that we did not have a formal runtime and approximation ratio analysis for the BRS algorithm. We have now added this analysis at the end of Section 3.5.
+\item In order to make space for the new additions to Section 6 and the runtime and approximation analyses, we have moved the `Setting $minSS$' part of Section 4.2, and the Qualitative experiments with weighting functions (Section 5.1.2) to the technical report.
+\item Our extensions in Section 6 were straightforward, as pointed out by the reviewers. So we have shortened the previous contents of Section 6, and combined them with the (augmented) Section 3.6.
+\end{enumerate}
+
+In addition, Reviewer 3 commented on how weight and count seem to favor different kinds of rules. This was intentional on our part. There is a trade-off between a rule's coverage and how informative it is of the portion it covers, as pointed out by the reviewer. Very small and very large rules are both bad (due to being too vague/based on only a tiny part of the table respectively). So we attempt to have the Score function strike a balance between these two aspects. 
+%Reviewer 3 had also mentioned comparing Smart Drill-Down with OLAP drill-down. Our paper contains an example of a regular drill-down on the Age column of our dataset, but we could .
+
+
+
+\closing{Sincerely, \\
+The Authors}
+\end{letter}
+\end{document}
