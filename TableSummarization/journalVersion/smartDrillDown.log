@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  17 DEC 2016 23:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.24)  17 DEC 2016 23:43
 entering extended mode
 **./smartDrillDown.tex
 (smartDrillDown.tex
@@ -646,58 +646,54 @@ File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
 ut line 1087.
 (pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
-File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
 
-<use graphs/screenshots6col/empty_expansion.jpg>
-Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1094.
-(pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
-File: graphs/screenshots6col/empty_expansion.jpg Graphic file (type jpg)
+<graphs/screenshots6col/education_expansion.jpg, id=55, 651.18282pt x 465.99094
+pt>
+File: graphs/screenshots6col/education_expansion.jpg Graphic file (type jpg)
+ <use graphs/screenshots6col/education_expansion.jpg>
+Package pdftex.def Info: graphs/screenshots6col/education_expansion.jpg used on
+ input line 1094.
+(pdftex.def)             Requested size: 227.62204pt x 162.88596pt.
 
-<use graphs/screenshots6col/empty_expansion.jpg>
-Package pdftex.def Info: graphs/screenshots6col/empty_expansion.jpg used on inp
-ut line 1121.
-(pdftex.def)             Requested size: 227.62204pt x 69.4295pt.
-
-<graphs/screenshots6col/age_drilldown.jpg, id=55, 860.46469pt x 406.51875pt>
+<graphs/screenshots6col/age_drilldown.jpg, id=56, 860.46469pt x 406.51875pt>
 File: graphs/screenshots6col/age_drilldown.jpg Graphic file (type jpg)
 
 <use graphs/screenshots6col/age_drilldown.jpg>
 Package pdftex.def Info: graphs/screenshots6col/age_drilldown.jpg used on input
- line 1128.
+ line 1129.
 (pdftex.def)             Requested size: 227.62204pt x 107.53465pt.
- [10 <./graphs/screenshots6col/empty_expansion.jpg> <./graphs/screenshots6col/a
-ge_drilldown.jpg>]
+ [10 <./graphs/screenshots6col/empty_expansion.jpg> <./graphs/screenshots6col/e
+ducation_expansion.jpg> <./graphs/screenshots6col/age_drilldown.jpg>]
 
 LaTeX Warning: Reference `fig:weigtingbitwise' on page 11 undefined on input li
-ne 1144.
+ne 1145.
 
-<graphs/mw_speed.pdf, id=59, 361.35pt x 216.81pt>
+<graphs/mw_speed.pdf, id=60, 361.35pt x 216.81pt>
 File: graphs/mw_speed.pdf Graphic file (type pdf)
  <use graphs/mw_speed.pdf>
-Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1148.
+Package pdftex.def Info: graphs/mw_speed.pdf used on input line 1149.
 (pdftex.def)             Requested size: 180.67456pt x 108.40472pt.
 
-<graphs/minSS_speed.pdf, id=60, 361.35pt x 216.81pt>
+<graphs/minSS_speed.pdf, id=61, 361.35pt x 216.81pt>
 File: graphs/minSS_speed.pdf Graphic file (type pdf)
 
 <use graphs/minSS_speed.pdf>
-Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1180.
+Package pdftex.def Info: graphs/minSS_speed.pdf used on input line 1181.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
-<graphs/minSS_error_percent.pdf, id=61, 361.35pt x 216.81pt>
+<graphs/minSS_error_percent.pdf, id=62, 361.35pt x 216.81pt>
 File: graphs/minSS_error_percent.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_percent.pdf>
-Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1181
+Package pdftex.def Info: graphs/minSS_error_percent.pdf used on input line 1182
 .
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
 
-<graphs/minSS_error_rule.pdf, id=62, 361.35pt x 216.81pt>
+<graphs/minSS_error_rule.pdf, id=63, 361.35pt x 216.81pt>
 File: graphs/minSS_error_rule.pdf Graphic file (type pdf)
 
 <use graphs/minSS_error_rule.pdf>
-Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1182.
+Package pdftex.def Info: graphs/minSS_error_rule.pdf used on input line 1183.
 (pdftex.def)             Requested size: 166.223pt x 99.7338pt.
  [11 <./graphs/mw_speed.pdf>] [12 <./graphs/minSS_speed.pdf> <./graphs/minSS_er
 ror_percent.pdf
@@ -723,25 +719,25 @@ Underfull \hbox (badness 10000) in paragraph at lines 103--105
 []\OT1/ptm/m/n/8.03 M. Joglekar, H. Garcia-Molina, and A. Parameswaran.
  []
 
-) <./figures/hector.pdf, id=109, 109.1277pt x 143.0946pt>
+) <./figures/hector.pdf, id=110, 109.1277pt x 143.0946pt>
 File: ./figures/hector.pdf Graphic file (type pdf)
 
 <use ./figures/hector.pdf>
-Package pdftex.def Info: ./figures/hector.pdf used on input line 1284.
+Package pdftex.def Info: ./figures/hector.pdf used on input line 1286.
 (pdftex.def)             Requested size: 76.82346pt x 99.58473pt.
 
-<./figures/Manas.pdf, id=110, 687.56876pt x 893.3375pt>
+<./figures/Manas.pdf, id=111, 687.56876pt x 893.3375pt>
 File: ./figures/Manas.pdf Graphic file (type pdf)
 
 <use ./figures/Manas.pdf>
-Package pdftex.def Info: ./figures/Manas.pdf used on input line 1293.
+Package pdftex.def Info: ./figures/Manas.pdf used on input line 1295.
 (pdftex.def)             Requested size: 76.81833pt x 99.57602pt.
 
-<./figures/aditya.pdf, id=111, 2509.375pt x 3276.24pt>
+<./figures/aditya.pdf, id=112, 2509.375pt x 3276.24pt>
 File: ./figures/aditya.pdf Graphic file (type pdf)
 
 <use ./figures/aditya.pdf>
-Package pdftex.def Info: ./figures/aditya.pdf used on input line 1303.
+Package pdftex.def Info: ./figures/aditya.pdf used on input line 1305.
 (pdftex.def)             Requested size: 76.8096pt x 99.58273pt.
  [14 <./figures/hector.pdf> <./figures/Manas.pdf> <./figures/aditya.pdf>] (smar
 tDrillDown.aux)
@@ -758,10 +754,10 @@ LaTeX Warning: There were undefined references.
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 7245 strings out of 493335
- 114316 string characters out of 3139263
- 212978 words of memory out of 3000000
- 10588 multiletter control sequences out of 15000+200000
+ 7249 strings out of 493335
+ 114523 string characters out of 3139263
+ 212734 words of memory out of 3000000
+ 10591 multiletter control sequences out of 15000+200000
  94040 words of font info for 207 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  53i,19n,92p,1909b,3670s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -789,9 +785,9 @@ e1/urw/helvetic/uhvro8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/
 utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb><C:/Program Files/MiKT
 eX 2.9/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on smartDrillDown.pdf (14 pages, 4540801 bytes).
+Output written on smartDrillDown.pdf (14 pages, 4631395 bytes).
 PDF statistics:
- 226 PDF objects out of 1000 (max. 8388607)
+ 227 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
 

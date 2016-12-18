@@ -1091,12 +1091,12 @@ To begin with, the user sees an empty rule with the total number of tuples as th
 
 \begin{figure}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/education_expansion.jpg}
 \caption{Star expansion on `Education' Column \label{fig:uiexamplestar}}
 \vspace{-10pt}
 \end{figure}
 
-Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up Figure~\ref{fig:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females. Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed Figure~\ref{fig:uiexamplerule}. 
+Now suppose the user decides to further explore the table, by looking at education related information of females in the dataset. Say the user clicks on the $\star$ in the `Education' column of the second rule. This opens up Figure~\ref{fig:uiexamplestar} that shows the number of females with different levels of education, for the $4$ most frequent levels of education among females. \techreporttext{Instead of expanding the `Education' column, if the user had simply expanded the third rule, it would have displayed Figure~\ref{fig:uiexamplerule}. }
 
 \techreporttext{
 \subsubsection{Weighting functions}
@@ -1108,20 +1108,21 @@ $$W(r) = \sum_{c \in C : r(c) \neq \star} \lceil \text{log}_2(|c|) \rceil$$ wher
 The other weighting function we try is given by:
 $$W(r) = \text{Min}(0, \text{Size}(r) - 1)$$
 This gives us Figure~\ref{fig:weightingsizeminusone}. This weighting gives a $0$ weight to rules with a single non-$\star$ value, and thus forces the algorithm to finds good rules having at least $2$ non-$\star$ values. As a result, we can see that our system only displays rules having $2$ or $3$ non-$\star$ values, unlike Figure~\ref{fig:uiexample1} which has two rules displaying the total number of males and females, that have size $1$.
-
-A regular drill down can be thought of as a special case of smart drill-down with the right weighting function and number of rules\eat{ (see technical report for details)}\papertext{. Specifically, if we want to perform a regular drill down on a column $C$ that has $n$ distinct values, then we set the number of rules to be displayed ($k$) to $n$. The weighting function $W$ is set such that $W(r) = 1$ if rule $r$ has $C$ instantiated, and $0$ otherwise. This ensures that all displayed rules have $C$ instantiated (with no other column $C'$ instantiated unless there is a functional dependency from $C$ to $C'$), and that each displayed rule has a distinct value of $C$. This effectively gives us a regular drill-down on $C$}. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
 }
+
+A regular drill down is a special case of smart drill-down with the right weighting function and number of rules\papertext{ (see technical report for details)}\techreporttext{. Specifically, if we want to perform a regular drill down on a column $C$ that has $n$ distinct values, then we set the number of rules to be displayed ($k$) to $n$. The weighting function $W$ is set such that $W(r) = 1$ if rule $r$ has $C$ instantiated, and $0$ otherwise. This ensures that all displayed rules have $C$ instantiated (with no other column $C'$ instantiated unless there is a functional dependency from $C$ to $C'$), and that each displayed rule has a distinct value of $C$. This effectively gives us a regular drill-down on $C$}. We use this to perform a drill down on the `Age' column using our experimental prototype. The result is shown in Figure~\ref{fig:drilldownexample}. We can contrast it with Figure~\ref{fig:uiexample1}; the latter gives information about multiple columns at once and only displays high count values. Regular drill down on the other hand, serves a complementary purpose by focusing on detailed evaluation of a single column.
 %TODO: Give application examples for different weighting functions
 %TODO: Say somewhere, that we haev drop-down list of common weighting functions in the user interface, with column selects and unselects.
 
-
+\techreporttext{
 \begin{figure}
 %\vspace{-10pt}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/rule_expansion.jpg}
 \caption{A rule expansion \label{fig:uiexamplerule}}
 \vspace{-10pt}
 \end{figure}
+}
 
 \begin{figure}
 \centering
@@ -1230,7 +1231,7 @@ Our framework assumes that all attributes are categorical. Attributes that have 
 
 \vspace{-5pt}
 \subsection{Using Sum instead of Count}\label{sec:extensions-sum}
-Throughout the paper, we define the total score of a rule-list using the marginal counts of rules in the list, and display the count of each rule in our table summary. However, if we have a numerical column (i.e. a `measure' column) in the table, it is straightforward to extend our summary to the `Sum' aggregate over that column instead. We can define $Sum$ and $MSum$ for a rule analogously to $Count$ and $MCount$, and $Score$ can be modified to use $MSum$ instead of $MCount$. We can then modify Algorithm~\ref{algo:best-rule-set} to maximize the new score by replacing $Count(r)$ by $Sum(r)$ and computing sum and marginal sum instead of count and marginal count in each pass over the table.}
+We defined the total score of a rule-list using the marginal counts of rules in the list, and display the counts of rules in our table summary. However, if we have a numerical (i.e. a `measure') column in the table, it is straightforward to extend our summary to the `Sum' aggregate over that column. We can define $Sum$ and $MSum$ analogously to $Count$ and $MCount$, and $Score$ can be modified to use $MSum$ instead of $MCount$. We can then modify Algorithm~\ref{algo:best-rule-set} to maximize the new score by replacing $Count(r)$ by $Sum(r)$ and computing sum and marginal sum instead of count and marginal count in each pass over the table.}
 
 
 \vspace{-10pt}
@@ -1253,6 +1254,7 @@ A lot of pattern mining work~\cite{Goethals:2011:MFI:2020408.2020529,Yan:2005:SI
 
 We use sampling to find approximate estimates of rule counts. Various other database systems~\cite{Acharya:1999:AAQ:304182.304581, Agarwal:2013:BQB:2465351.2465355} use samples to find approximate results to SQL aggregation queries. These systems create samples in advance and only update them when the database changes. In contrast, we keep updating our samples on the fly, as the user interacts with our system. There is work on using weighted sampling~\cite{6691587} to create samples favouring data that is of interest to a user, based on the user's history. In contrast, we create samples at run time in response to the user's commands.
 
+\vspace{-10pt}
 \section{Conclusion}\label{sec:conclusion}
 We have presented a new data exploration operator called smart drill down.
 Like traditional drill down, it allows an analyst
@@ -1284,7 +1286,7 @@ Hector Garcia-Molina is the Leonard Bosack and Sandra Lerner Professor in the De
 \includegraphics[height=3.5cm, width=2.7cm]{./figures/hector.pdf}
 %   \end{center}
 \end{wrapfigure}
-He was the chairman of the Computer Science Department from January 2001 to December 2004. From 1997 to 2001 he was a member the President's Information Technology Advisory Committee (PITAC). From August 1994 to December 1997 he was the Director of the Computer Systems Laboratory at Stanford. From 1979 to 1991 he was on the faculty of the Computer Science Department at Princeton University, Princeton, New Jersey. His research interests include distributed computing systems, digital libraries and database systems. He received a BS in electrical engineering from the Instituto Tecnologico de Monterrey, Mexico, in 1974. From Stanford University, Stanford, California, he received in 1975 a MS in electrical engineering and a PhD in computer science in 1979. He holds an honorary PhD from ETH Zurich (2007). Garcia-Molina is a Fellow of the Association for Computing Machinery and of the American Academy of Arts and Sciences; is a member of the National Academy of Engineering; received the 1999 ACM SIGMOD Innovations Award; is a Venture Advisor for Onset Ventures, is a member of the Board of Directors of Oracle, and is a member of the State Farm Technical Advisory Council.
+He was the chairman of the Computer Science Department from January 2001 to December 2004. From 1997 to 2001 he was a member the President's Information Technology Advisory Committee (PITAC). From August 1994 to December 1997 he was the Director of the Computer Systems Laboratory at Stanford. From 1979 to 1991 he was on the faculty of the Computer Science Department at Princeton University, Princeton, New Jersey. His research interests include distributed computing systems, digital libraries and database systems. He received a BS in electrical engineering from the Instituto Tecnologico de Monterrey, Mexico, in 1974. From Stanford University, Stanford, California, he received in 1975 a MS in electrical engineering and a PhD in computer science in 1979. He holds an honorary PhD from ETH Zurich (2007). He is a Fellow of the Association for Computing Machinery and of the American Academy of Arts and Sciences; is a member of the National Academy of Engineering; received the 1999 ACM SIGMOD Innovations Award; is a Venture Advisor for Onset Ventures, is a member of the Board of Directors of Oracle, and is a member of the State Farm Technical Advisory Council.
 \medskip
 
 
