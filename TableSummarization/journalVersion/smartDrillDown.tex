@@ -63,7 +63,7 @@
 
 \begin{document}
 
-\title{Interactive Data Exploration with Smart Drill-Down (Extended Version)}
+\title{Interactive Data Exploration with Smart Drill-Down}
 
 \author{Manas~Joglekar,
         Hector~Garcia-Molina,~\IEEEmembership{Member,~IEEE,}
@@ -1084,14 +1084,14 @@ To begin with, the user sees an empty rule with the total number of tuples as th
 
 \begin{figure}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/empty_expansion.png}
 \caption{Summary after clicking on the empty rule \label{fig:uiexample1}}
 \vspace{-10pt}
 \end{figure} 
 
 \begin{figure}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/education_expansion.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/education_expansion.png}
 \caption{Star expansion on `Education' Column \label{fig:uiexamplestar}}
 \vspace{-10pt}
 \end{figure}
@@ -1118,7 +1118,7 @@ A regular drill down is a special case of smart drill-down with the right weight
 \begin{figure}
 %\vspace{-10pt}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/rule_expansion.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/rule_expansion.png}
 \caption{A rule expansion \label{fig:uiexamplerule}}
 \vspace{-10pt}
 \end{figure}
@@ -1126,7 +1126,7 @@ A regular drill down is a special case of smart drill-down with the right weight
 
 \begin{figure}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/age_drilldown.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/age_drilldown.png}
 \caption{A regular drill down on Age\label{fig:drilldownexample}}
 \vspace{-10pt}
 \end{figure}
@@ -1159,14 +1159,14 @@ We consider one value of $minSS$ and one weight function $W$ at a time. For thos
 \techreporttext{
 \begin{figure}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/bits_scoring.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/bits_scoring.png}
 \caption{Bits scoring\label{fig:weigtingbitwise}}
 \end{figure}
 
 \begin{figure}
 \vspace{-10pt}
 \centering
-\includegraphics[width=80mm,frame]{graphs/screenshots6col/min2_scoring.jpg}
+\includegraphics[width=80mm,frame]{graphs/screenshots6col/min2_scoring.png}
 \caption{Size minus one weighting \label{fig:weightingsizeminusone}}
 \vspace{-10pt}
 \end{figure}
@@ -1194,32 +1194,32 @@ When $|T|$ is small, the runtme is dominated by the $b \times minSS$ term, as se
 \vspace{-5pt}
 \section{Extensions}\label{sec:extensions}
 \papertext{
-\subsection{Setting parameters $W$, $k$, $m_w$}\label{sec:setting-paramters}
+\subsection{Setting parameters $k$, $m_w$, $W$}\label{sec:setting-paramters}
 Our system allows the user to tune the smart drill-down by adjusting a number of parameters. Having a lot of tunable parameters can increase the difficulty of using a system by increasing the decision-making burden on the user. To counteract this, we now provide ways to guide the user while selecting appropriate parameter values.
 
 Parameter $k$ is the number of new rules to display upon each smart drill-down. Large values of $k$ increase the run-time quadratically, and can also overwhelm the user with too much information. Very small values of $k$ may display too little information about the table. Fortunately, the BRS algorithm is incremental in nature. That is, in order to find the best rule list of size $k+1$, it first finds the best rule-list of size $k$, and then finds another rule to add to get a rule-list of size $k+1$. Thus instead of running the algorithm with a fixed value of $k$, it can start with an empty rule-list and keep adding rules to it, displaying new rules as they are found. This search for additional rules can stop when the user issues a new smart drill-down command to the system, or manually stops the search. Alternatively, we can set a time limit (of say $5$ seconds) and display as many rules as we can find within that time limit.
 
-$W$ is the weight function that determines which rules are interesting. This is a function specified by the user as a black box. Specifying an arbitrary function can be hard, so instead we hardcode some common Weight functions and allow the user to choose one from a drop-down menu. In addition, the user can express interest or disinterest in certain columns by telling the system to favor or ignore those columns, via the user interface. The system internally adjusts the weight function by increasing or decreasing the weight given to rules instantiating that column.
-
 The $m_w$ parameter lets the user trade off the accuracy of the optimal rule-list and the running time. Ideally we want $m_w$ to equal the actual maximum weight of a rule in the optimal rule-list; this way we get full accuracy while also optimizing run-time. We cannot know the ideal value of $m_w$ in advance, but we can easily estimate it using sampling. We create a small random sample of tuples from the table, and run the BRS algorithm on it. Then the maximum weight $x$ of the output on the sample is likely to equal the maximum weight of the actual output. To account for sampling error, we can set $m_w$ to $2x$, which works well in practice.
 
+$W$ is the weight function that determines which rules are interesting. This is a function specified by the user as a black box. Specifying an arbitrary function can be hard, so instead we hardcode some common Weight functions and allow the user to choose one from a drop-down menu. In addition, the user can express interest or disinterest in certain columns by telling the system to favor or ignore those columns, via the user interface. The system internally adjusts the weight function by increasing or decreasing the weight given to rules instantiating that column.
+
 \noindent
-\textbf{Generalizing our weight functions:} We now analyze a parametric family of weighting functions that generalizes our functions from Section~\ref{sec:weighting} and provides intuition for them. Let $W(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^k$, where the $w_c$'s and $k$ are parameters of the weighting function, and $o_{r,c}$ ($o$ stands for occurrence) is $1$ if $r(c) \neq \star$ and $0$ otherwise. The Size and Bits weighting functions can be seen as special cases of the above function with $k=1$ and with $w_c$ equal to $1$ for Size and $\text{log}(|c|)$ for Bits.
+\textbf{Generalizing our weight functions:} We now analyze a parametric family of weighting functions that generalizes our functions from Section~\ref{sec:weighting} and provides intuition for them. Let $W(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^{\mathsf{p}}$, where the $w_c$'s and $\mathsf{p}$ are parameters of the weighting function, and $o_{r,c}$ ($o$ stands for occurrence) is $1$ if $r(c) \neq \star$ and $0$ otherwise. The Size and Bits weighting functions can be seen as special cases of the above function with $\mathsf{p}=1$ and with $w_c$ equal to $1$ for Size and $\text{log}(|c|)$ for Bits.
 
 We want to estimate the Score contribution of a rule according to this weight function, which requires estimating the count of the rule. Suppose that for each column $c$, the most frequent value occurs a $f_c$ fraction of the time. If the probability of a value occurring in a column of a tuple is independent of other values in the tuple, the $Count$ of rule $r$ is approximately $|T|\Pi_{c \in C}f_c^{o_{r,c}}$. Thus the score of a rule set containing $r$ alone can be approximated by:
-$$S(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^k|T|\Pi_{c \in C}f_c^{o_{r,c}}$$
+$$S(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^{\mathsf{p}}|T|\Pi_{c \in C}f_c^{o_{r,c}}$$
 
 
 Now consider the rule that has the highest weight times count according to the above weighting function. We can approximate this rule by relaxing $o_{r,c}$ to a real number; that is by maximizing the estimated $S(r)$ subject to $0 \leq o_{r,c} \leq 1$. According to the KKT conditions~\cite{Boyd:2004:CO:993483}, at the optimum $Weight \times Count$, the partial derivative of $W(r)$ with respect to $o_{r,c}$ must be $\leq 0$ for each $c$ where $o_{r,c} = 0$, equal to $0$ if $0 < o_{r,c} < 1$ and $\geq 0$ otherwise. For each $c$, we have:
-$$\frac{\partial S(r)}{\partial o_{r,c}} = S(r)(\frac{kw_c}{\sum_{c \in C} o_{r,c}w_c} + \ln f_c)$$
+$$\frac{\partial S(r)}{\partial o_{r,c}} = S(r)(\frac{\mathsf{p}w_c}{\sum_{c \in C} o_{r,c}w_c} + \ln f_c)$$
 
-Thus, if $x = \frac{k}{\sum_{c \in C} o_{r,c}w_c}$, then the maximum scoring rule should instantiate columns where $\frac{\ln f_c}{w_c} > x$ and some of the ones with $\frac{\ln f_c}{w_c} = x$. Thus, for Size weighting, the highest score rule should select columns with high values of $\ln f_c$, i.e., the highest frequency values. In contrast, Bits weighting will select columns with highest values of $\log_{|c|}(f_c)$, i.e., values that are frequent relative to the number of distinct values in the column.
+Thus, if $x = \frac{\mathsf{p}}{\sum_{c \in C} o_{r,c}w_c}$, then the maximum scoring rule should instantiate columns where $\frac{\ln f_c}{w_c} > x$ and some of the ones with $\frac{\ln f_c}{w_c} = x$. Thus, for Size weighting, the highest score rule should select columns with high values of $\ln f_c$, i.e., the highest frequency values. In contrast, Bits weighting will select columns with highest values of $\log_{|c|}(f_c)$, i.e., values that are frequent relative to the number of distinct values in the column.
 
 If we want the score to treat all columns equally, then the derivative must be $0$ for all $c$. This implies that for all $c$, we must have $w_c \propto \ln f_c$. Notice that Bits satisfies the above criterion if we assume that values in each column are uniformly distributed (that is, $f_c = 1/|c|$). This provides an intuitive justification for why we might want to use the Bits weighting function.
 
-We can also estimate the size of the optimal rule under the above weighting function. Specifically, the weighted fraction of columns with non-$\star$ values is given by $\frac{\sum_{c\in C} o_{r,c}w_c}{\sum_{c \in C} w_c}$ which equals $-k/(\sum_{c \in C} \ln f_c)$. Thus, if we wanted our highest score rule to have $s$ fraction of the columns get instantiated, we can achieve that by setting $k = -s\sum_{c \in C} \ln f_c$.
+We can also estimate the size of the optimal rule under the above weighting function. Specifically, the weighted fraction of columns with non-$\star$ values is given by $\frac{\sum_{c\in C} o_{r,c}w_c}{\sum_{c \in C} w_c}$ which equals $-\mathsf{p}/(\sum_{c \in C} \ln f_c)$. Thus, if we wanted our highest score rule to have $s$ fraction of the columns get instantiated, we can achieve that by setting $\mathsf{p} = -s\sum_{c \in C} \ln f_c$.
 
-The above reasoning also lets us estimate the $m_w$ parameter we need to use. Specifically, the highest score rule above has weight $(\frac{-\ln f_c}{kw_c})^k$.
+The above reasoning also lets us estimate the $m_w$ parameter we need to use. Specifically, the highest score rule above has weight $(\frac{-\ln f_c}{\mathsf{p}w_c})^{\mathsf{p}}$.
 
 We can use the above estimate to guess the size of the max scoring rule for the Bits weighting function. But note that in practice, values are not distributed uniformly (so $f_c$ is actually higher than $1/|c|$) and are not independent of each other, due to correlations. As a result, our estimate of the maximum size is a significant under-estimate. In our experiments (Section~\ref{sec:exp_qualitative}), we observe that use the Bits weighting function actually gives us rules of size $3$ on our datasets, while our estimate above is approximately $0.74$. As expected, the values displayed by the rules are ones that occur much more frequently relative to other values in that column.
 }
