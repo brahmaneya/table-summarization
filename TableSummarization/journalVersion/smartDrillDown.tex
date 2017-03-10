@@ -336,7 +336,7 @@ Sarawagi98discovery-drivenexploration,
 DBLP:journals/pvldb/GebalyAGKS14}.
 These papers mostly focus on
 giving ``surprising'' information to the user, i.e., information
-that would minimize the Kullback-Liebler(KL) divergence between the
+that would minimize the Kullback-Liebler (KL) divergence between the
 resulting maximum entropy distribution and the actual value distribution. For instance, if a certain set of
 values occur together in an unexpectedly small number of tuples, that
 set of values may be displayed to the user. In contrast, our algorithm
@@ -799,12 +799,12 @@ The reader may be wondering why we did not simply count the score of each rule u
 \textbf{Runtime analysis:}
 Our algorithm calls the function for finding best marginal rule $k$ times. Thus the total computational cost is about $k$ times the cost of computing the best marginal rule. Let $c_n$ be the number of counts in $C_n$ at the end of the $n^{th}$ iteration (that is, after eliminating rules that have no chance of having the highest marginal value). Also, let $c_0 = 1$.
 
-The cost of the finding the best marginal rule can be split into three parts: (i) Enumerating all new rules to add to $C_n$ at the start of the $n^{th}$ iteration. (ii) Determining which of the rules in $C_n$ to eliminate (iii) Finding counts and marginal values for the remaining $c_n$ rules in $C_n$. The number of super-rules we can consider for (i) can be no larger than $c_{n-1}|T|$, since each rule in $C_{n-1}$ can give us at most $|T|$ new candidate super-rules for $C_n$. The cost of (ii) is $O(|C_n|)$. Finally, the cost of (iii) is again $c_n|T|$, since we have two nested for loops over $T$ and $C_n$ respectively. Thus, our total cost is $O(|T|\sum_i c_i)$.
+The cost of the finding the best marginal rule can be split into three parts: (i) Enumerating all new rules to add to $C_n$ at the start of the $n^{th}$ iteration; (ii) Determining which of the rules in $C_n$ to eliminate; (iii) Finding counts and marginal values for the remaining $c_n$ rules in $C_n$. The number of super-rules we can consider for (i) can be no larger than $c_{n-1}|T|$, since each rule in $C_{n-1}$ can give us at most $|T|$ new candidate super-rules for $C_n$. The cost of (ii) is $O(|C_n|)$. Finally, the cost of (iii) is again $c_n|T|$, since we have two nested for loops over $T$ and $C_n$ respectively. Thus, our total cost is $O(|T|\sum_i c_i)$.
 
 In the worst case, we may need to evaluate all possible rules; since the total possible number of rules is $|T||C|$ where $C$ is the set of columns, our cost is at most $O(k|C||T|^2))$. However, note that this worst case is unlikely to occur when we use the Size or Bits weighting function, because the count of a rule decreases rapidly with its size, making it unlikely that we will need to find counts for its super-rules.
 
 If fact, say that values in columns occur independently, and let $x$ be the frequency of the most common value (note $x<1$). Then the number of candidate rules is bounded by $c_i \le c_1 x^i$, where $c_1$ is the number of distinct values in the table. This gives us $\sum_i c_i \leq c_1\sum_i x^i \leq c_1/(1-x)$.
-Thus our cost is now only $O(k|T|c_1/(1-x))$ for some constant $x$. If $c_1$, $k$ and $x$ are taken to be constants (i.e. they do not scale with table size), then our cost is $O(|T|)$.
+Thus our cost is now only $O(k|T|c_1/(1-x))$ for some constant $x$. If $c_1$, $k$, and $x$ are taken to be constants (i.e., they do not scale with table size), then our cost is $O(|T|)$.
 
 \noindent
 \textbf{Approximation ratio:}
@@ -848,7 +848,7 @@ Problem~\ref{prob:sample-sizes} is {\sc NP-Hard}.
 Suppose we are given an instance of the knapsack problem with $m$ objects, with the $i^{th}$ object having weight $w_i$ and value $v_i$. We are also given a weight limit $W$, and our objective is to choose a set of objects that maximizes value and has total weight $< W$. We will reduce this instance to an instance of Problem~\ref{prob:sample-sizes}.
 
 We first scale the $w_i$s and $W$ such that all $w_i$s are $< 1$. For Problem~\ref{prob:sample-sizes}, we set $M$ to $(m + W) \times minSS$. Tree $U$ has $m$ special nodes $r_1, r_2, ... r_m$, and each $r_i$ has two leaf children $r_{i,1}, r_{i,2}$. All other leaves have expansion probability $0$. 
-The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace, j \in \left\lbrace 1, 2 \right\rbrace : (S(x, r_{i,j}) \neq 0 \Rightarrow x = r_{i,j} || x = r_i)$. In reality, the $S$ values cannot be exactly zero, but can be made small enough for all practical purposes. Thus, $\forall 1 \leq i \leq m, j \in \left\lbrace 1,2 \right\rbrace : ess(r_{i,j}) = n_{r_{i,j}} + n_{r_i}S(r_i, r_{i,j})$. In addition, $S(r_i, r_{i,1}) = 1$, and $S(r_i, r_{i,2}) = 1 - w_i$. Finally, $\forall i : p_{r_{i,1}} = \frac{2}{2m+1}$ and $p_{r_{i,2}} = \frac{v_i}{(2m+1)\sum_{j=1}^{m}v_i}$. So in any optimal solution, $\forall i : ess(r_{i,1}) = minSS$, and we've to decide which $i$'s also have $ess(r_{i,2}) = minSS$. Having $ess(r_{i,2}) = minSS$ requires consuming $w_i \times minSS$ extra memory and gives an extra $\frac{v_i}{(2m+1)(\sum_{j=1}^{m}v_j)}$ probability value. Thus, having $ess(r_{i,2}) = minSS$ is equivalent to picking object $i$ from the knapsack problem. Solving Problem~\ref{prob:sample-sizes} with the above $U$, $S$, $p$ and picking the set of $i$'s for which $ess(r_{i,2}) = minSS$ gives a solution to the instance of the knapsack problem. 
+The $S$ values are such that $\forall i \in \left\lbrace 1, 2, ..m\right\rbrace, j \in \left\lbrace 1, 2 \right\rbrace : (S(x, r_{i,j}) \neq 0 \Rightarrow x = r_{i,j} || x = r_i)$. In reality, the $S$ values cannot be exactly zero, but can be made small enough for all practical purposes. Thus, $\forall 1 \leq i \leq m, j \in \left\lbrace 1,2 \right\rbrace : ess(r_{i,j}) = n_{r_{i,j}} + n_{r_i}S(r_i, r_{i,j})$. In addition, $S(r_i, r_{i,1}) = 1$, and $S(r_i, r_{i,2}) = 1 - w_i$. Finally, $\forall i : p_{r_{i,1}} = \frac{2}{2m+1}$ and $p_{r_{i,2}} = \frac{v_i}{(2m+1)\sum_{j=1}^{m}v_i}$. So in any optimal solution, $\forall i : ess(r_{i,1}) = minSS$, and we have to decide which $i$'s also have $ess(r_{i,2}) = minSS$. Having $ess(r_{i,2}) = minSS$ requires consuming $w_i \times minSS$ extra memory and gives an extra $\frac{v_i}{(2m+1)(\sum_{j=1}^{m}v_j)}$ probability value. Thus, having $ess(r_{i,2}) = minSS$ is equivalent to picking object $i$ from the knapsack problem. Solving Problem~\ref{prob:sample-sizes} with the above $U$, $S$, $p$ and picking the set of $i$'s for which $ess(r_{i,2}) = minSS$ gives a solution to the instance of the knapsack problem. 
 \end{proof}
 %\vspace{-5pt}
 %\noindent A more detailed proof sketch is given in the technical report.
@@ -972,9 +972,9 @@ and its `Sampling Cost' is
 $$S(e) = \frac{minSS}{S(r_0, r_{i_m})} + \sum_{j=i_m+1}^{i_M} minSS - \frac{minSS}{S(r_0, r_{i_j})}$$
 Thus, there are $\leq 3^d$ locally optimal solutions; $d$ is usually small ($\leq k$), even when $U$ is big. So we enumerate all locally optimal solutions and find their sampling cost and probability scores.
 
-The% next step is to combine the solutions using dynamic programming. Let the $M$ sets be called $M_0, M_1, ... M_D$. Let our possible sample sizes range from $0$ to $\mathcal{S}$. The number of sample sizes can be pretty large ($\mathcal{S}$), but we can make it smaller by discretizing the sample sizes, say to have granularity $100$. Then we create a $D \times \mathcal{S}$ array $A$. The value $A\left[i\right]\left[j\right]$ contains the best probability score we can get from $M_0, M_1, ... M_i$ with total sample size at most $j$. We can populate $A\left[0\right]\left[j\right] \forall j$ using the locally optimal solutions for $M_0$. Let $E_{i+1}$ denote the set of locally optimal solutions for $M_{i+1}$. Then we have,
+Next, we combine the solutions using dynamic programming. Let the $M$ sets be called $M_0, M_1, ... M_D$, while possible sample sizes range from $0$ to $\mathcal{S}$. The number of sample sizes can be pretty large, but we can make it smaller by discretizing, say to have granularity $100$. Then we create a $D \times \mathcal{S}$ array $A$. The value $A\left[i\right]\left[j\right]$ contains the best probability score we can get from $M_0, M_1, ... M_i$ with total sample size at most $j$. We can populate $A\left[0\right]\left[j\right] \forall j$ using the locally optimal solutions for $M_0$. Let $E_{i+1}$ denote the set of locally optimal solutions for $M_{i+1}$. Then we have,
 $$A\left[i+1\right] \left[j \right] = \textrm{max} (A\left[i\right]\left[j\right], \textrm{max}_{e \in E_{i+1}}(A\left[i\right]\left[j-S(e)\right] + P(e)))$$
-Dynamic programming solves this in $O(D\mathcal{S}3^d)$ time. 
+Dynamic programming solves this recurrence in $O(D\mathcal{S}3^d)$ time. 
 }
 
 \subsection{Alternative Convex-Optimization based solution}\label{sec:alternative-convex}
@@ -1067,12 +1067,12 @@ We now describe our experiments on this tool with real datasets.
 \stitle{Datasets.} The first dataset, denoted `Marketing', contains demographic information about potential customers~\cite{dataset1}. A total of $N=9409$ questionnaires containing $502$ questions were filled out by shopping mall customers in the San Francisco Bay area. This dataset is the summarized result of this survey. Each tuple in the table describes a single person. There are $14$ columns, each of which is a demographic attribute, such as annual income, gender, marital status, age, education, and so on. Continuous values, such as income, have been bucketized in the dataset, and each column has up to $10$ distinct values.
 
 The columns (in order) are as follows:
-annual household income, gender, marital status, age, education, occupation, time lived in the Bay Area, dual incomes?, persons in household, persons in household under $18$, householder status, type of home, ethnic classification, language most spoken in home.
+annual household income, gender, marital status, age, education, occupation, time lived in the Bay Area, dual incomes status, persons in household, persons in household under $18$, householder status, type of home, ethnic classification, and language most spoken in home.
 
 The second dataset, denoted `Census', is a US 1990 Census dataset from the UCI Machine Learning repository~\cite{uciml},
 consisting of about $2.5$ million tuples, with each tuple corresponding to a person. It has $68$ columns, including ancestry, age, and citizenship. Numerical columns, such as age, have been bucketized beforehand in the dataset. We use this dataset in Section~\ref{sec:quantitative_study} in order to study the accuracy and performance of sampling on a large dataset.
 
-Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use the current implementation of our the smart drill down operator, and insert cropped screenshots of its output in this paper. 
+Unless otherwise specified, in all our experiments, we restrict the tables to the first $7$ columns in order to make the result tables fit in the page. We use the current implementation of our smart drill down operator, and insert cropped screenshots of its output in this paper. 
 We set the $k$ (number of rules) parameter to $4$, and $m_w$ to $5$ for the Size weighting and $20$ for the Bits weighting function (see Section~\ref{sec:weighting}). Memory capacity $M$ for the SampleHandler is set to $50000$ tuples, and $minSS$ to $5000$.
 
 
@@ -1142,7 +1142,7 @@ We fix a weighting function $W$, and a value of $m_w$. For that value of the $W$
 
 For the Census dataset, the running time is dominated by time spent in making a pass through the $2.5$ million tuples to create the first sample. The response time for the next user click should be quite small, as the sample created for the first expansion can usually be re-used for the next rule expansion.
 
-The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus, for size scoring on the Marketing dataset, according to Figure~\ref{fig:uiexample1}, we require $m_w \geq 3$. For the second weighting function, according to Figure~\ref{fig:weigtingbitwise}, the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
+The value of $m_w$ required to ensure a correct answer is equal to the maximum weight of a selected rule. Thus, for size scoring on the Marketing dataset, according to Figure~\ref{fig:uiexample1}, we require $m_w \geq 3$. For the second weighting function, \techreporttext{according to Figure~\ref{fig:weigtingbitwise}, }the minimum required value of $m_w$ is $10$. At these values of $m_w$, we see that the expansion takes $1.5$ seconds and about $0.25$ seconds respectively. Of course, the minimum value of $m_w$ we can use is not known to us beforehand. But even if we use more conservative values of $m_w$, say $6$ and $20$ respectively, the running times are about $1.5$ and $0.5$ seconds respectively.
 
 \begin{figure}
 \centering
@@ -1201,7 +1201,7 @@ Parameter $k$ is the number of new rules to display upon each smart drill-down. 
 
 The $m_w$ parameter lets the user trade off the accuracy of the optimal rule-list and the running time. Ideally we want $m_w$ to equal the actual maximum weight of a rule in the optimal rule-list; this way we get full accuracy while also optimizing run-time. We cannot know the ideal value of $m_w$ in advance, but we can easily estimate it using sampling. We create a small random sample of tuples from the table, and run the BRS algorithm on it. Then the maximum weight $x$ of the output on the sample is likely to equal the maximum weight of the actual output. To account for sampling error, we can set $m_w$ to $2x$, which works well in practice.
 
-$W$ is the weight function that determines which rules are interesting. This is a function specified by the user as a black box. Specifying an arbitrary function can be hard, so instead we hardcode some common Weight functions and allow the user to choose one from a drop-down menu. In addition, the user can express interest or disinterest in certain columns by telling the system to favor or ignore those columns, via the user interface. The system internally adjusts the weight function by increasing or decreasing the weight given to rules instantiating that column.
+$W$ is the weight function that determines which rules are interesting. Specifying an arbitrary function can be hard, so instead we hardcode some common Weight functions and allow the user to choose one from a drop-down menu.
 
 \noindent
 \textbf{Generalizing our weight functions:} We now analyze a parametric family of weighting functions that generalizes our functions from Section~\ref{sec:weighting} and provides intuition for them. Let $W(r) = \left(\sum_{c \in C} o_{r,c}w_c\right)^{\mathsf{p}}$, where the $w_c$'s and $\mathsf{p}$ are parameters of the weighting function, and $o_{r,c}$ ($o$ stands for occurrence) is $1$ if $r(c) \neq \star$ and $0$ otherwise. The Size and Bits weighting functions can be seen as special cases of the above function with $\mathsf{p}=1$ and with $w_c$ equal to $1$ for Size and $\text{log}(|c|)$ for Bits.
@@ -1226,7 +1226,7 @@ We can use the above estimate to guess the size of the max scoring rule for the 
 %This evaluates to $1.44$, while the observed value in our experiments is $10$. 
 
 \subsection{Dealing with Numerical Attributes}\label{sec:extensions-numerical}
-Our framework assumes that all attributes are categorical. Attributes that have a large domain tend to have fewer tuples per value, and hence don't appear in rule summaries. Thus our algorithm does not summarize information about numerical attributes. But it can easily be modified to do so by bucketizing a numerical attribute and treating the bucket id as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
+Our framework assumes that all attributes are categorical. It does not summarize numerical values. But it can easily be modified to do so by bucketizing a numerical attribute and treating the bucket id as a categorical attribute. This is already done in our MD dataset, where numerical attributes like age are divided into buckets ($18-24$, $25-34$ and so on).
 
 
 \vspace{-5pt}

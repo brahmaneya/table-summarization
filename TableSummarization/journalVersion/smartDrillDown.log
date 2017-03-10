@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  10 MAR 2017 18:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  11 MAR 2017 01:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -670,10 +670,6 @@ Package pdftex.def Info: graphs/screenshots6col/age_drilldown.png used on input
 (pdftex.def)             Requested size: 227.62204pt x 107.53465pt.
  [10 <./graphs/screenshots6col/empty_expansion.png> <./graphs/screenshots6col/e
 ducation_expansion.png> <./graphs/screenshots6col/age_drilldown.png>]
-
-LaTeX Warning: Reference `fig:weigtingbitwise' on page 11 undefined on input li
-ne 1145.
-
 <graphs/mw_speed.pdf, id=61, 361.35pt x 216.81pt>
 File: graphs/mw_speed.pdf Graphic file (type pdf)
  <use graphs/mw_speed.pdf>
@@ -751,19 +747,16 @@ artDrillDown.aux)
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 2.6161pt have occurred.
 
-
-LaTeX Warning: There were undefined references.
-
  )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 7261 strings out of 493014
- 115847 string characters out of 6133351
- 213224 words of memory out of 5000000
- 10611 multiletter control sequences out of 15000+600000
+ 7260 strings out of 493014
+ 115826 string characters out of 6133351
+ 212909 words of memory out of 5000000
+ 10610 multiletter control sequences out of 15000+600000
  94945 words of font info for 210 fonts, out of 8000000 for 9000
  1144 hyphenation exceptions out of 8191
  53i,19n,92p,1906b,3675s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -795,7 +788,7 @@ rw/helvetic/uhvro8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/tim
 es/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmr8a.
 pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmri8a.pfb></usr
 /local/texlive/2016/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on smartDrillDown.pdf (14 pages, 4928194 bytes).
+Output written on smartDrillDown.pdf (14 pages, 4928355 bytes).
 PDF statistics:
  238 PDF objects out of 1000 (max. 8388607)
  165 compressed objects within 2 object streams
